@@ -1,6 +1,8 @@
 ljson -- Line JSON
 ******************
 
+.. contents::
+
 What is ljson?
 ==============
 
@@ -89,3 +91,10 @@ tables)::
 	{"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
 
 
+One can access items using python's built-in ``__getitem__``
+and ``__setitem__``::
+
+	table[{"id": 1}]["name"]
+
+The table "index" must be a dict. This allows to access
+non-unique rows.
