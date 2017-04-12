@@ -35,4 +35,57 @@ in the file. A header must be in the following format::
 	<modifiers> = "[" [<modifier> {","<modifier>}] "]"
 	<modifier> = "\"unique\"" | "\"not null\"" 
 
+The header is required by the on-disk implementation.
+
+Usage
+=====
+
+Without a Python Module
+-----------------------
+
+ljson is designed to work without any third party python
+modules. One can read ljson data with the python built-in
+json module::
+
+	import json
+	ljson = '''\
+	{"id": 1, "name": "foo"}
+	{"id": 2, "name": "bar"}'''
+
+	for line in ljson.split("\n"):
+		print(json.loads(line))
+
+And this should always be the preferred way to access ljson
+data, if all data is required. 
+
+If one wants to access specific fields it is better to use
+the ljson python module:
+
+With the ljson Module
+---------------------
+
+Using the ljson Module is simple and efficient if one wants
+to access just some fields, not the complete file.
+
+There are two base implementations: ``ljson.base.mem`` that
+loads the file content into the RAM. This is way faster and
+supports files without a header and one is able to construct
+the Table without a file.
+
+The second implementation is ``ljson.base.disk``. This
+implementation does not load any data into RAM. If you are
+accessing huge sets you should use this implementation.
+
+Creating a table is simple (at least for the memory
+tables)::
+
+	import ljson
+	header = ljson.Header({"id": {"type": "int",
+	"modifiers":["unique"]}, "name": {"type": "str",
+	"modifiers": []}})
+
+	table = ljson.Table(header, 
+	[{"id": 1, "name": "foo"}, 
+	{"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
+
 
