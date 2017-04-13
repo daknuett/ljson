@@ -14,7 +14,7 @@ class Table(LjsonTable):
 	One should **not** use the constructor to open
 	a file but instead use the static method from_file.
 
-	WARNING: file_ **must** be opened in ``w+`` mode!
+	WARNING: ``file_`` **must** be opened in ``w+`` mode!
 	"""
 
 	def __init__(self, header, file_):
@@ -25,7 +25,7 @@ class Table(LjsonTable):
 	@staticmethod
 	def from_file(fin):
 		"""
-		WARNING: file_ **must** be opened in ``w+`` mode!
+		WARNING: ``file_`` **must** be opened in ``w+`` mode!
 		"""
 		header = Header.from_file(fin)
 		return Table(header, fin)
@@ -43,11 +43,17 @@ class Table(LjsonTable):
 			self.file.readline()
 		return json.loads(self.file.__next__())
 	def save(self, fout):
+		"""
+		Save this table to the file ``fout``.
+		"""
 		self._first_next_call = True
 		self.file.seek(0)
 		for r in self.file:
 			fout.write(r)
 	def additem(self, row):
+		"""
+		Add a new row.
+		"""
 		self._first_next_call = True
 		for k, v in row.items():
 			self.header.check_data(k, v)
