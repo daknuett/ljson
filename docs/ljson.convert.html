@@ -25,6 +25,8 @@
     <script type="text/javascript" src="static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="lson 0.0.1 documentation" href="index.html" />
+    <link rel="up" title="ljson package" href="ljson.html" />
+    <link rel="prev" title="ljson.base package" href="ljson.base.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -97,6 +99,39 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 </dd></dl>
 
 </div>
+<div class="section" id="module-ljson.convert.sql">
+<span id="ljson-convert-sql-module"></span><h2>ljson.convert.sql module<a class="headerlink" href="#module-ljson.convert.sql" title="Permalink to this headline">¶</a></h2>
+<p>This module provides functions to convert ljson
+tables from/to SQL tables.</p>
+<p><strong>WARNING</strong>: The SQL datatype &#8220;BINARY&#8221; and the python datatype &#8220;bytes&#8221;
+might not work.</p>
+<dl class="function">
+<dt id="ljson.convert.sql.sql2file">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2file</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>fout</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2file" title="Permalink to this definition">¶</a></dt>
+<dd><p id="sql2file">Convert the SQL table to an <code class="docutils literal"><span class="pre">ljson.disk.Table</span></code>.</p>
+<p>This function should be used to read big tables.</p>
+<p><strong>*WARNING*</strong>: <code class="docutils literal"><span class="pre">fout</span></code> must be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
+<p>See also: <a class="reference internal" href="#sql2table">sql2table</a></p>
+<p>Returns the resulting table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ljson.convert.sql.sql2table">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2table</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2table" title="Permalink to this definition">¶</a></dt>
+<dd><p id="sql2table">Convert the SQL table to an ljson table.</p>
+<p>db, username, password and host are used to log in.</p>
+<p>See also: <a class="reference internal" href="#sql2file">sql2file</a></p>
+<p>Returns the resulting table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ljson.convert.sql.table2sql">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">table2sql</code><span class="sig-paren">(</span><em>table</em>, <em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#table2sql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.table2sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert the values from the given table into the 
+<strong>already existing</strong> SQL table.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-ljson.convert">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ljson.convert" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -113,6 +148,7 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 <li><a class="reference internal" href="#">ljson.convert package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ljson.convert.csv">ljson.convert.csv module</a></li>
+<li><a class="reference internal" href="#module-ljson.convert.sql">ljson.convert.sql module</a></li>
 <li><a class="reference internal" href="#module-ljson.convert">Module contents</a></li>
 </ul>
 </li>
@@ -121,6 +157,11 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">ljson</a><ul>
+  <li><a href="ljson.html">ljson package</a><ul>
+      <li>Previous: <a href="ljson.base.html" title="previous chapter">ljson.base package</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

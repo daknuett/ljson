@@ -12,6 +12,14 @@ ljson.convert.csv module
     :undoc-members:
     :show-inheritance:
 
+ljson.convert.sql module
+------------------------
+
+.. automodule:: ljson.convert.sql
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
