@@ -14,6 +14,39 @@ elegant object representation.
 ljson can be used instead of pure json to increase the
 performance when accessing a large set of data.
 
+
+Why ljson?
+==========
+
+There are a **lot** data storage formats out there: XML,
+JSON, CSV, SQL, NOSQL, binary packed, GNU-DB,...
+
+Some of them are designed to store complete databases (SQL,
+NOSQL, ...) and some are designed to store tables. And of
+course there are JSON and XML. They can be used to store
+more complex objects, are human-readable and data is stored
+in just one file.
+
+But they suffer from one problem: If one wants to alter the
+data in the file he has to read the complete file and store
+all the data in his RAM. This is slow, maybe impossible
+(*Big Data*) and insecure. If the process cannot complete
+the operation properly this might corrupt all data.
+
+ljson tries to bypass this by using a mixture of CSV (line
+based) and JSON (object based): 
+
+Every line is one object. If one wants to add another object
+he just opens the file in append mode and adds one line. If
+one line is corrupted the rest of the file is still valid.
+
+Operating on large sets of objects is also possible by
+reading the file line by line.
+
+Especially asynchronous operations can be performed easily,
+as the main part of the file stays untouched (unless you
+alter objects. Then the file has to be re-written).
+
 Design
 ======
 
