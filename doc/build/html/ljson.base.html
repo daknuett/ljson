@@ -63,22 +63,24 @@
 <p>An on-disk ljson table.</p>
 <p>One should <strong>not</strong> use the constructor to open
 a file but instead use the static method from_file.</p>
-<p>WARNING: <a href="#id1"><span class="problematic" id="id2">file_</span></a> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
+<p>WARNING: <code class="docutils literal"><span class="pre">file_</span></code> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
 <dl class="method">
 <dt id="ljson.base.disk.Table.additem">
 <code class="descname">additem</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/disk.html#Table.additem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Table.additem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add a new row.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="ljson.base.disk.Table.from_file">
 <em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>fin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/disk.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Table.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>WARNING: <a href="#id3"><span class="problematic" id="id4">file_</span></a> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
+<dd><p>WARNING: <code class="docutils literal"><span class="pre">file_</span></code> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ljson.base.disk.Table.save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>fout</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/disk.html#Table.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Table.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save this table to the file <code class="docutils literal"><span class="pre">fout</span></code>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -217,7 +219,7 @@ like getter and setter interface.</p>
 <p>Creating a ljson table is pretty easy.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ljson</span> <span class="kn">import</span> <span class="n">base</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">header</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">Header</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;modifiers&quot;</span><span class="p">:[</span><span class="s2">&quot;unique&quot;</span><span class="p">]},</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]}})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">}])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">}])</span>
 </pre></div>
 </div>
 <blockquote>

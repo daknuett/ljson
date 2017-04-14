@@ -79,22 +79,25 @@ implementation does not load any data into RAM. If you are
 accessing huge sets you should use this implementation.
 
 Creating a table is simple (at least for the memory
-tables)::
+tables):
 
-	import ljson
-	header = ljson.Header({"id": {"type": "int",
-	"modifiers":["unique"]}, "name": {"type": "str",
-	"modifiers": []}})
-
-	table = ljson.Table(header, 
-	[{"id": 1, "name": "foo"}, 
-	{"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
+>>> import ljson
+>>> header = ljson.Header({"id": {"type": "int",
+>>> "modifiers":["unique"]}, "name": {"type": "str",
+>>> "modifiers": []}})
+>>> 
+>>> table = ljson.Table(header, 
+>>> [{"id": 1, "name": "foo"}, 
+>>> {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
 
 
 One can access items using python's built-in ``__getitem__``
-and ``__setitem__``::
+and ``__setitem__``:
 
-	table[{"id": 1}]["name"]
+>>> table[{"id": 1}]["name"]
+['foo']
+>>> list(table[{"id": 1}])
+[{'id': 1, 'name': 'foo'}]
 
 The table "index" must be a dict. This allows to access
 non-unique rows.

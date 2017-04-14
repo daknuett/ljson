@@ -55,7 +55,7 @@
 <span class="sd">	One should **not** use the constructor to open</span>
 <span class="sd">	a file but instead use the static method from_file.</span>
 
-<span class="sd">	WARNING: file_ **must** be opened in ``w+`` mode!</span>
+<span class="sd">	WARNING: ``file_`` **must** be opened in ``w+`` mode!</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">file_</span><span class="p">):</span>
@@ -66,7 +66,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="Table.from_file"><a class="viewcode-back" href="../../../ljson.base.html#ljson.base.disk.Table.from_file">[docs]</a>	<span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		WARNING: file_ **must** be opened in ``w+`` mode!</span>
+<span class="sd">		WARNING: ``file_`` **must** be opened in ``w+`` mode!</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">fin</span><span class="p">)</span></div>
@@ -84,11 +84,17 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
 		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">__next__</span><span class="p">())</span>
 <div class="viewcode-block" id="Table.save"><a class="viewcode-back" href="../../../ljson.base.html#ljson.base.disk.Table.save">[docs]</a>	<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Save this table to the file ``fout``.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_first_next_call</span> <span class="o">=</span> <span class="bp">True</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
 			<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 <div class="viewcode-block" id="Table.additem"><a class="viewcode-back" href="../../../ljson.base.html#ljson.base.disk.Table.additem">[docs]</a>	<span class="k">def</span> <span class="nf">additem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a new row.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_first_next_call</span> <span class="o">=</span> <span class="bp">True</span>
 		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">check_data</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
