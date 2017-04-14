@@ -72,6 +72,23 @@ in the file. A header must be in the following format::
 
 The header is required by the on-disk implementation.
 
+Datatypes
+---------
+
+If you use ljson you are restricted to the following python
+data types (and their ljson types):
+
+- ``int``: ``"int"``
+- ``str``: ``"str"``
+- ``bool``: ``"bool"``
+- ``float``: ``"float"``
+- ``bytes``: ``"bytes"``
+- ``dict``: ``"json"``
+- ``list``: ``"json"``
+
+Because it is possible to convert all data types to one of
+these it is possible to store any kind of data.
+
 Usage
 =====
 
@@ -168,3 +185,9 @@ Reading and writing csv files is pretty simple, too:
 >>> list(table2)
 [{'id': 1, 'name': 'foo'}, {'id': 2, 'name': 'bar'}, {'id': 3, 'name': 'bar'}]
 
+
+Todos
+=====
+
+- store bytes as b64
+- fix the sql bytes representation
