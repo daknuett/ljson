@@ -47,15 +47,15 @@ Without a Python Module
 
 ljson is designed to work without any third party python
 modules. One can read ljson data with the python built-in
-json module::
+json module:
 
-	import json
-	ljson = '''\
-	{"id": 1, "name": "foo"}
-	{"id": 2, "name": "bar"}'''
-
-	for line in ljson.split("\n"):
-		print(json.loads(line))
+>>> import json
+>>> ljson = '{"id": 1, "name": "foo"}\n{"id": 2, "name": "bar"}'
+>>> for line in ljson.split("\n"):
+... 	print(json.loads(line))
+...
+{'name': 'foo', 'id': 1}
+{'name': 'bar', 'id': 2}
 
 And this should always be the preferred way to access ljson
 data, if all data is required. 
@@ -82,13 +82,8 @@ Creating a table is simple (at least for the memory
 tables):
 
 >>> import ljson
->>> header = ljson.Header({"id": {"type": "int",
->>> "modifiers":["unique"]}, "name": {"type": "str",
->>> "modifiers": []}})
->>> 
->>> table = ljson.Table(header, 
->>> [{"id": 1, "name": "foo"}, 
->>> {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
+>>> header = ljson.Header({"id": {"type": "int", "modifiers":["unique"]}, "name": {"type": "str", "modifiers": []}})
+>>> table = ljson.Table(header, [{"id": 1, "name": "foo"}, {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
 
 
 One can access items using python's built-in ``__getitem__``
@@ -96,8 +91,47 @@ and ``__setitem__``:
 
 >>> table[{"id": 1}]["name"]
 ['foo']
->>> list(table[{"id": 1}])
-[{'id': 1, 'name': 'foo'}]
+>>> list(table[{"id": 1}]) 
+[{'name': 'foo', 'id': 1}]
 
 The table "index" must be a dict. This allows to access
-non-unique rows.
+non-unique rows, like this:
+
+>>> list(table[{"name":"bar"}])
+[{'id': 2, 'name': 'bar'}, {'id': 3, 'name': 'bar'}]
+
+
+Using ljson to store data
+-------------------------
+
+Using ljson to store data is pretty simple:
+
+>>> from io import StringIO
+>>> fout = StringIO()
+>>> table.save(fout)
+>>> fout.seek(0)
+0
+>>> fout.read()
+'{"name": {"type": "str", "modifiers": []}, "__type__": "header", "id": {"type": "int", "modifiers": ["unique"]}}\n{"name": "foo", "id": 1}\n{"name": "bar", "id": 2}\n{"name": "bar", "id": 3}'
+>>> fout.seek(0)
+0
+>>> table2 = ljson.Table.from_file(fout)
+>>> list(table2)
+[{'id': 1, 'name': 'foo'}, {'id': 2, 'name': 'bar'}, {'id': 3, 'name': 'bar'}]
+
+
+Reading and writing csv files is pretty simple, too:
+
+>>> from ljson.convert.csv import table2csv, csv2table
+>>> fout = StringIO()
+>>> table2csv(table, fout)
+>>> fout.seek(0)
+0
+>>> fout.read()
+'id,name\r\n1,foo\r\n2,bar\r\n3,bar\r\n'
+>>> fout.seek(0)
+0
+>>> table2 = csv2table(fout, types = {"id": "int", "name":"str"})
+>>> list(table2)
+[{'id': 1, 'name': 'foo'}, {'id': 2, 'name': 'bar'}, {'id': 3, 'name': 'bar'}]
+

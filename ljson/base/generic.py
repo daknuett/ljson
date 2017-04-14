@@ -12,6 +12,8 @@ datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "boo
 class Header(object):
 	def __init__(self, descriptor):
 		self.descriptor = descriptor
+		if("__type__" in self.descriptor):
+			del(self.descriptor["__type__"])
 
 	@staticmethod
 	def from_file(fin):

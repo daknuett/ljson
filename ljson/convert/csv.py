@@ -152,7 +152,13 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 
 	Returns: None
 	"""
-	fieldnames = table.header.descriptor.keys()
+	fieldnames = list(table.header.descriptor.keys())
+	# XXX I do not know why but ONLY in doctest
+	# this gets messed up. The field "__type__"
+	# should get deleted in Header.__init__.
+	# FIXME explan this.
+	if("__type__" in fieldnames):
+		del(fieldnames[fieldnames.index("__type__")])
 	writer = csv.DictWriter(fout, fieldnames, 
 			restval = restval,
 			extrasaction = extrasaction,
