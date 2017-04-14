@@ -56,6 +56,14 @@ html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+	@echo "Copying files to /docs..."
+	if [ -e ../docs ] ;then rm -rf ../docs;fi
+	cp -r $(BUILDDIR)/html ../docs
+	@echo "done"
+	@echo "calling postbuild..."
+	cp github-make ../docs/Makefile
+	cd ../docs && make github
+	@echo "done"
 
 .PHONY: dirhtml
 dirhtml:
@@ -94,9 +102,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/ljson.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/lson.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/ljson.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/lson.qhc"
 
 .PHONY: applehelp
 applehelp:
@@ -113,8 +121,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/ljson"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/ljson"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/lson"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/lson"
 	@echo "# devhelp"
 
 .PHONY: epub

@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ljson.convert.csv &mdash; lson 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="lson 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ljson.convert.csv</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Convert csv to ljson and the ohter way around.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">..base.generic</span> <span class="kn">import</span> <span class="n">datatype_by_name</span><span class="p">,</span> <span class="n">Header</span>
+<span class="kn">from</span> <span class="nn">..base.mem</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">..base.disk</span> <span class="kn">import</span> <span class="n">Table</span> <span class="k">as</span> <span class="n">DiskTable</span>
+
+<div class="viewcode-block" id="csv2table"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.csv.csv2table">[docs]</a><span class="k">def</span> <span class="nf">csv2table</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">types</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="p">{},</span>
+		<span class="n">fieldnames</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">restkey</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">restval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s1">&#39;excel&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">fmtargs</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _csv2table:</span>
+
+<span class="sd">	Reads the csv table from ``fin`` and converts it to </span>
+<span class="sd">	a ``ljson.base.memTable``.</span>
+
+<span class="sd">	The arguments fin,fieldnames,restkey,restval,dialect,fmtargs are passed to ``csv.DictReader``.</span>
+
+<span class="sd">	``types`` is a dict containing the types of the columns,</span>
+<span class="sd">	they are mapped {&lt;columname&gt;:&lt;typename&gt;}.</span>
+
+<span class="sd">	``modifiers`` is a dict containing the modifiers mapped</span>
+<span class="sd">	{&lt;columname&gt;:[&lt;modifier&gt;, &lt;modifier&gt;]}.</span>
+
+<span class="sd">	If a column does not have an expicite type ``&quot;str&quot;`` is used.</span>
+
+<span class="sd">	Eg:</span>
+
+<span class="sd">	&gt;&gt;&gt; from io import StringIO</span>
+<span class="sd">	&gt;&gt;&gt; fin = StringIO(&quot;id,name\\n1,foo\\n2,bar\\n3,baz&quot;)</span>
+<span class="sd">	&gt;&gt;&gt; table = csv2table(fin, types = {&quot;id&quot;: &quot;int&quot;, &quot;name&quot;:&quot;str&quot;}, modifiers = {&quot;id&quot;: [&quot;unique&quot;]})</span>
+<span class="sd">	&gt;&gt;&gt; list(table)</span>
+<span class="sd">	[{&#39;name&#39;: &#39;foo&#39;, &#39;id&#39;: 1}, {&#39;name&#39;: &#39;bar&#39;, &#39;id&#39;: 2}, {&#39;name&#39;: &#39;baz&#39;, &#39;id&#39;: 3}]</span>
+
+
+<span class="sd">	**Note**: to convert files csv2file_ should be used.</span>
+
+<span class="sd">	Returns: the table</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> 
+			<span class="n">fieldnames</span> <span class="o">=</span> <span class="n">fieldnames</span><span class="p">,</span> 
+			<span class="n">restkey</span> <span class="o">=</span> <span class="n">restkey</span><span class="p">,</span> 
+			<span class="n">restval</span> <span class="o">=</span> <span class="n">restval</span><span class="p">,</span>
+			<span class="n">dialect</span> <span class="o">=</span> <span class="n">dialect</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">fmtargs</span><span class="p">)</span>
+
+	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="n">converters</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span><span class="p">:</span>
+		<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">fieldname</span> <span class="ow">in</span> <span class="n">types</span><span class="p">):</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span>
+			<span class="n">converters</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="n">datatype_by_name</span><span class="p">[</span><span class="n">types</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;str&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">fieldname</span> <span class="ow">in</span> <span class="n">modifiers</span><span class="p">):</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;modifiers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">modifiers</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span>
+
+	<span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span>
+	<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="p">[])</span>
+
+	<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+		<span class="c1"># This converts all non-str elements.</span>
+		<span class="c1"># it is kind of hard to read.</span>
+		<span class="c1"># This equals</span>
+		<span class="c1">#</span>
+		<span class="c1">#	 for k,v in row.items():</span>
+		<span class="c1">#		if(k in converters):</span>
+		<span class="c1">#			row[k] = converters[k](v)</span>
+		<span class="c1">#</span>
+		<span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">converters</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">converters</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+		<span class="n">table</span><span class="o">.</span><span class="n">additem</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">table</span></div>
+		
+	
+			
+	
+<div class="viewcode-block" id="csv2file"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.csv.csv2file">[docs]</a><span class="k">def</span> <span class="nf">csv2file</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">types</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="p">{},</span>
+		<span class="n">fieldnames</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">restkey</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">restval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s1">&#39;excel&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">fmtargs</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _csv2file:</span>
+
+<span class="sd">	Converts the csv file to a ljson file. Reads csv from ``fin`` and writes to ``fout``.</span>
+
+<span class="sd">	The main difference to csv2table_ is that csv2file uses the on-disk implementation.</span>
+<span class="sd">	</span>
+<span class="sd">	This function should be used if one wants to convert just the files without using the data.</span>
+
+<span class="sd">	**See also**: csv2table_</span>
+
+<span class="sd">	Returns: the table</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> 
+			<span class="n">fieldnames</span> <span class="o">=</span> <span class="n">fieldnames</span><span class="p">,</span> 
+			<span class="n">restkey</span> <span class="o">=</span> <span class="n">restkey</span><span class="p">,</span> 
+			<span class="n">restval</span> <span class="o">=</span> <span class="n">restval</span><span class="p">,</span>
+			<span class="n">dialect</span> <span class="o">=</span> <span class="n">dialect</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">fmtargs</span><span class="p">)</span>
+
+	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="n">converters</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span><span class="p">:</span>
+		<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">fieldname</span> <span class="ow">in</span> <span class="n">types</span><span class="p">):</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span>
+			<span class="n">converters</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="n">datatype_by_name</span><span class="p">[</span><span class="n">types</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;str&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">fieldname</span> <span class="ow">in</span> <span class="n">modifiers</span><span class="p">):</span>
+			<span class="n">descriptor</span><span class="p">[</span><span class="n">fieldname</span><span class="p">][</span><span class="s2">&quot;modifiers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">modifiers</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span>
+
+	<span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span>
+
+	<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">get_header</span><span class="p">())</span>
+	<span class="n">fout</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+	<span class="n">table</span> <span class="o">=</span> <span class="n">DiskTable</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">fout</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+		<span class="c1"># This converts all non-str elements.</span>
+		<span class="c1"># it is kind of hard to read.</span>
+		<span class="c1"># This equals</span>
+		<span class="c1">#</span>
+		<span class="c1">#	 for k,v in row.items():</span>
+		<span class="c1">#		if(k in converters):</span>
+		<span class="c1">#			row[k] = converters[k](v)</span>
+		<span class="c1">#</span>
+		<span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">converters</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">converters</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+		<span class="n">table</span><span class="o">.</span><span class="n">additem</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">table</span></div>
+
+<div class="viewcode-block" id="table2csv"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.csv.table2csv">[docs]</a><span class="k">def</span> <span class="nf">table2csv</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">restval</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrasaction</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s1">&#39;excel&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert the given ljson table to csv.</span>
+
+<span class="sd">	The arguments ``restval=&#39;&#39;, extrasaction=&#39;raise&#39;, dialect=&#39;excel&#39;, *args, **kwds`` are</span>
+<span class="sd">	passed to ``csv.DictWriter``.</span>
+
+<span class="sd">	**Hint**: Converting files can be done by using the on-disk implementation:</span>
+
+<span class="sd">	&gt;&gt;&gt; from ljson.base.disk import Table</span>
+<span class="sd">	&gt;&gt;&gt; from ljson.convert.csv import table2csv</span>
+<span class="sd">	&gt;&gt;&gt; fin = open(&quot;test.lson&quot;, &quot;r+&quot;)</span>
+<span class="sd">	&gt;&gt;&gt; table = Table.from_file(fin)</span>
+<span class="sd">	&gt;&gt;&gt; fout = open(&quot;test.csv&quot;, &quot;w&quot;)</span>
+<span class="sd">	&gt;&gt;&gt; table2csv(table, fout)</span>
+
+<span class="sd">	Returns: None</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">fieldnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+	<span class="c1"># XXX I do not know why but ONLY in doctest</span>
+	<span class="c1"># this gets messed up. The field &quot;__type__&quot;</span>
+	<span class="c1"># should get deleted in Header.__init__.</span>
+	<span class="c1"># FIXME explan this.</span>
+	<span class="k">if</span><span class="p">(</span><span class="s2">&quot;__type__&quot;</span> <span class="ow">in</span> <span class="n">fieldnames</span><span class="p">):</span>
+		<span class="k">del</span><span class="p">(</span><span class="n">fieldnames</span><span class="p">[</span><span class="n">fieldnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;__type__&quot;</span><span class="p">)])</span>
+	<span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span> <span class="n">fieldnames</span><span class="p">,</span> 
+			<span class="n">restval</span> <span class="o">=</span> <span class="n">restval</span><span class="p">,</span>
+			<span class="n">extrasaction</span> <span class="o">=</span> <span class="n">extrasaction</span><span class="p">,</span>
+			<span class="n">dialect</span> <span class="o">=</span> <span class="n">dialect</span><span class="p">,</span>
+			<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+	<span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+		<span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Daniel Knüttel.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
