@@ -10,7 +10,7 @@ Creating a ljson table is pretty easy.
 
 >>> from ljson import base 
 >>> header = base.Header({"id": {"type": "int", "modifiers":["unique"]}, "name": {"type": "str", "modifiers": []}})
->>> table = Table(header, [{"id": 1, "name": "foo"}, {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
+>>> table = base.Table(header, [{"id": 1, "name": "foo"}, {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
 
 	***NOTE***: The default implementation is the in-memory implementation.
 	If one wants to use the on-disk implementation he has to use

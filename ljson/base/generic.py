@@ -5,9 +5,9 @@ They are used by the memory and the disk implementation.
 """
 import json
 
-datatypes = (int, str, float, bool, bytes)
+datatypes = (int, str, float, bool, bytes, json.loads)
 
-datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool}
+datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": json.loads}
 
 class Header(object):
 	def __init__(self, descriptor):
@@ -67,6 +67,11 @@ class LjsonTable(object):
 		"""
 		Select rows by the dict dct.
 		Returns a LjsonSelector object.
+
+		Using dict as index is required to provide 
+		"search functionality". 
+
+		See also the ljson.base documentation.
 		"""
 		pass
 	def __next__(self):

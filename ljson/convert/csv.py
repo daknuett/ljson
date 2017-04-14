@@ -30,7 +30,7 @@ def csv2table(fin, types = {}, modifiers = {},
 	Eg:
 
 	>>> from io import StringIO
-	>>> fin = StringIO("id,name\n1,foo\n2,bar\n3,baz")
+	>>> fin = StringIO("id,name\\n1,foo\\n2,bar\\n3,baz")
 	>>> table = csv2table(fin, types = {"id": "int", "name":"str"}, modifiers = {"id": ["unique"]})
 	>>> list(table)
 	[{'name': 'foo', 'id': 1}, {'name': 'bar', 'id': 2}, {'name': 'baz', 'id': 3}]
@@ -141,7 +141,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 	The arguments ``restval='', extrasaction='raise', dialect='excel', *args, **kwds`` are
 	passed to ``csv.DictWriter``.
 
-	**Hint**: To converting files can be done by using the on-disk implementation:
+	**Hint**: Converting files can be done by using the on-disk implementation:
 
 	>>> from ljson.base.disk import Table
 	>>> from ljson.convert.csv import table2csv
