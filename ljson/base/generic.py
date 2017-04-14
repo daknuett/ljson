@@ -15,6 +15,12 @@ class Header(object):
 		if("__type__" in self.descriptor):
 			del(self.descriptor["__type__"])
 
+
+	def __repr__(self):
+		return "{mymod}.{myname}({descriptor})".format(mymod = type(self).__module__,
+				myname = type(self).__name__,
+				descriptor = self.descriptor)
+
 	@staticmethod
 	def from_file(fin):
 		"""
