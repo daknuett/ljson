@@ -1,3 +1,5 @@
+# ~Makefile~
+
 modname=ljson
 
 github:
