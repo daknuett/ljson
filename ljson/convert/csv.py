@@ -167,5 +167,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 			**kwds)
 	writer.writeheader()
 	for row in table:
+		row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+			for k,v in row.items()}
 		writer.writerow(row)
 

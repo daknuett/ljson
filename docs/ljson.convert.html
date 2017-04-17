@@ -105,6 +105,10 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 tables from/to SQL tables.</p>
 <p><strong>WARNING</strong>: The SQL datatype &#8220;BINARY&#8221; and the python datatype &#8220;bytes&#8221;
 might not work.</p>
+<p><strong>Note</strong>: If one wants to use json items, these items will be stored
+as &#8220;varchar&#8221; in SQL. The function <a class="reference internal" href="#table2sql">table2sql</a> will convert json automatically
+to str, but the &#8220;sql2*&#8221; functions will not convert str to json. One can convert
+the objects later.</p>
 <dl class="function">
 <dt id="ljson.convert.sql.sql2file">
 <code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2file</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>fout</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2file" title="Permalink to this definition">¶</a></dt>
@@ -118,7 +122,8 @@ might not work.</p>
 <dl class="function">
 <dt id="ljson.convert.sql.sql2table">
 <code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2table</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2table" title="Permalink to this definition">¶</a></dt>
-<dd><p id="sql2table">Convert the SQL table to an ljson table.</p>
+<dd><p id="sql2table">Convert the SQL table to an ljson table. This function(just like <a class="reference internal" href="#sql2file">sql2file</a>)
+<strong>does not</strong> parse json items automatically.</p>
 <p>db, username, password and host are used to log in.</p>
 <p>See also: <a class="reference internal" href="#sql2file">sql2file</a></p>
 <p>Returns the resulting table.</p>
@@ -127,8 +132,9 @@ might not work.</p>
 <dl class="function">
 <dt id="ljson.convert.sql.table2sql">
 <code class="descclassname">ljson.convert.sql.</code><code class="descname">table2sql</code><span class="sig-paren">(</span><em>table</em>, <em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#table2sql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.table2sql" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert the values from the given table into the 
+<dd><p id="table2sql">Insert the values from the given table into the 
 <strong>already existing</strong> SQL table.</p>
+<p>json items will be stored as str instances.</p>
 </dd></dl>
 
 </div>

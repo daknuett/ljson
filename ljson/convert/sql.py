@@ -4,6 +4,11 @@ tables from/to SQL tables.
 
 **WARNING**: The SQL datatype "BINARY" and the python datatype "bytes"
 might not work. 
+
+**Note**: If one wants to use json items, these items will be stored
+as "varchar" in SQL. The function table2sql_ will convert json automatically
+to str, but the "sql2*" functions will not convert str to json. One can convert
+the objects later.
 """
 
 from ..base import Header, Table
@@ -45,7 +50,8 @@ def sql2table(db, username, password, tablename, host = "localhost"):
 	.. _sql2table:
 
 
-	Convert the SQL table to an ljson table.
+	Convert the SQL table to an ljson table. This function(just like sql2file_)
+	**does not** parse json items automatically.
 
 	db, username, password and host are used to log in.
 
@@ -135,8 +141,12 @@ def sql2file(db, username, password, tablename, fout, host = "localhost"):
 
 def table2sql(table, db, username, password, tablename, host = "localhost"):
 	"""
+	.. _table2sql:
+
 	Insert the values from the given table into the 
 	**already existing** SQL table.
+
+	json items will be stored as str instances.
 	"""
 	
 	# build the INSERT pattern:
@@ -151,6 +161,10 @@ def table2sql(table, db, username, password, tablename, host = "localhost"):
 	con = pymysql.connect(db = db, user = username, password = password, host = host)
 	with con.cursor() as cursor:
 		for row in table:
+			# convert json to str.
+			row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+				for k,v in row.items()}
+			
 			cursor.execute(pattern.format(*[row[colname] for colname in columns]))
 	con.commit()
 	con.close()

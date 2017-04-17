@@ -23,8 +23,7 @@ setup(
 	license = "AGPL v3",
 	classifiers = ['Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
-
-		'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
+		'License :: OSI Approved :: GNU Affero General Public License v3',
 		'Programming Language :: Python :: 3'],
 	keywords = "data storage table json",
 	install_requires = [
