@@ -45,26 +45,35 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#ljson-line-json" id="id1">ljson &#8211; Line JSON</a><ul>
-<li><a class="reference internal" href="#what-is-ljson" id="id2">What is ljson?</a></li>
-<li><a class="reference internal" href="#why-ljson" id="id3">Why ljson?</a></li>
-<li><a class="reference internal" href="#design" id="id4">Design</a><ul>
-<li><a class="reference internal" href="#header" id="id5">Header</a></li>
-<li><a class="reference internal" href="#datatypes" id="id6">Datatypes</a></li>
+<li><a class="reference internal" href="#quicklinks" id="id2">Quicklinks</a></li>
+<li><a class="reference internal" href="#what-is-ljson" id="id3">What is ljson?</a></li>
+<li><a class="reference internal" href="#why-ljson" id="id4">Why ljson?</a></li>
+<li><a class="reference internal" href="#design" id="id5">Design</a><ul>
+<li><a class="reference internal" href="#header" id="id6">Header</a></li>
+<li><a class="reference internal" href="#datatypes" id="id7">Datatypes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#usage" id="id7">Usage</a><ul>
-<li><a class="reference internal" href="#without-a-python-module" id="id8">Without a Python Module</a></li>
-<li><a class="reference internal" href="#with-the-ljson-module" id="id9">With the ljson Module</a></li>
-<li><a class="reference internal" href="#using-ljson-to-store-data" id="id10">Using ljson to store data</a></li>
+<li><a class="reference internal" href="#usage" id="id8">Usage</a><ul>
+<li><a class="reference internal" href="#without-a-python-module" id="id9">Without a Python Module</a></li>
+<li><a class="reference internal" href="#with-the-ljson-module" id="id10">With the ljson Module</a></li>
+<li><a class="reference internal" href="#using-ljson-to-store-data" id="id11">Using ljson to store data</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#todos" id="id11">Todos</a></li>
+<li><a class="reference internal" href="#todos" id="id12">Todos</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<div class="section" id="quicklinks">
+<h2><a class="toc-backref" href="#id2">Quicklinks</a><a class="headerlink" href="#quicklinks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="daknuett.github.io/ljson">The Documentation</a></li>
+<li><a class="reference external" href="github.com/daknuett/ljson">The github.com repo</a></li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/ljson/">The PyPi repo</a></li>
+</ul>
+</div>
 <div class="section" id="what-is-ljson">
-<h2><a class="toc-backref" href="#id2">What is ljson?</a><a class="headerlink" href="#what-is-ljson" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">What is ljson?</a><a class="headerlink" href="#what-is-ljson" title="Permalink to this headline">¶</a></h2>
 <p>ljson is an attempt to create a database model suiting the
 needs of modern data procession. It is designed to work
 faster than usual json, but to keep the simple but yet
@@ -73,7 +82,7 @@ elegant object representation.</p>
 performance when accessing a large set of data.</p>
 </div>
 <div class="section" id="why-ljson">
-<h2><a class="toc-backref" href="#id3">Why ljson?</a><a class="headerlink" href="#why-ljson" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Why ljson?</a><a class="headerlink" href="#why-ljson" title="Permalink to this headline">¶</a></h2>
 <p>There are a <strong>lot</strong> data storage formats out there: XML,
 JSON, CSV, SQL, NOSQL, binary packed, GNU-DB,...</p>
 <p>Some of them are designed to store complete databases (SQL,
@@ -98,7 +107,7 @@ as the main part of the file stays untouched (unless you
 alter objects. Then the file has to be re-written).</p>
 </div>
 <div class="section" id="design">
-<h2><a class="toc-backref" href="#id4">Design</a><a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Design</a><a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
 <p>ljson is designed to be stored in files, the definition
 of a ljson file is:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>&lt;ljson_file&gt; = [&lt;header&gt;\n]&lt;ljson_content&gt;
@@ -108,7 +117,7 @@ of a ljson file is:</p>
 <p><code class="docutils literal"><span class="pre">&lt;json_object&gt;</span></code> can be any json object, as described on
 <a class="reference external" href="http://json.org/">json.org</a>.</p>
 <div class="section" id="header">
-<h3><a class="toc-backref" href="#id5">Header</a><a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Header</a><a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h3>
 <p>The header is a special json object that describes the data
 in the file. A header must be in the following format:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>&lt;header&gt; = &quot;{ \&quot;__type__\&quot;: \&quot;header\&quot;,&quot; &lt;fieldname&gt;&quot;: {&quot; &quot;\&quot;type\&quot;:&quot; &lt;type&gt;&quot;, \&quot;modifiers\&quot;:&quot; &lt;modifiers&gt; &quot;}&quot;
@@ -120,7 +129,7 @@ in the file. A header must be in the following format:</p>
 <p>The header is required by the on-disk implementation.</p>
 </div>
 <div class="section" id="datatypes">
-<h3><a class="toc-backref" href="#id6">Datatypes</a><a class="headerlink" href="#datatypes" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Datatypes</a><a class="headerlink" href="#datatypes" title="Permalink to this headline">¶</a></h3>
 <p>If you use ljson you are restricted to the following python
 data types (and their ljson types):</p>
 <ul class="simple">
@@ -137,9 +146,9 @@ these it is possible to store any kind of data.</p>
 </div>
 </div>
 <div class="section" id="usage">
-<h2><a class="toc-backref" href="#id7">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="without-a-python-module">
-<h3><a class="toc-backref" href="#id8">Without a Python Module</a><a class="headerlink" href="#without-a-python-module" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Without a Python Module</a><a class="headerlink" href="#without-a-python-module" title="Permalink to this headline">¶</a></h3>
 <p>ljson is designed to work without any third party python
 modules. One can read ljson data with the python built-in
 json module:</p>
@@ -158,7 +167,7 @@ data, if all data is required.</p>
 the ljson python module:</p>
 </div>
 <div class="section" id="with-the-ljson-module">
-<h3><a class="toc-backref" href="#id9">With the ljson Module</a><a class="headerlink" href="#with-the-ljson-module" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">With the ljson Module</a><a class="headerlink" href="#with-the-ljson-module" title="Permalink to this headline">¶</a></h3>
 <p>Using the ljson Module is simple and efficient if one wants
 to access just some fields, not the complete file.</p>
 <p>There are two base implementations: <code class="docutils literal"><span class="pre">ljson.base.mem</span></code> that
@@ -191,7 +200,7 @@ non-unique rows, like this:</p>
 </div>
 </div>
 <div class="section" id="using-ljson-to-store-data">
-<h3><a class="toc-backref" href="#id10">Using ljson to store data</a><a class="headerlink" href="#using-ljson-to-store-data" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Using ljson to store data</a><a class="headerlink" href="#using-ljson-to-store-data" title="Permalink to this headline">¶</a></h3>
 <p>Using ljson to store data is pretty simple:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fout</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
@@ -225,7 +234,7 @@ non-unique rows, like this:</p>
 </div>
 </div>
 <div class="section" id="todos">
-<h2><a class="toc-backref" href="#id11">Todos</a><a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Todos</a><a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>store bytes as b64</li>
 <li>fix the sql bytes representation</li>
@@ -242,6 +251,7 @@ non-unique rows, like this:</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">ljson &#8211; Line JSON</a><ul>
+<li><a class="reference internal" href="#quicklinks">Quicklinks</a></li>
 <li><a class="reference internal" href="#what-is-ljson">What is ljson?</a></li>
 <li><a class="reference internal" href="#why-ljson">Why ljson?</a></li>
 <li><a class="reference internal" href="#design">Design</a><ul>

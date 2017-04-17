@@ -3,6 +3,14 @@ ljson -- Line JSON
 
 .. contents::
 
+
+Quicklinks
+==========
+
+- `The Documentation <daknuett.github.io/ljson>`_
+- `The github.com repo <github.com/daknuett/ljson>`_
+- `The PyPi repo <https://pypi.python.org/pypi/ljson/>`_
+
 What is ljson?
 ==============
 
