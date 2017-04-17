@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst')) as f:
 
 setup(
 	name = "ljson",
-	version = "0.0.1",
+	version = "0.0.2",
 	description = "A table dataformat based on json",
 	long_description = long_description,
 	url = "https://github.com/daknuett/ljson",
@@ -29,7 +29,7 @@ setup(
 	install_requires = [
 #		"csv", "json" # those seem to be built-in
 	],
-	extras_require = {"ljson.conver.sql": "pymysql"},
+	extras_require = {"ljson.convert.sql": "pymysql"},
 	packages = find_packages()
      )
 
