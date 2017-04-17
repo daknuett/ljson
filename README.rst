@@ -7,8 +7,8 @@ ljson -- Line JSON
 Quicklinks
 ==========
 
-- `The Documentation <daknuett.github.io/ljson>`_
-- `The github.com repo <github.com/daknuett/ljson>`_
+- `The Documentation <https://daknuett.github.io/ljson>`_
+- `The github.com repo <https://github.com/daknuett/ljson>`_
 - `The PyPi repo <https://pypi.python.org/pypi/ljson/>`_
 
 What is ljson?
