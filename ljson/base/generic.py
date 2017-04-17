@@ -5,9 +5,10 @@ They are used by the memory and the disk implementation.
 """
 import json
 
-datatypes = (int, str, float, bool, bytes, json.loads)
+datatypes = (int, str, float, bool, bytes, dict, list)
 
 datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": json.loads}
+python_datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": (list, dict)}
 
 class Header(object):
 	def __init__(self, descriptor):
@@ -50,7 +51,7 @@ class Header(object):
 		if(self.descriptor[key]["type"] == None):
 			return True
 
-		if(isinstance(value, datatype_by_name[self.descriptor[key]["type"]])):
+		if(isinstance(value, python_datatype_by_name[self.descriptor[key]["type"]])):
 			return True
 		return False
 
