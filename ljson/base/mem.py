@@ -57,11 +57,11 @@ class Table(LjsonTable):
 	def additem(self, row):
 		for k, v in row.items():
 			self.header.check_data(k, v)
-			if("unique" in self.header.descriptor[k]):
+			if("unique" in self.header.descriptor[k]["modifiers"]):
 				# check if the value is unique
 				values = [r[k] for r in self.rows]
 				if(v in values):
-					raise ValueError("Value v is not unique: {}".format(v))
+					raise ValueError("Value {} is not unique: {}".format(k, v))
 		self.rows.append(row)
 	def __contains__(self, dct):
 		for row in self.rows:
