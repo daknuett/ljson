@@ -122,11 +122,15 @@ class LjsonSelector(object):
 		Set the values to the columns
 		"""
 		pass
-	def getone(self, column):
+	def getone(self, column = None):
 		"""
 		Return exactly one element.
 		If the selector matches multiple rows
 		the first row is choosen.
+
+		If ``column`` is None the entired row will be returned.
+
+		Returns ``None`` if no matching rows were found.
 		"""
 		pass
 	def __next__(self):

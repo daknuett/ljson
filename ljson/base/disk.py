@@ -96,14 +96,18 @@ class Selector(LjsonSelector):
 		self.table = table
 		self._first_next_call = True
 
-	def getone(self, column):
+	def getone(self, column = None):
 		self._first_next_call = True
 		self.file.seek(0)
 		self.file.readline()
 		for line in self.file:
 			row = json.loads(line)
 			if(row_matches(row, self.dct)):
-				return row[column]
+				if(column):
+					return row[column]
+				else:
+					return row
+		return None
 	def __getitem__(self, column):
 		self._first_next_call = True
 		self.file.seek(0)

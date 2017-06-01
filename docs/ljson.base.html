@@ -54,7 +54,7 @@
 <dd><p>Bases: <a class="reference internal" href="#ljson.base.generic.LjsonSelector" title="ljson.base.generic.LjsonSelector"><code class="xref py py-class docutils literal"><span class="pre">ljson.base.generic.LjsonSelector</span></code></a></p>
 <dl class="method">
 <dt id="ljson.base.disk.Selector.getone">
-<code class="descname">getone</code><span class="sig-paren">(</span><em>column</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/disk.html#Selector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Selector.getone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getone</code><span class="sig-paren">(</span><em>column=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/disk.html#Selector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Selector.getone" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -122,10 +122,12 @@ a file but instead use the static method from_file.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="ljson.base.generic.LjsonSelector.getone">
-<code class="descname">getone</code><span class="sig-paren">(</span><em>column</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/generic.html#LjsonSelector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonSelector.getone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getone</code><span class="sig-paren">(</span><em>column=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/generic.html#LjsonSelector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonSelector.getone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return exactly one element.
 If the selector matches multiple rows
 the first row is choosen.</p>
+<p>If <code class="docutils literal"><span class="pre">column</span></code> is None the entired row will be returned.</p>
+<p>Returns <code class="docutils literal"><span class="pre">None</span></code> if no matching rows were found.</p>
 </dd></dl>
 
 </dd></dl>
@@ -178,7 +180,7 @@ needed or the set is small.</p>
 <dd><p>Bases: <a class="reference internal" href="#ljson.base.generic.LjsonSelector" title="ljson.base.generic.LjsonSelector"><code class="xref py py-class docutils literal"><span class="pre">ljson.base.generic.LjsonSelector</span></code></a></p>
 <dl class="method">
 <dt id="ljson.base.mem.Selector.getone">
-<code class="descname">getone</code><span class="sig-paren">(</span><em>column</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/mem.html#Selector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.Selector.getone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getone</code><span class="sig-paren">(</span><em>column=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/mem.html#Selector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.Selector.getone" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

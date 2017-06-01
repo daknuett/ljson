@@ -163,11 +163,15 @@
 <span class="sd">		Set the values to the columns</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">pass</span>
-<div class="viewcode-block" id="LjsonSelector.getone"><a class="viewcode-back" href="../../../ljson.base.html#ljson.base.generic.LjsonSelector.getone">[docs]</a>	<span class="k">def</span> <span class="nf">getone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+<div class="viewcode-block" id="LjsonSelector.getone"><a class="viewcode-back" href="../../../ljson.base.html#ljson.base.generic.LjsonSelector.getone">[docs]</a>	<span class="k">def</span> <span class="nf">getone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Return exactly one element.</span>
 <span class="sd">		If the selector matches multiple rows</span>
 <span class="sd">		the first row is choosen.</span>
+
+<span class="sd">		If ``column`` is None the entired row will be returned.</span>
+
+<span class="sd">		Returns ``None`` if no matching rows were found.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">pass</span></div>
 	<span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

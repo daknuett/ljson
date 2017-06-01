@@ -83,8 +83,13 @@ class Selector(LjsonSelector):
 		self.table = table
 		self._index = 0
 
-	def getone(self, column):
-		return self.rows[0][column]
+	def getone(self, column = None):
+		if(not len(self.rows)):
+			return None
+		if(column != None):
+			return self.rows[0][column]
+		else:
+			return self.rows[0]
 	def __getitem__(self, column):
 		return [row[column] for row in self.rows]
 	def __setitem__(self, column, value):

@@ -7,6 +7,10 @@ github:
 	sed -i -- 's/_sources/sources/g'   *.html
 	sed -i -- 's/_images/images/g'   *.html
 	sed -i -- 's/_modules/modules/g' *.html
+	sed -i -- 's/_static/static/g'   guide/*.html
+	sed -i -- 's/_sources/sources/g' guide/*.html
+	sed -i -- 's/_images/images/g'   guide/*.html
+	sed -i -- 's/_modules/modules/g' guide/*.html
 	if [ -e  _modules/ ] ; then sed -i -- 's/_static/static/g'   _modules/$(modname)/*/*.html; fi
 	if [ -e  _modules/ ] ; then sed -i -- 's/_images/images/g'   _modules/$(modname)/*/*.html; fi
 	if [ -e  _modules/ ] ; then sed -i -- 's/_modules/modules/g' _modules/$(modname)/*/*.html; fi
