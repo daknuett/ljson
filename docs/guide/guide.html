@@ -25,6 +25,8 @@
     <script type="text/javascript" src="../static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="lson 0.0.2 documentation" href="../index.html" />
+    <link rel="next" title="ljson" href="../modules.html" />
+    <link rel="prev" title="ljson – Line JSON" href="../README.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -88,7 +90,7 @@ Accessing elements is done by either iterating:</p>
 </pre></div>
 </div>
 <p><strong>Note</strong>: You cannot set data using this method.</p>
-<p>The table items can be accessed by using queries.
+<p>Or by using queries.
 A query is basically indexing the table with a dict.
 This returns a Selector object. A selector is iterable
 and single elements can be accessed by the method
@@ -103,6 +105,76 @@ and single elements can be accessed by the method
 </div>
 <p>If the dict contains more than one key value pair
 all conditions will be joined by logical <code class="docutils literal"><span class="pre">and</span></code>.</p>
+</div>
+</div>
+<div class="section" id="cookbook">
+<h1>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+<p>This chapter contains some recipes for ljson.</p>
+<div class="section" id="simple-min-and-max">
+<h2>Simple Min and Max<a class="headerlink" href="#simple-min-and-max" title="Permalink to this headline">¶</a></h2>
+<p>As ljson tables are iterable, the default min and max
+functions will work:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">youngest</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>As suggested in &#8220;Data Science from Scratch&#8221; by Joel Grus one
+can write a simple function for that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">picker</span><span class="p">(</span><span class="n">keyname</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">keyname</span><span class="p">]</span>
+
+<span class="n">oldest</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">picker</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="min-and-max-and-queries">
+<h2>Min and Max and Queries<a class="headerlink" href="#min-and-max-and-queries" title="Permalink to this headline">¶</a></h2>
+<p>Selectors are iterable too, so... guess what:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">oldest_peter</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">table</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;peter&quot;</span><span class="p">}],</span> <span class="n">key</span> <span class="o">=</span> <span class="n">picker</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="converting-csv-to-ljson">
+<h2>Converting CSV to LJSON<a class="headerlink" href="#converting-csv-to-ljson" title="Permalink to this headline">¶</a></h2>
+<p>Assuming you have a file called <code class="docutils literal"><span class="pre">input.csv</span></code> and you want
+to convert it to a file <code class="docutils literal"><span class="pre">output.ljson</span></code>, you can use the
+function <code class="docutils literal"><span class="pre">ljson.convert.csv.csv2file</span></code>. At first take
+a look at your file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nb">id</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">name</span>
+<span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="n">Peter</span>
+<span class="mi">1</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="n">Gustav</span>
+<span class="mi">2</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">Peter</span>
+<span class="mi">3</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="n">Sally</span>
+</pre></div>
+</div>
+<p>Now open the files and convert them:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ljson.convert.csv</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">fio</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;input.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.ljson&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">disk_table</span> <span class="o">=</span> <span class="n">csv2file</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">})</span>
+<span class="n">fio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This is the content of output.ljson:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;__type__&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="p">[]}}</span>
+<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Peter&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Gustav&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Peter&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sally&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="converting-ljson-to-csv">
+<h2>Converting LJSON to CSV<a class="headerlink" href="#converting-ljson-to-csv" title="Permalink to this headline">¶</a></h2>
+<p>This is pretty simple as well. It is recommended to use the
+on disk implementation for those conversions, as they avoid
+loading tons of data into your ram.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">table2csv</span><span class="p">(</span><span class="n">disk_table</span><span class="p">,</span> <span class="n">fout</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -120,11 +192,20 @@ all conditions will be joined by logical <code class="docutils literal"><span cl
 <li><a class="reference internal" href="#using-tables">Using Tables</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#cookbook">Cookbook</a><ul>
+<li><a class="reference internal" href="#simple-min-and-max">Simple Min and Max</a></li>
+<li><a class="reference internal" href="#min-and-max-and-queries">Min and Max and Queries</a></li>
+<li><a class="reference internal" href="#converting-csv-to-ljson">Converting CSV to LJSON</a></li>
+<li><a class="reference internal" href="#converting-ljson-to-csv">Converting LJSON to CSV</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../README.html" title="previous chapter">ljson &#8211; Line JSON</a></li>
+      <li>Next: <a href="../modules.html" title="next chapter">ljson</a></li>
   </ul></li>
 </ul>
 </div>
