@@ -5,7 +5,7 @@ This module might be used if the entired set is
 needed or the set is small.
 """
 
-import json
+import json, os
 from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
 
 class Table(LjsonTable):
@@ -25,6 +25,23 @@ class Table(LjsonTable):
 		header = Header.from_file(fin)
 		rows = [json.loads(line) for line in fin if not line.isspace()]
 		return Table(header, rows)
+	@staticmethod
+	def open(filename):
+		"""
+		Equivalent to ``Table.from_file(open(filename, "r"))``
+		"""
+		if(not os.path.exists(filename)):
+			raise IOError("cannot open {} for reading: does not exist".format(filename))
+		fin = open(filename, "r")
+		table = Table.from_file(fin)
+
+		fin.close()
+		return table
+
+	def __enter__(self):
+		return self
+	def __exit__(self, exc_type, exc_value, traceback):
+		return False
 
 	def __repr__(self):
 		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__, 

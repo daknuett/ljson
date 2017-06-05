@@ -94,6 +94,12 @@ class LjsonTable(object):
 		Construct the table from the given file.
 		"""
 		pass
+	@staticmethod
+	def open(filename):
+		"""
+		Equivalent to ``Table.from_file(open(filename, "r+"))``
+		"""
+		pass
 	def additem(self, row):
 		"""
 		Add the row to the table.

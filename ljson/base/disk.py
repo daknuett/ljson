@@ -2,7 +2,7 @@
 An on-disk ljson implementation.
 """
 
-import json
+import json, os
 from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
 from collections import deque
 from tempfile import TemporaryFile
@@ -23,9 +23,21 @@ class Table(LjsonTable):
 		self._first_next_call = True
 
 	@staticmethod
+	def open(filename):
+		"""
+		Equivalent to ``Table.from_file(open(filename, "r+"))``
+		"""
+		if(not os.path.exists(filename)):
+			raise IOError("cannot open {} for reading: does not exist".format(filename))
+		fin = open(filename, "r+")
+		header = Header.from_file(fin)
+		return Table(header, fin)
+
+
+	@staticmethod
 	def from_file(fin):
 		"""
-		WARNING: ``file_`` **must** be opened in ``w+`` mode!
+		WARNING: ``file_`` **must** be opened in ``r+`` mode!
 		"""
 		header = Header.from_file(fin)
 		return Table(header, fin)
@@ -42,6 +54,15 @@ class Table(LjsonTable):
 			self.file.seek(0)
 			self.file.readline()
 		return json.loads(self.file.__next__())
+
+	def __enter__(self):
+		return self
+	def __exit__(self, exc_type, exc_value, traceback):
+		self.file.close()
+		del(self.header)
+		del(self)
+		return False
+
 	def save(self, fout):
 		"""
 		Save this table to the file ``fout``.
