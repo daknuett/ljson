@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ljson.base package &mdash; lson 0.0.2 documentation</title>
+    <title>ljson.base package &mdash; lson 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.2',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="lson 0.0.2 documentation" href="index.html" />
+    <link rel="top" title="lson 0.1.0 documentation" href="index.html" />
     <link rel="up" title="ljson package" href="ljson.html" />
     <link rel="next" title="ljson.convert package" href="ljson.convert.html" />
     <link rel="prev" title="ljson package" href="ljson.html" />
@@ -76,7 +76,13 @@ a file but instead use the static method from_file.</p>
 <dl class="staticmethod">
 <dt id="ljson.base.disk.Table.from_file">
 <em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>fin</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/disk.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Table.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>WARNING: <code class="docutils literal"><span class="pre">file_</span></code> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
+<dd><p>WARNING: <code class="docutils literal"><span class="pre">file_</span></code> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">r+</span></code> mode!</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ljson.base.disk.Table.open">
+<em class="property">static </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/disk.html#Table.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Table.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r+&quot;))</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -148,6 +154,12 @@ the first row is choosen.</p>
 <dd><p>Construct the table from the given file.</p>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="ljson.base.generic.LjsonTable.open">
+<em class="property">static </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/generic.html#LjsonTable.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonTable.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r+&quot;))</span></code></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="ljson.base.generic.LjsonTable.save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>fout</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/generic.html#LjsonTable.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonTable.save" title="Permalink to this definition">¶</a></dt>
@@ -201,6 +213,12 @@ a file but instead use the static method from_file.</p>
 <dt id="ljson.base.mem.Table.from_file">
 <em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>fin</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/mem.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.Table.from_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ljson.base.mem.Table.open">
+<em class="property">static </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/base/mem.html#Table.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.Table.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r&quot;))</span></code></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ljson.base.mem.Table.save">

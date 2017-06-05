@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quickstart &mdash; lson 0.0.2 documentation</title>
+    <title>Quickstart &mdash; lson 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="../static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.0.2',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="lson 0.0.2 documentation" href="../index.html" />
+    <link rel="top" title="lson 0.1.0 documentation" href="../index.html" />
     <link rel="next" title="ljson" href="../modules.html" />
     <link rel="prev" title="ljson – Line JSON" href="../README.html" />
    
@@ -176,6 +176,18 @@ loading tons of data into your ram.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="using-context-managers">
+<h2>Using Context Managers<a class="headerlink" href="#using-context-managers" title="Permalink to this headline">¶</a></h2>
+<p>Since version 0.1.0 ljson tables are context managers. This
+makes it easy to manage disk tables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DiskTable</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;output.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">table</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="n">table2csv</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">fout</span><span class="p">)</span>
+
+<span class="c1"># now both fout and table are closed properly.</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -197,6 +209,7 @@ loading tons of data into your ram.</p>
 <li><a class="reference internal" href="#min-and-max-and-queries">Min and Max and Queries</a></li>
 <li><a class="reference internal" href="#converting-csv-to-ljson">Converting CSV to LJSON</a></li>
 <li><a class="reference internal" href="#converting-ljson-to-csv">Converting LJSON to CSV</a></li>
+<li><a class="reference internal" href="#using-context-managers">Using Context Managers</a></li>
 </ul>
 </li>
 </ul>

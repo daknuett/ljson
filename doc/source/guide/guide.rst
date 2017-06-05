@@ -144,3 +144,15 @@ loading tons of data into your ram.
 	table2csv(disk_table, fout)
 	fout.close()
 
+Using Context Managers
+======================
+
+Since version 0.1.0 ljson tables are context managers. This
+makes it easy to manage disk tables::
+
+	with DiskTable.open("output.json") as table:
+		with open("output.csv", "w") as fout:
+			table2csv(table, fout)
+
+	# now both fout and table are closed properly.
+
