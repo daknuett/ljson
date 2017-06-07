@@ -107,6 +107,26 @@ class Table(LjsonTable):
 		self.file.readline()
 		return [json.loads(line) for line in self.file]
 
+	def __delitem__(self, dct):
+		self._first_next_call = True
+		self.file.seek(0)
+		buf = TemporaryFile(mode = "w+")
+		buf.write(self.file.readline())
+		deleted_row = False
+		for line in self.file:
+			r = json.loads(line)
+			if(row_matches(r, dct)):
+				deleted_row = True
+			else:
+				buf.write(line)
+		buf.seek(0)
+		self.file.seek(0)
+		self.file.truncate(0)
+		for line in buf:
+			self.file.write(line)
+		buf.close()
+		if(not deleted_row):
+			raise KeyError("no matching rows found: {}".format(dct))
 
 	
 class Selector(LjsonSelector):

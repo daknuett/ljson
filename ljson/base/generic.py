@@ -113,6 +113,11 @@ class LjsonTable(object):
 			{"id": 4} in table
 		"""
 		pass
+	def __delitem__(self, dct):
+		"""
+		Delete all matching items.
+		"""
+		pass
 
 
 class LjsonSelector(object):

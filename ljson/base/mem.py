@@ -5,7 +5,7 @@ This module might be used if the entired set is
 needed or the set is small.
 """
 
-import json, os
+import json, os, collections
 from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
 
 class Table(LjsonTable):
@@ -89,6 +89,16 @@ class Table(LjsonTable):
 		return iter(self.rows)
 	def __list__(self):
 		return list(self.rows)
+	def __delitem__(self, dct):
+		que = collections.deque()
+		for i, row in enumerate(self.rows):
+			if(row_matches(row, dct)):
+				que.appendleft(i)
+		if(not len(que)):
+			raise KeyError("no matching rows found: {}".format(dct))
+		for i in que:
+			del(self.rows[i])
+			
 
 
 
