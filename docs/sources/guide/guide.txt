@@ -156,3 +156,12 @@ makes it easy to manage disk tables::
 
 	# now both fout and table are closed properly.
 
+
+Deleting Items
+==============
+
+Deleting rows is supported since 0.1.1::
+
+	with DiskTable.open("output.json") as table:
+		del(table[{"id": 0}])
+
