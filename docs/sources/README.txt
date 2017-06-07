@@ -15,7 +15,7 @@ What is ljson?
 ==============
 
 ljson is an attempt to create a database model suiting the
-needs of modern data procession. It is designed to work
+needs of modern data processing. It is designed to work
 faster than usual json, but to keep the simple but yet
 elegant object representation.
 
