@@ -59,6 +59,7 @@ html:
 	@echo "Copying files to /docs..."
 	if [ -e ../docs ] ;then rm -rf ../docs;fi
 	cp -r $(BUILDDIR)/html ../docs
+	cp sitemap.txt ../docs
 	@echo "done"
 	@echo "calling postbuild..."
 	cp github-make ../docs/Makefile
