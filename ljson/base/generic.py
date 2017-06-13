@@ -9,6 +9,13 @@ datatypes = (int, str, float, bool, bytes, dict, list)
 
 datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": json.loads}
 python_datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": (list, dict)}
+inversed_datatypes = {}
+for k, v in python_datatype_by_name.items():
+	if(not isinstance(v, tuple)):
+		inversed_datatypes[v] = k
+	else:
+		for pytype in v:
+			inversed_datatypes[pytype] = k
 
 class Header(object):
 	def __init__(self, descriptor):
