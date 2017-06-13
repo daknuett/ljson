@@ -14,3 +14,6 @@ most unique.
 
 
 """
+
+from .mem import Table
+from .generic import SlapdashHeader
