@@ -53,6 +53,9 @@ class Table(LjsonTable):
 			self._first_next_call = False
 			self.file.seek(0)
 			self.file.readline()
+		row = self.file.__next__()
+		while(row.strip() == ""):
+			row = self.file.__next__()
 		return json.loads(self.file.__next__())
 
 	def __enter__(self):
@@ -70,6 +73,8 @@ class Table(LjsonTable):
 		self._first_next_call = True
 		self.file.seek(0)
 		for r in self.file:
+			if(r.strip == ""):
+				continue
 			fout.write(r)
 	def additem(self, row):
 		"""
@@ -100,12 +105,12 @@ class Table(LjsonTable):
 		self._first_next_call = True
 		self.file.seek(0)
 		self.file.readline()
-		return iter([json.loads(line) for line in self.file])
+		return iter([json.loads(line) for line in self.file if line.strip() != ""])
 	def __list__(self):
 		self._first_next_call = True
 		self.file.seek(0)
 		self.file.readline()
-		return [json.loads(line) for line in self.file]
+		return [json.loads(line) for line in self.file if line.strip() != ""]
 
 	def __delitem__(self, dct):
 		self._first_next_call = True
@@ -114,6 +119,8 @@ class Table(LjsonTable):
 		buf.write(self.file.readline())
 		deleted_row = False
 		for line in self.file:
+			if(line.isspace()):
+				continue
 			r = json.loads(line)
 			if(row_matches(r, dct)):
 				deleted_row = True
