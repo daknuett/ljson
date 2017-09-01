@@ -138,11 +138,10 @@ class Selector(object):
 	def __getitem__(self, column):
 		return [document[column] for document in self.documents]
 	def __setitem__(self, column, value):
-		documents = self.table.documents
 		for i, r in enumerate(self.table.documents):
 			if(document_matches(r, self.dct)):
 				r[column] = value
-		self.table.documents = documents
+				self.table.documents[i] = r
 	def __next__(self):
 		if(self._index >= len(self.documents)):
 			self._index = 0
