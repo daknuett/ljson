@@ -41,3 +41,11 @@ def test_read_write():
 	table_in = ljson.convert.csv.csv2table(fio, types = {k: v["type"] for k,v in header_descriptor.items()})
 
 	assert list(table_in) == data
+
+	f = StringIO()
+
+	fio.seek(0)
+
+	disk_table = ljson.convert.csv.csv2file(fio, f, types = {k: v["type"] for k,v in header_descriptor.items()})
+
+	assert list(disk_table) == data
