@@ -15,6 +15,9 @@ Quicklinks
 Build and Test Status
 =====================
 
+This package is tested using ``pytest`` on `travis-ci <https://travis-ci.org>`_. The
+current build-status is:
+
 .. image:: https://travis-ci.org/daknuett/ljson.svg?branch=master
     :target: https://travis-ci.org/daknuett/ljson
 
