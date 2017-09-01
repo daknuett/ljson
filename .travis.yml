@@ -1,8 +1,8 @@
 language: python3
 
-script:
-	- python3 setup.py install .
-	- ( cd doc && make html )
+install:
+- python3 setup.py install .
+- ( cd doc && make html )
 
 deploy: 
 	- pytest -vv
