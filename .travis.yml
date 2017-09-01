@@ -3,6 +3,8 @@ language: python3
 before_install:
 - sudo apt-get install python-sphinx
 - sudo apt-get install python3-setuptools 
+- sudo apt-get install python3-pip
+- sudo python3 -m pip install alabaster
 
 install:
 - python3 setup.py install --user
