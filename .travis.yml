@@ -6,6 +6,7 @@ before_install:
 - sudo apt-get install python3-pip
 - sudo python3 -m pip install alabaster
 - sudo python3 -m pip install --upgrade sphinx
+- sudo python3 -m pip install pytest
 
 install:
 - python3 setup.py install --user
