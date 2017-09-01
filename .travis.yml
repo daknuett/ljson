@@ -2,6 +2,7 @@ language: python3
 
 before_install:
 - sudo apt-get install python-sphinx
+- sudo python3 -m pip install setuptools 
 
 install:
 - python3 setup.py install --user
