@@ -1,7 +1,7 @@
 language: python3
 
 install:
-- python3 setup.py install .
+- python3 setup.py install --user
 - ( cd doc && make html )
 
 script: pytest -vv 
