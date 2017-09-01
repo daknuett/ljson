@@ -11,6 +11,13 @@ Quicklinks
 - `The github.com repo <https://github.com/daknuett/ljson>`_
 - `The PyPi repo <https://pypi.python.org/pypi/ljson/>`_
 
+
+Build and Test Status
+=====================
+
+.. image:: https://travis-ci.org/daknuett/ljson.svg?branch=master
+    :target: https://travis-ci.org/daknuett/ljson
+
 What is ljson?
 ==============
 
