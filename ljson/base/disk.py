@@ -54,9 +54,9 @@ class Table(LjsonTable):
 			self.file.seek(0)
 			self.file.readline()
 		row = self.file.__next__()
-		while(row.strip() == ""):
+		while(row.isspace()):
 			row = self.file.__next__()
-		return json.loads(self.file.__next__())
+		return json.loads(row)
 
 	def __enter__(self):
 		return self
@@ -102,10 +102,7 @@ class Table(LjsonTable):
 				return True
 		return False
 	def __iter__(self):
-		self._first_next_call = True
-		self.file.seek(0)
-		self.file.readline()
-		return iter([json.loads(line) for line in self.file if line.strip() != ""])
+		return self
 	def __list__(self):
 		self._first_next_call = True
 		self.file.seek(0)
@@ -173,6 +170,8 @@ class Selector(LjsonSelector):
 		buf = TemporaryFile(mode = "w+")
 		buf.write(self.file.readline())
 		for line in self.file:
+			if(line.isspace()):
+				continue
 			r = json.loads(line)
 			if(row_matches(r, self.dct)):
 				r[column] = value
@@ -192,20 +191,17 @@ class Selector(LjsonSelector):
 			self._first_next_call = False
 			self.file.seek(0)
 			self.file.readline()
-		return json.loads(self.file.__next__())
+		row = self.file.__next__()
+		data = {}
+		if(not row.isspace()):
+			data = json.loads(row)
+		while(row.isspace() or not row_matches(data, self.dct)):
+			row = self.file.__next__()
+			data = json.loads(row) if not row.isspace() else {}
+		return data
 	def __iter__(self):
-		self._first_next_call = True
-		self.file.seek(0)
-		self.file.readline()
-		
-		res = deque()
-		
-		for line in self.file:
-			row = json.loads(line)
-			if(row_matches(row, self.dct)):
-				res.append(row)
+		return self
 
-		return iter(res)
 	def __list__(self):
 		self._first_next_call = True
 		self.file.seek(0)

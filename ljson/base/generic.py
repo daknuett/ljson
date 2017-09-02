@@ -176,6 +176,7 @@ class UniqueLjsonSelector(object):
 
 def row_matches(row, dct):
 	for k, v in dct.items():
+		print(__file__, k, v, row[k], row[k] == v)
 		if(row[k] != v):
 			return False
 	return True

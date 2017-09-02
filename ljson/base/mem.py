@@ -86,7 +86,7 @@ class Table(LjsonTable):
 				return True
 		return False
 	def __iter__(self):
-		return iter(self.rows)
+		return self
 	def __list__(self):
 		return list(self.rows)
 	def __delitem__(self, dct):
