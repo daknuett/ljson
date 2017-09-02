@@ -100,6 +100,8 @@ class SlapdashTable(object):
 	def additem(self, document):
 		"""
 		Add a document to the table.
+
+		This will update the header according to the inserted document.
 		"""
 		pass
 	def save(self, fout):
