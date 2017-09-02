@@ -38,7 +38,7 @@ class SlapdashHeader(object):
 		if(not "__type__" in data or data["__type__"] != "slapdash-header"):
 			return SlapdashHeader({})
 		del(data["__type__"])
-		return Header(data)
+		return SlapdashHeader(data)
 
 class SlapdashTable(object):
 	"""
