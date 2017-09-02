@@ -120,6 +120,7 @@ class Table(SlapdashTable):
 	def __iter__(self):
 		return iter(self.documents)
 
+# FIXME: add abstract base class for Selector
 class Selector(object):
 	def __init__(self, header, dct, table):
 		self.header = header
