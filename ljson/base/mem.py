@@ -59,7 +59,6 @@ class Table(LjsonTable):
 	
 	def __next__(self):
 		if(self._index >= len(self.rows)):
-			self._index = 0
 			raise StopIteration()
 
 		res = self.rows[self._index]
@@ -86,9 +85,8 @@ class Table(LjsonTable):
 				return True
 		return False
 	def __iter__(self):
+		self._index = 0
 		return self
-	def __list__(self):
-		return list(self.rows)
 	def __delitem__(self, dct):
 		que = collections.deque()
 		for i, row in enumerate(self.rows):
@@ -127,15 +125,13 @@ class Selector(LjsonSelector):
 		self.table.rows = rows
 	def __next__(self):
 		if(self._index >= len(self.rows)):
-			self._index = 0
 			raise StopIteration()
 		res = self.rows[self._index]
 		self._index += 1
 		return res
 	def __iter__(self):
-		return iter(self.rows)
-	def __list__(self):
-		return list(self.rows)
+		self._index = 0
+		return self
 
 class UniqueSelector(UniqueLjsonSelector):
 	def __init__(self, header, dct, table, value):

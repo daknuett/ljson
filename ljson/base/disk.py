@@ -102,12 +102,8 @@ class Table(LjsonTable):
 				return True
 		return False
 	def __iter__(self):
-		return self
-	def __list__(self):
 		self._first_next_call = True
-		self.file.seek(0)
-		self.file.readline()
-		return [json.loads(line) for line in self.file if line.strip() != ""]
+		return self
 
 	def __delitem__(self, dct):
 		self._first_next_call = True
@@ -200,20 +196,9 @@ class Selector(LjsonSelector):
 			data = json.loads(row) if not row.isspace() else {}
 		return data
 	def __iter__(self):
+		self._first_next_call = True
 		return self
 
-	def __list__(self):
-		self._first_next_call = True
-		self.file.seek(0)
-		self.file.readline()
-		res = deque()
-		
-		for line in self.file:
-			row = json.loads(line)
-			if(row_matches(row, self.dct)):
-				res.append(row)
-
-		return list(res)
 	
 
 

@@ -86,7 +86,6 @@ class Table(SlapdashTable):
 
 	def __next__(self):
 		if(self._index >= self.document_count):
-			self._index = 0
 			raise StopIteration()
 
 		res = self.documents[self._index]
@@ -118,7 +117,8 @@ class Table(SlapdashTable):
 	def __getitem__(self, dct):
 		return Selector(self.header, dct, self)
 	def __iter__(self):
-		return iter(self.documents)
+		self._index = 0
+		return self
 
 # FIXME: add abstract base class for Selector
 class Selector(object):
@@ -145,13 +145,11 @@ class Selector(object):
 				self.table.documents[i] = r
 	def __next__(self):
 		if(self._index >= len(self.documents)):
-			self._index = 0
 			raise StopIteration()
 		res = self.documents[self._index]
 		self._index += 1
 		return res
 	def __iter__(self):
-		return iter(self.documents)
-	def __list__(self):
-		return list(self.documents)
+		self._index = 0
+		return self
 
