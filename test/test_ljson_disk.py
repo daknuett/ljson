@@ -1,6 +1,7 @@
 import ljson.base.mem
 import ljson.base.disk
 import ljson.base.generic
+import copy
 
 data = [
 {
@@ -10,7 +11,7 @@ data = [
 },
 {
 	"age": 41,
-	"name": "lousie",
+	"name": "louise",
 	"lname": "griffin"
 },
 {
@@ -28,6 +29,7 @@ header_descriptor = {
 
 def test_read():
 	from io import StringIO
+
 
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
@@ -74,10 +76,10 @@ def test_edit():
 
 	assert list(table) == data + [{"age": 16, "name": "meg", "lname": "griffin"}]
 	
-
 	fio.seek(0)
 
 	table_in = ljson.base.mem.Table.from_file(fio)
+	table._first_next_call = True
 
 	assert list(table) == list(table_in)
 
@@ -113,4 +115,29 @@ def test_zipping():
 		assert row_data == row_mem
 		assert row_data == row_disk
 
+def test_selection_iter():
+	from io import StringIO
+
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
+
+	fio = StringIO()
+
+	table.save(fio)
+	fio.seek(0)
+
+	table_in = ljson.base.disk.Table.from_file(fio)
+
+	for row in table_in[{"lname": "griffin"}]:
+		assert row["lname"] == "griffin"
+
+
+	table_in[{"name": "chris"}]["lname"] = "peters"
+
+	for row in table_in[{"lname": "griffin"}]:
+		assert row["lname"] == "griffin"
+	for row in table_in[{"lname": "peters"}]:
+		assert row["name"] == "chris"
+
+	
 
