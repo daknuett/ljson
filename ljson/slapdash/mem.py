@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from .generic import SlapdashHeader, SlapdashTable, document_matches
-from ..base.generic import inversed_datatypes
+from ..base.generic import inversed_datatypes, loads_item, dump_item, dumps_item
 from collections import defaultdict, deque
 import json
 
@@ -113,7 +113,7 @@ class Table(SlapdashTable):
 		fout.write(self.header.get_header())
 		for r in self.documents:
 			fout.write("\n")
-			json.dump(r, fout)
+			dump_item(r, None, fout)
 	
 	def __getitem__(self, dct):
 		return Selector(self.header, dct, self)

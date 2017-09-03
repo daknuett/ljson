@@ -1,5 +1,5 @@
 from .generic import SlapdashHeader, SlapdashTable, document_matches
-from ..base.generic import inversed_datatypes
+from ..base.generic import inversed_datatypes, dumps_item, dump_item, loads_item
 from collections import defaultdict, deque
 import json, os
 
@@ -85,7 +85,7 @@ class Table(SlapdashTable):
 
 		self.file.seek(0, 2) # EOF here
 		self.file.write("\n")
-		json.dump(document, self.file)
+		dump_item(document, None, self.file)
 
 	def __getitem__(self, dct):
 		return Selector(self.header, dct, self)
@@ -99,7 +99,7 @@ class Table(SlapdashTable):
 		for row in self.file:
 			if(row.isspace()):
 				continue
-			if(document_matches(json.loads(row), dct)):
+			if(document_matches(loads_item(row, None), dct)):
 				return True
 		return False
 	def save(self, fout):
@@ -120,7 +120,7 @@ class Table(SlapdashTable):
 		row = self.file.__next__()
 		while(row.strip() == ""):
 			row = self.file.__next__()
-		return json.loads(row)
+		return loads_item(row, None)
 
 	def __enter__(self):
 		return self
@@ -174,7 +174,7 @@ class Table(SlapdashTable):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = loads_item(line, None)
 			if(document_matches(r, dct)):
 				deleted_row = True
 				self.document_count -= 1
@@ -201,7 +201,7 @@ class Selector(object):
 		self.file.seek(0)
 		self.file.readline()
 		for line in self.file:
-			row = json.loads(line)
+			row = loads_item(line, None)
 			if(document_matches(row, self.dct)):
 				if(column):
 					return row[column]
@@ -215,7 +215,7 @@ class Selector(object):
 		self.file.readline()
 		res = deque()
 		for line in self.file:
-			row = json.loads(line)
+			row = loads_item(line, None)
 			if(document_matches(row, self.dct)):
 				res.append(row[column])
 		return list(res)
@@ -230,10 +230,10 @@ class Selector(object):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = loads_item(line, None)
 			if(document_matches(r, self.dct)):
 				r[column] = value
-				json.dump(r, buf)
+				dump_item(r, None, buf)
 				buf.write("\n")
 			else:
 				buf.write(line)
@@ -250,10 +250,10 @@ class Selector(object):
 		row = self.file.__next__()
 		data = {}
 		if(not row.isspace()):
-			data = json.loads(row)
+			data = loads_item(row, None)
 		while(row.isspace() or not document_matches(data, self.dct)):
 			row = self.file.__next__()
-			data = json.loads(row) if not row.isspace() else {}
+			data = loads_item(row, None) if not row.isspace() else {}
 		return data
 	def __iter__(self):
 		self.table._first_next_call = True

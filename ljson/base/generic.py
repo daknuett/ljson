@@ -5,6 +5,8 @@ They are used by the memory and the disk implementation.
 """
 import json
 
+from .preprocessing import *
+
 datatypes = (int, str, float, bool, bytes, dict, list)
 
 datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": json.loads}
@@ -16,6 +18,9 @@ for k, v in python_datatype_by_name.items():
 	else:
 		for pytype in v:
 			inversed_datatypes[pytype] = k
+
+	
+
 
 class Header(object):
 	def __init__(self, descriptor):
@@ -182,3 +187,65 @@ def row_matches(row, dct):
 		if(row[k] != v):
 			return False
 	return True
+
+def get_ljson_type_from_python(item, item_name, header):
+	"""
+	This function tries to read the correct datatype from the
+	given header. If the header does not contain the required information
+	the function ``ljson.base.preprocessing.guess_ljson_type_from_python``
+	will be used. 
+	"""
+	if(isinstance(header, Header) and 
+			item_name in header.descriptor and
+			header.descriptor[item_name]["type"]):
+		ljson_type = header.descriptor[item_name]["type"]
+	else:
+		ljson_type = guess_ljson_type_from_python(item)
+
+	return ljson_type
+def get_ljson_type_from_loaded(item, item_name, header):
+	"""
+	Receive the ljson type either via the given header,
+	or with ``ljson.base.preprocessing.guess_ljson_type_from_loaded``.
+	"""
+	if(isinstance(header, Header) and 
+			item_name in header.descriptor and 
+			header.descriptor[item_name]["type"]):
+		ljson_type = header.descriptor[item_name]["type"]
+	else:
+		ljson_type = guess_ljson_type_from_loaded(item)
+
+	return ljson_type
+
+
+
+def make_ready_for_json(item, item_name, header):
+	"""
+	Make the item ready to be dumped to a JSON representation.
+
+	Uses ``get_ljson_type_from_python``.
+	"""
+
+	ljson_type = get_ljson_type_from_python(item, item_name, header)
+
+	return dump_functions_ljson[ljson_type](item)
+
+def make_postload(item, item_name, header):
+	"""
+	Makes the loaded item ready for python usage.
+
+	Uses ``get_ljson_type_from_loaded``.
+	"""
+	ljson_type = get_ljson_type_from_loaded(item, item_name, header)
+	return load_functions_ljson[ljson_type](item)
+
+def dump_item(item, header, file_):
+
+	json.dump({k: make_ready_for_json(v, k, header) for k,v in item.items()}, file_)
+
+def dumps_item(item, header):
+	return json.dumps({k: make_ready_for_json(v, k, header) for k,v in item.items()})
+
+def loads_item(item, header):
+	loaded = json.loads(item)
+	return {k: make_postload(v, k, header) for k,v in loaded.items()}

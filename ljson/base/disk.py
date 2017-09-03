@@ -3,7 +3,9 @@ An on-disk ljson implementation.
 """
 
 import json, os
-from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
+from .generic import (Header, LjsonTable, LjsonSelector,
+		UniqueLjsonSelector, row_matches, loads_item,
+		dump_item, dumps_item)
 from collections import deque
 
 class Table(LjsonTable):
@@ -57,7 +59,7 @@ class Table(LjsonTable):
 		row = self.file.__next__()
 		while(row.isspace()):
 			row = self.file.__next__()
-		return json.loads(row)
+		return loads_item(row, self.header)
 
 	def __enter__(self):
 		return self
@@ -91,7 +93,7 @@ class Table(LjsonTable):
 						raise ValueError("Value {} is not unique: {}".format(k, v))
 		self.file.seek(0, 2) # EOF here
 		self.file.write("\n")
-		json.dump(row, self.file)
+		dump_item(row, self.header, self.file)
 	def __contains__(self, dct):
 		self._first_next_call = True
 		self.file.seek(0)
@@ -100,7 +102,7 @@ class Table(LjsonTable):
 		for row in self.file:
 			if(row.isspace()):
 				continue
-			if(row_matches(json.loads(row), dct)):
+			if(row_matches(loads_item(row, self.header), dct)):
 				return True
 		return False
 	def __iter__(self):
@@ -118,7 +120,7 @@ class Table(LjsonTable):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = loads_item(line, self.header)
 			if(row_matches(r, dct)):
 				deleted_row = True
 			else:
@@ -147,7 +149,7 @@ class Selector(LjsonSelector):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			row = json.loads(line)
+			row = loads_item(line, self.header)
 			if(row_matches(row, self.dct)):
 				if(column):
 					return row[column]
@@ -162,7 +164,7 @@ class Selector(LjsonSelector):
 			self.file.readline()
 		res = deque()
 		for line in self.file:
-			row = json.loads(line)
+			row = loads_item(line, self.header)
 			if(row_matches(row, self.dct)):
 				res.append(row[column])
 		return list(res)
@@ -178,10 +180,10 @@ class Selector(LjsonSelector):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = loads_item(line, self.header)
 			if(row_matches(r, self.dct)):
 				r[column] = value
-				json.dump(r, buf)
+				dump_item(r, self.header, buf)
 				buf.write("\n")
 			else:
 				buf.write(line)
@@ -199,10 +201,10 @@ class Selector(LjsonSelector):
 		row = self.file.__next__()
 		data = {}
 		if(not row.isspace()):
-			data = json.loads(row)
+			data = loads_item(row, self.table.header)
 		while(row.isspace() or not row_matches(data, self.dct)):
 			row = self.file.__next__()
-			data = json.loads(row) if not row.isspace() else {}
+			data = loads_item(row, self.table.header) if not row.isspace() else {}
 		return data
 	def __iter__(self):
 		self.table._first_next_call = True

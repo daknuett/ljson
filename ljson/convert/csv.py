@@ -8,6 +8,7 @@ import csv, json
 from ..base.generic import datatype_by_name, Header
 from ..base.mem import Table
 from ..base.disk import Table as DiskTable
+from .preprocessing import *
 
 def csv2table(fin, types = {}, modifiers = {},
 		fieldnames=None, restkey=None, restval=None, dialect='excel', **fmtargs):
@@ -64,6 +65,7 @@ def csv2table(fin, types = {}, modifiers = {},
 	table = Table(header, [])
 
 	for row in reader:
+		row = {k: make_csv_postload(v, k, header) for k,v in row.items()}
 		# This converts all non-str elements.
 		# it is kind of hard to read.
 		# This equals
@@ -122,9 +124,10 @@ def csv2file(fin, fout, types = {}, modifiers = {},
 	table = DiskTable(header, fout)
 
 	for row in reader:
+		row = {k: make_csv_postload(v, k, header) for k,v in row.items()}
 		# This converts all non-str elements.
 		# it is kind of hard to read.
-		# This equals
+		# This is equivalent to 
 		#
 		#	 for k,v in row.items():
 		#		if(k in converters):
@@ -156,7 +159,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 	# XXX I do not know why but ONLY in doctest
 	# this gets messed up. The field "__type__"
 	# should get deleted in Header.__init__.
-	# FIXME explan this.
+	# FIXME explain this.
 	if("__type__" in fieldnames):
 		del(fieldnames[fieldnames.index("__type__")])
 	writer = csv.DictWriter(fout, fieldnames, 
@@ -167,7 +170,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 			**kwds)
 	writer.writeheader()
 	for row in table:
-		row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+		row = {k: make_ready_for_csv(v, k, table.header)
 			for k,v in row.items()}
 		writer.writerow(row)
 

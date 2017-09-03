@@ -6,7 +6,9 @@ needed or the set is small.
 """
 
 import json, os, collections
-from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
+from .generic import (Header, LjsonTable, LjsonSelector, 
+		UniqueLjsonSelector, row_matches,
+		loads_item, dump_item, dumps_item)
 
 class Table(LjsonTable):
 	"""
@@ -23,7 +25,7 @@ class Table(LjsonTable):
 	@staticmethod
 	def from_file(fin):
 		header, headless = Header.from_file(fin)
-		rows = [json.loads(line) for line in fin if not line.isspace()]
+		rows = [loads_item(line, header) for line in fin if not line.isspace()]
 		return Table(header, rows)
 	@staticmethod
 	def open(filename):
@@ -68,7 +70,7 @@ class Table(LjsonTable):
 		fout.write(self.header.get_header())
 		for r in self.rows:
 			fout.write("\n")
-			json.dump(r, fout)
+			dump_item(r, self.header, fout)
 		
 	def additem(self, row):
 		for k, v in row.items():
