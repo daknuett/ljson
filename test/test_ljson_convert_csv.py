@@ -2,29 +2,7 @@ import ljson.base.mem
 import ljson.base.generic
 import ljson.convert.csv
 
-data = [
-{
-	"age": 42,
-	"name": "peter",
-	"lname": "griffin"
-},
-{
-	"age": 41,
-	"name": "lousie",
-	"lname": "griffin"
-},
-{
-	"age": 12,
-	"name": "chris",
-	"lname": "griffin"
-}
-]
-
-header_descriptor = {
-	"age": {"type": "int", "modifiers": []},
-	"name": {"type": "str", "modifiers": []},
-	"lname": {"type": "str", "modifiers": []}
-}
+from .data import data, header_descriptor
 
 
 def test_read_write():

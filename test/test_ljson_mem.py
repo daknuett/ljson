@@ -1,29 +1,7 @@
 import ljson.base.mem
 import ljson.base.generic
 
-data = [
-{
-	"age": 42,
-	"name": "peter",
-	"lname": "griffin"
-},
-{
-	"age": 41,
-	"name": "lousie",
-	"lname": "griffin"
-},
-{
-	"age": 12,
-	"name": "chris",
-	"lname": "griffin"
-}
-]
-
-header_descriptor = {
-	"age": {"type": "int", "modifiers": []},
-	"name": {"type": "str", "modifiers": []},
-	"lname": {"type": "str", "modifiers": []}
-}
+from .data import data, header_descriptor, item_meg
 
 def test_construct():
 	header = ljson.base.generic.Header(header_descriptor)
@@ -76,11 +54,8 @@ def test_edit():
 
 	assert list(table) == data_
 
-	table.additem({
-		"age": 16,
-		"name": "meg",
-		"lname": "griffin"})
-	assert list(table) == data_ + [{"age": 16, "name": "meg", "lname": "griffin"}]
+	table.additem(item_meg)
+	assert list(table) == data_ + [item_meg]
 
 
 def test_unique_check():
@@ -90,10 +65,7 @@ def test_unique_check():
 	header = ljson.base.generic.Header(header_descriptor_)
 	table = ljson.base.mem.Table(header, data)
 
-	table.additem({
-		"age": 16,
-		"name": "meg",
-		"lname": "griffin"})
+	table.additem(item_meg)
 
 	import pytest
 

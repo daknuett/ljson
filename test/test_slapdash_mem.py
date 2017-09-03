@@ -1,25 +1,7 @@
 import ljson.slapdash.mem
 import ljson.slapdash.generic
 
-data = [
-{
-	"test1": "foo",
-	"test2": "bar",
-	"test3": "baz"
-},
-{
-	"test4": 4
-},
-{
-	"test1": "foo",
-	"test2": "fool",
-	"test4": 231
-},
-{
-	"test1": True,
-	"test2": "baz"
-}
-]
+from .data import data_slapdash as data
 
 def test_construct():
 	header = ljson.slapdash.generic.SlapdashHeader({})

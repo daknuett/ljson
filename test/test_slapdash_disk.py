@@ -3,25 +3,7 @@ import ljson.slapdash.generic
 import ljson.slapdash.disk
 from io import StringIO
 
-data = [
-{
-	"test1": "foo",
-	"test2": "bar",
-	"test3": "baz"
-},
-{
-	"test4": 4
-},
-{
-	"test1": "foo",
-	"test2": "fool",
-	"test4": 231
-},
-{
-	"test1": True,
-	"test2": "baz"
-}
-]
+from .data import data_slapdash as data
 
 def test_construct(tmpdir):
 	import os

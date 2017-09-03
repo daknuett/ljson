@@ -3,29 +3,7 @@ import ljson.base.disk
 import ljson.base.generic
 import copy, os
 
-data = [
-{
-	"age": 42,
-	"name": "peter",
-	"lname": "griffin"
-},
-{
-	"age": 41,
-	"name": "louise",
-	"lname": "griffin"
-},
-{
-	"age": 12,
-	"name": "chris",
-	"lname": "griffin"
-}
-]
-
-header_descriptor = {
-	"age": {"type": "int", "modifiers": []},
-	"name": {"type": "str", "modifiers": []},
-	"lname": {"type": "str", "modifiers": []}
-}
+from .data import data, header_descriptor, item_meg
 
 def test_read():
 	from io import StringIO
@@ -77,12 +55,9 @@ def test_edit(tmpdir):
 
 	assert list(table) == data_
 
-	table.additem({
-		"age": 16,
-		"name": "meg",
-		"lname": "griffin"})
+	table.additem(item_meg)
 
-	assert list(table) == data_ + [{"age": 16, "name": "meg", "lname": "griffin"}]
+	assert list(table) == data_ + [item_meg]
 	
 	fio = table.file
 
@@ -94,7 +69,7 @@ def test_edit(tmpdir):
 	assert list(table) == list(table_in)
 
 	assert table[{"lname": "griffin"}].getone("name") == "meg"
-	assert table[{"lname": "griffin"}].getone() == {"age": 16, "name": "meg", "lname": "griffin"}
+	assert table[{"lname": "griffin"}].getone() == item_meg
 
 	fio.seek(0)
 	print(fio.readline()) # get rid of the header
@@ -234,10 +209,7 @@ def test_unique_check():
 	table = ljson.base.disk.Table.from_file(fio)
 
 
-	table.additem({
-		"age": 16,
-		"name": "meg",
-		"lname": "griffin"})
+	table.additem(item_meg)
 
 	import pytest
 
