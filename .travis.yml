@@ -7,10 +7,11 @@ before_install:
 - sudo python3 -m pip install alabaster
 - sudo python3 -m pip install --upgrade sphinx
 - sudo python3 -m pip install pytest
+- sudo python3 -m pip install pytest-cov
 
 install:
 - python3 setup.py install --user
 - ( cd doc && make html )
 
-script: pytest -vv 
+script: pytest --cov=ljson --cov-report=term-missing  -vv 
 
