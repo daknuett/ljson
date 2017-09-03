@@ -16,5 +16,4 @@ install:
 script: pytest --cov=ljson --cov-report=term-missing  -vv 
 
 notifications:
-	webhooks:
-	- https://fathomless-fjord-24024.herokuapp.com/notify
+	webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
