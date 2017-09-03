@@ -53,6 +53,7 @@ def _disk_table_from_data(tmpdir):
 
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
+	table.insert_stats()
 		
 
 	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
@@ -90,3 +91,17 @@ def test_arithmetics(tmpdir):
 	assert header.descriptor["length"] == len(data)
 	assert header.descriptor["field_count"]["test1"] == 3
 
+
+def test_delete(tmpdir):
+	table = _disk_table_from_data(tmpdir)
+
+	del(table[{"test4": 4}])
+
+	assert not ({"test4": 4} in table)
+
+	import copy
+
+	data_ = copy.copy(data)
+	del(data_[data_.index({"test4": 4})])
+
+	assert list(table) == data_
