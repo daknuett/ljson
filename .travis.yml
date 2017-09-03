@@ -1,15 +1,12 @@
 language: python
 
 python:
-- "3.3"
 - "3.4"
 - "3.5"
 - "3.6"
 
 before_install:
 - sudo apt-get install python-sphinx
-- sudo apt-get install python3-setuptools 
-- sudo apt-get install python3-pip
 - sudo python3 -m pip install alabaster
 - sudo python3 -m pip install --upgrade sphinx
 - sudo python3 -m pip install pytest
