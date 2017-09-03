@@ -1,7 +1,7 @@
 import ljson.base.mem
 import ljson.base.disk
 import ljson.base.generic
-import copy
+import copy, os
 
 data = [
 {
@@ -48,15 +48,19 @@ def test_read():
 	with pytest.raises(KeyError):
 		assert table_in[{"foo": "bar"}]
 
-def test_edit():
-	from io import StringIO
+	assert table_in[{"lname": "griffin"}]["name"] == [d["name"] for d in data]
+
+
+def test_edit(tmpdir):
 	import copy
 	data_ = copy.deepcopy(data)
+
+	filename = os.path.join(str(tmpdir), "table.ljson")
 
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data_)
 
-	fio = StringIO()
+	fio = open(filename, "w+")
 
 	table.save(fio)
 	fio.seek(0)
@@ -77,18 +81,33 @@ def test_edit():
 		"age": 16,
 		"name": "meg",
 		"lname": "griffin"})
-	fio.seek(0)
-	print(fio.read())
-	fio.seek(0)
 
 	assert list(table) == data_ + [{"age": 16, "name": "meg", "lname": "griffin"}]
 	
+	fio = table.file
+
 	fio.seek(0)
 
 	table_in = ljson.base.mem.Table.from_file(fio)
 	table._first_next_call = True
 
 	assert list(table) == list(table_in)
+
+	assert table[{"lname": "griffin"}].getone("name") == "meg"
+	assert table[{"lname": "griffin"}].getone() == {"age": 16, "name": "meg", "lname": "griffin"}
+
+	fio.seek(0)
+	print(fio.readline()) # get rid of the header
+	content = fio.read()
+	print(content)
+	fio.seek(0)
+	fio.truncate(0)
+	fio.write(content)
+	fio.seek(0)
+	table = ljson.base.disk.Table.from_file(fio)
+	assert list(table) == list(table_in)
+
+
 
 
 def test_contexts():
@@ -122,13 +141,14 @@ def test_zipping():
 		assert row_data == row_mem
 		assert row_data == row_disk
 
-def test_selection_iter():
-	from io import StringIO
+def test_selection_iter(tmpdir):
+
+	filename = os.path.join(str(tmpdir), "table.ljson")
 
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
 
-	fio = StringIO()
+	fio = open(filename, "w+")
 
 	table.save(fio)
 	fio.seek(0)
@@ -147,13 +167,14 @@ def test_selection_iter():
 		assert row["name"] == "chris"
 
 
-def test_save():
+def test_save(tmpdir):
 	from io import StringIO
+	filename = os.path.join(str(tmpdir), "table.ljson")
 
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
 
-	fio = StringIO()
+	fio = open(filename, "w+")
 
 	table.save(fio)
 	fio.seek(0)
@@ -173,7 +194,6 @@ def test_save():
 	
 	
 def test_open(tmpdir):
-	import os
 
 	filename = os.path.join(str(tmpdir), "table.ljson")
 

@@ -5,7 +5,6 @@ An on-disk ljson implementation.
 import json, os
 from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
 from collections import deque
-from tempfile import TemporaryFile
 
 class Table(LjsonTable):
 	"""
@@ -17,7 +16,8 @@ class Table(LjsonTable):
 	WARNING: ``file_`` **must** be opened in ``w+`` mode!
 	"""
 
-	def __init__(self, header, file_):
+	def __init__(self, header, file_, is_headless = False):
+		self._headless = is_headless
 		self.header = header
 		self.file = file_
 		self._first_next_call = True
@@ -30,8 +30,8 @@ class Table(LjsonTable):
 		if(not os.path.exists(filename)):
 			raise IOError("cannot open {} for reading: does not exist".format(filename))
 		fin = open(filename, "r+")
-		header = Header.from_file(fin)
-		return Table(header, fin)
+		header, _headless = Header.from_file(fin)
+		return Table(header, fin, _headless)
 
 
 	@staticmethod
@@ -39,8 +39,8 @@ class Table(LjsonTable):
 		"""
 		WARNING: ``file_`` **must** be opened in ``r+`` mode!
 		"""
-		header = Header.from_file(fin)
-		return Table(header, fin)
+		header, _headless = Header.from_file(fin)
+		return Table(header, fin, _headless)
 
 	def __getitem__(self, dct):
 		for k in dct:
@@ -52,7 +52,8 @@ class Table(LjsonTable):
 		if(self._first_next_call):
 			self._first_next_call = False
 			self.file.seek(0)
-			self.file.readline()
+			if(not self._headless):
+				self.file.readline()
 		row = self.file.__next__()
 		while(row.isspace()):
 			row = self.file.__next__()
@@ -94,7 +95,8 @@ class Table(LjsonTable):
 	def __contains__(self, dct):
 		self._first_next_call = True
 		self.file.seek(0)
-		self.file.readline()
+		if(not self._headless):
+			self.file.readline()
 		for row in self.file:
 			if(row.isspace()):
 				continue
@@ -110,7 +112,8 @@ class Table(LjsonTable):
 		self.file.seek(0)
 		os.unlink(self.file.name)
 		buf = open(self.file.name, "w+")
-		buf.write(self.file.readline())
+		if(not self._headless):
+			buf.write(self.file.readline())
 		deleted_row = False
 		for line in self.file:
 			if(line.isspace()):
@@ -136,10 +139,14 @@ class Selector(LjsonSelector):
 		self._first_next_call = True
 
 	def getone(self, column = None):
+		self.table._first_next_call = True
 		self._first_next_call = True
 		self.file.seek(0)
-		self.file.readline()
+		if(not self.table._headless):
+			self.file.readline()
 		for line in self.file:
+			if(line.isspace()):
+				continue
 			row = json.loads(line)
 			if(row_matches(row, self.dct)):
 				if(column):
@@ -149,20 +156,25 @@ class Selector(LjsonSelector):
 		return None
 	def __getitem__(self, column):
 		self._first_next_call = True
+		self.table._first_next_call = True
 		self.file.seek(0)
-		self.file.readline()
+		if(not self.table._headless):
+			self.file.readline()
 		res = deque()
 		for line in self.file:
 			row = json.loads(line)
 			if(row_matches(row, self.dct)):
 				res.append(row[column])
-		return list(deque)
+		return list(res)
 			
 	def __setitem__(self, column, value):
 		self._first_next_call = True
+		self.table._first_next_call = True
 		self.file.seek(0)
-		buf = TemporaryFile(mode = "w+")
-		buf.write(self.file.readline())
+		os.unlink(self.file.name)
+		buf = open(self.file.name, "w+")
+		if(not self.table._headless):
+			buf.write(self.file.readline())
 		for line in self.file:
 			if(line.isspace()):
 				continue
@@ -173,18 +185,17 @@ class Selector(LjsonSelector):
 				buf.write("\n")
 			else:
 				buf.write(line)
-		buf.seek(0)
-		self.file.truncate(0)
-		self.file.seek(0)
-		for line in buf:
-			self.file.write(line)
-		buf.close()
+		self.file.close()
+		self.file = buf
+		self.table.file = buf
 
 	def __next__(self):
+		self.table._first_next_call = True
 		if(self._first_next_call):
 			self._first_next_call = False
 			self.file.seek(0)
-			self.file.readline()
+			if(not self.table._headless):
+				self.file.readline()
 		row = self.file.__next__()
 		data = {}
 		if(not row.isspace()):
@@ -194,6 +205,7 @@ class Selector(LjsonSelector):
 			data = json.loads(row) if not row.isspace() else {}
 		return data
 	def __iter__(self):
+		self.table._first_next_call = True
 		self._first_next_call = True
 		return self
 

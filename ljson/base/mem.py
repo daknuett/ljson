@@ -22,7 +22,7 @@ class Table(LjsonTable):
 
 	@staticmethod
 	def from_file(fin):
-		header = Header.from_file(fin)
+		header, headless = Header.from_file(fin)
 		rows = [json.loads(line) for line in fin if not line.isspace()]
 		return Table(header, rows)
 	@staticmethod

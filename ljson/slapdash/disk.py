@@ -196,6 +196,7 @@ class Selector(object):
 
 	def getone(self, column = None):
 		self._first_next_call = True
+		self.table._first_next_call = True
 		self.file.seek(0)
 		self.file.readline()
 		for line in self.file:
@@ -208,6 +209,7 @@ class Selector(object):
 		return None
 	def __getitem__(self, column):
 		self._first_next_call = True
+		self.table._first_next_call = True
 		self.file.seek(0)
 		self.file.readline()
 		res = deque()
@@ -219,6 +221,7 @@ class Selector(object):
 			
 	def __setitem__(self, column, value):
 		self._first_next_call = True
+		self.table._first_next_call = True
 		self.file.seek(0)
 		os.unlink(self.file.name)
 		buf = open(self.file.name, "w+")
@@ -238,6 +241,7 @@ class Selector(object):
 		self.table.file = buf
 
 	def __next__(self):
+		self.table._first_next_call = True
 		if(self._first_next_call):
 			self._first_next_call = False
 			self.file.seek(0)
@@ -251,5 +255,6 @@ class Selector(object):
 			data = json.loads(row) if not row.isspace() else {}
 		return data
 	def __iter__(self):
+		self.table._first_next_call = True
 		self._first_next_call = True
 		return self

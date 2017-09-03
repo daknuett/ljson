@@ -34,16 +34,19 @@ class Header(object):
 		"""
 		Construct the header from the file.
 		"""
+
 		line = fin.readline()
+		while(line.isspace()):
+			line = fin.readline()
 		data = json.loads(line)
 		if(not "__type__" in data or data["__type__"] != "header"):
 			fin.seek(0)
 			descriptor = {}
 			for k, v in data.items():
 				descriptor[k] = {"type": None, "modifiers": []}
-			return Header(descriptor)
+			return Header(descriptor), True 
 		del(data["__type__"])
-		return Header(data)
+		return Header(data), False
 
 	def check_data(self, key, value):
 		"""
