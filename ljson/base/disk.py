@@ -73,7 +73,7 @@ class Table(LjsonTable):
 		self._first_next_call = True
 		self.file.seek(0)
 		for r in self.file:
-			if(r.strip == ""):
+			if(r.isspace()):
 				continue
 			fout.write(r)
 	def additem(self, row):
@@ -85,9 +85,9 @@ class Table(LjsonTable):
 			self.header.check_data(k, v)
 			if("unique" in self.header.descriptor[k]["modifiers"]):
 				# check if the value is unique
-				values = [r[k] for r in self.rows]
-				if(v in values):
-					raise ValueError("Value {} is not unique: {}".format(k, v))
+				for r in self:
+					if(v == r[k]):
+						raise ValueError("Value {} is not unique: {}".format(k, v))
 		self.file.seek(0, 2) # EOF here
 		self.file.write("\n")
 		json.dump(row, self.file)
