@@ -8,10 +8,10 @@ python:
 
 before_install:
 - sudo apt-get install python-sphinx
-- pip install --user alabaster
-- pip install --user --upgrade sphinx
-- pip install --user pytest
-- pip install --user pytest-cov
+- pip install alabaster
+- pip install --upgrade sphinx
+- pip install pytest
+- pip install pytest-cov
 
 install:
 - ( cd doc && make html )
