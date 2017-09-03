@@ -13,7 +13,6 @@ before_install:
 - sudo python3 -m pip install pytest-cov
 
 install:
-- python3 setup.py install --user
 - ( cd doc && make html )
 
 script: pytest --cov=ljson --cov-report=term-missing  -vv 
