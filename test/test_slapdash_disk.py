@@ -66,7 +66,22 @@ def _disk_table_from_data(tmpdir):
 def test_read(tmpdir):
 	table = _disk_table_from_data(tmpdir)
 	assert table[{"test4": 231}].getone()["test1"] == "foo"
-	
+
+	assert list(table[{"test1": "foo"}]) == [r for r  in data if "test1" in r and r["test1"] == "foo"]
+
+	filename = table.file.name + "~"
+
+	f = open(filename, "w")
+	table.save(f)
+	f.close()
+
+	table = ljson.slapdash.disk.Table.open(filename)
+	assert table[{"test4": 231}].getone()["test1"] == "foo"
+
+	assert list(table) == data
+	assert list(table[{"test1": "foo"}]) == [r for r  in data if "test1" in r and r["test1"] == "foo"]
+
+	assert table[{"test1": "foo"}]["test1"] == [r["test1"] for r  in data if "test1" in r and r["test1"] == "foo"]	
 def test_edit(tmpdir):
 	import copy
 	table = _disk_table_from_data(tmpdir)

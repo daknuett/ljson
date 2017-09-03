@@ -67,3 +67,20 @@ def test_arithmetics():
 
 	assert header.descriptor["length"] == len(data)
 	assert header.descriptor["field_count"]["test1"] == 3
+
+
+def test_delete():
+	import copy
+
+	header = ljson.slapdash.generic.SlapdashHeader({})
+	table = ljson.slapdash.mem.Table(header, copy.copy(data))
+
+
+	del(table[{"test4": 4}])
+
+	assert not ({"test4": 4} in table)
+
+	data_ = copy.copy(data)
+	del(data_[data_.index({"test4": 4})])
+
+	assert list(table) == data_
