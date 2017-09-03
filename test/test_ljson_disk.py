@@ -43,11 +43,18 @@ def test_read():
 
 	assert list(table_in) == data
 
+	import pytest
+
+	with pytest.raises(KeyError):
+		assert table_in[{"foo": "bar"}]
+
 def test_edit():
 	from io import StringIO
+	import copy
+	data_ = copy.deepcopy(data)
 
 	header = ljson.base.generic.Header(header_descriptor)
-	table = ljson.base.mem.Table(header, data)
+	table = ljson.base.mem.Table(header, data_)
 
 	fio = StringIO()
 
@@ -60,7 +67,7 @@ def test_edit():
 	data_ = []
 
 	for row in data:
-		row_ = row
+		row_ = copy.copy(row)
 		row_["lname"] = "Griffin"
 		data_.append(row_)
 
@@ -74,7 +81,7 @@ def test_edit():
 	print(fio.read())
 	fio.seek(0)
 
-	assert list(table) == data + [{"age": 16, "name": "meg", "lname": "griffin"}]
+	assert list(table) == data_ + [{"age": 16, "name": "meg", "lname": "griffin"}]
 	
 	fio.seek(0)
 
@@ -139,5 +146,115 @@ def test_selection_iter():
 	for row in table_in[{"lname": "peters"}]:
 		assert row["name"] == "chris"
 
+
+def test_save():
+	from io import StringIO
+
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
+
+	fio = StringIO()
+
+	table.save(fio)
+	fio.seek(0)
+
+	table_in = ljson.base.disk.Table.from_file(fio)
+	assert list(table_in) == data
+
+	f = StringIO()
+
+	table_in.save(f)
+
+	f.seek(0)
+
+	table = ljson.base.disk.Table.from_file(f)
+
+	assert list(table) == data
+	
+	
+def test_open(tmpdir):
+	import os
+
+	filename = os.path.join(str(tmpdir), "table.ljson")
+
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
 	
 
+	f = open(filename, "w+")
+
+	table.save(f)
+	f.close()
+
+	with ljson.base.mem.Table.open(filename) as table:
+		assert list(table) == data
+	with ljson.base.disk.Table.open(filename) as table:
+		assert list(table) == data
+
+	import pytest
+
+	with pytest.raises(IOError):
+		ljson.base.disk.Table.open(filename + "**~~")
+
+
+
+def test_unique_check():
+	import copy
+	from io import StringIO
+	header_descriptor_ = copy.copy(header_descriptor)
+	header_descriptor_["name"]["modifiers"] = ["unique"]
+	header = ljson.base.generic.Header(header_descriptor_)
+	table = ljson.base.mem.Table(header, data)
+
+	fio = StringIO()
+
+	table.save(fio)
+	fio.seek(0)
+
+	table = ljson.base.disk.Table.from_file(fio)
+
+
+	table.additem({
+		"age": 16,
+		"name": "meg",
+		"lname": "griffin"})
+
+	import pytest
+
+	with pytest.raises(ValueError):
+		table.additem({"age": 12, "name": "chris",
+				"lname": "griffin"})
+
+def test_contains():
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
+	
+	from io import StringIO
+	fio = StringIO()
+	table.save(fio)
+	fio.seek(0)
+	table = ljson.base.disk.Table.from_file(fio)
+
+	assert {"lname": "griffin"} in table
+	assert not {"lname": "griffindor"} in table
+
+def test_delete(tmpdir):
+	import copy
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, copy.copy(data))
+	import os
+
+	filename = os.path.join(str(tmpdir), "table.ljson")
+
+	fio = open(filename, "w+")
+	table.save(fio)
+	fio.seek(0)
+	table = ljson.base.disk.Table.from_file(fio)
+
+	data_ = copy.copy(data)
+
+	del(data_[0])
+
+	del(table[{"name": "peter"}])
+
+	assert list(table) == data_

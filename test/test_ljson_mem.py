@@ -54,11 +54,16 @@ def test_write_and_read():
 	table_in = ljson.base.mem.Table.from_file(fio)
 
 	assert list(table_in) == data
+	import pytest
+
+	with pytest.raises(KeyError):
+		assert table_in[{"foo": "bar"}]
 
 def test_edit():
 	import copy
+	data_ = copy.copy(data)
 	header = ljson.base.generic.Header(header_descriptor)
-	table = ljson.base.mem.Table(header, data)
+	table = ljson.base.mem.Table(header, data_)
 
 	table[{"lname": "griffin"}]["lname"] = "Griffin"
 	
@@ -76,3 +81,47 @@ def test_edit():
 		"name": "meg",
 		"lname": "griffin"})
 	assert list(table) == data_ + [{"age": 16, "name": "meg", "lname": "griffin"}]
+
+
+def test_unique_check():
+	import copy
+	header_descriptor_ = copy.copy(header_descriptor)
+	header_descriptor_["name"]["modifiers"] = ["unique"]
+	header = ljson.base.generic.Header(header_descriptor_)
+	table = ljson.base.mem.Table(header, data)
+
+	table.additem({
+		"age": 16,
+		"name": "meg",
+		"lname": "griffin"})
+
+	import pytest
+
+	with pytest.raises(ValueError):
+		table.additem({"age": 12, "name": "chris",
+				"lname": "griffin"})
+
+def test_contains():
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
+	
+
+	assert {"lname": "griffin"} in table
+	assert not {"lname": "griffindor"} in table
+
+
+def test_delete():
+	import copy
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, copy.copy(data))
+
+	data_ = copy.copy(data)
+
+	del(data_[0])
+
+	del(table[{"name": "peter"}])
+
+	assert list(table) == data_
+
+
+

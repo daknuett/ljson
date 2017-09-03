@@ -1,5 +1,7 @@
 import ljson.slapdash.mem
 import ljson.slapdash.generic
+import ljson.slapdash.disk
+from io import StringIO
 
 data = [
 {
@@ -21,13 +23,24 @@ data = [
 }
 ]
 
-def test_construct():
-	header = ljson.slapdash.generic.SlapdashHeader({})
-	table = ljson.slapdash.mem.Table(header, data)
-	assert list(table) == data
+def test_construct(tmpdir):
+	import os
 
 	header = ljson.slapdash.generic.SlapdashHeader({})
-	table = ljson.slapdash.mem.Table(header, [])
+	table = ljson.slapdash.mem.Table(header, data)
+		
+
+	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
+	table.save(f)
+
+	f.seek(0)
+	table = ljson.slapdash.disk.Table.from_file(f)
+
+	assert list(table) == data
+
+	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
+	header = ljson.slapdash.generic.SlapdashHeader({})
+	table = ljson.slapdash.disk.Table(header, f, reread_stats = True)
 
 	for row in data:
 		table.additem(row)
@@ -35,17 +48,27 @@ def test_construct():
 	assert list(table) == data
 
 
-def test_read():
-	header = ljson.slapdash.generic.SlapdashHeader({})
-	table = ljson.slapdash.mem.Table(header, data)
-	
-	assert table[{"test4": 231}].getone()["test1"] == "foo"
+def _disk_table_from_data(tmpdir):
+	import os
 
-def test_edit():
-	import copy
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
+		
+
+	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
+	table.save(f)
+
+	f.seek(0)
+	table = ljson.slapdash.disk.Table.from_file(f)
+	return table
+
+def test_read(tmpdir):
+	table = _disk_table_from_data(tmpdir)
+	assert table[{"test4": 231}].getone()["test1"] == "foo"
 	
+def test_edit(tmpdir):
+	import copy
+	table = _disk_table_from_data(tmpdir)
 	table[{"test1": "bar"}]["test2"] = "foolbar"
 
 	data_ = []
@@ -57,13 +80,13 @@ def test_edit():
 
 	assert list(table) == data_
 
-
-def test_arithmetics():
-	header = ljson.slapdash.generic.SlapdashHeader({})
-	table = ljson.slapdash.mem.Table(header, data)
+def test_arithmetics(tmpdir):
+	table = _disk_table_from_data(tmpdir)
 	
 	table.insert_stats()
 
 
+	header = table.header
 	assert header.descriptor["length"] == len(data)
 	assert header.descriptor["field_count"]["test1"] == 3
+
