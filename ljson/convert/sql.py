@@ -13,6 +13,7 @@ the objects later.
 
 from ..base import Header, Table
 from ..base.disk import Table as DiskTable
+from .preprocessing import make_ready_for_csv
 
 import pymysql
 
@@ -162,7 +163,7 @@ def table2sql(table, db, username, password, tablename, host = "localhost"):
 	with con.cursor() as cursor:
 		for row in table:
 			# convert json to str.
-			row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+			row = {k: make_ready_for_csv(v, k, table.header)
 				for k,v in row.items()}
 			
 			cursor.execute(pattern.format(*[row[colname] for colname in columns]))
