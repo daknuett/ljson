@@ -177,6 +177,7 @@ class Table(SlapdashTable):
 			r = json.loads(line)
 			if(document_matches(r, dct)):
 				deleted_row = True
+				self.document_count -= 1
 			else:
 				buf.write(line)
 		buf.seek(0)
@@ -217,7 +218,7 @@ class Selector(object):
 			row = json.loads(line)
 			if(document_matches(row, self.dct)):
 				res.append(row[column])
-		return list(deque)
+		return list(res)
 			
 	def __setitem__(self, column, value):
 		self._first_next_call = True

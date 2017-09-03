@@ -2,7 +2,7 @@
 
 from .generic import SlapdashHeader, SlapdashTable, document_matches
 from ..base.generic import inversed_datatypes
-from collections import defaultdict
+from collections import defaultdict, deque
 import json
 
 
@@ -75,10 +75,11 @@ class Table(SlapdashTable):
 				
 
 	def __delitem__(self, dct):
-		que = collections.deque()
+		que = deque()
 		for i, document in enumerate(self.documents):
 			if(document_matches(document, dct)):
 				que.appendleft(i)
+				self.document_count -= 1
 		if(not len(que)):
 			raise KeyError("no matching documents found: {}".format(dct))
 		for i in que:
