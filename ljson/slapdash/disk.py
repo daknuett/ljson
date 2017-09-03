@@ -164,6 +164,26 @@ class Table(SlapdashTable):
 		return {"length": self.document_count, "field_count": dict(counter),
 			"total_datatype_count": dict(dtype_counter),
 			"per_field_datatype_count": dict(dtype_per_field_counter)}
+	def __delitem__(self, dct):
+		self._first_next_call = True
+		self.file.seek(0)
+		os.unlink(self.file.name)
+		buf = open(self.file.name, "w+")
+		buf.write(self.file.readline())
+		deleted_row = False
+		for line in self.file:
+			if(line.isspace()):
+				continue
+			r = json.loads(line)
+			if(document_matches(r, dct)):
+				deleted_row = True
+			else:
+				buf.write(line)
+		buf.seek(0)
+		self.file.close()
+		self.file = buf
+		if(not deleted_row):
+			raise KeyError("no matching rows found: {}".format(dct))
 
 # FIXME: add abstract base class for Selector
 class Selector(object):
@@ -230,26 +250,6 @@ class Selector(object):
 			row = self.file.__next__()
 			data = json.loads(row) if not row.isspace() else {}
 		return data
-	def __delitem__(self, dct):
-		self._first_next_call = True
-		self.file.seek(0)
-		os.unlink(self.file.name)
-		buf = open(self.file.name, "w+")
-		buf.write(self.file.readline())
-		deleted_row = False
-		for line in self.file:
-			if(line.isspace()):
-				continue
-			r = json.loads(line)
-			if(document_matches(r, dct)):
-				deleted_row = True
-			else:
-				buf.write(line)
-		buf.seek(0)
-		self.file.close()
-		self.file = buf
-		if(not deleted_row):
-			raise KeyError("no matching rows found: {}".format(dct))
 	def __iter__(self):
 		self._first_next_call = True
 		return self
