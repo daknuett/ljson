@@ -1,16 +1,17 @@
 language: python
 
 python:
+- "3.3"
 - "3.4"
 - "3.5"
 - "3.6"
 
 before_install:
 - sudo apt-get install python-sphinx
-- sudo python3 -m pip install alabaster
-- sudo python3 -m pip install --upgrade sphinx
-- sudo python3 -m pip install pytest
-- sudo python3 -m pip install pytest-cov
+- pip install --user alabaster
+- pip install --user --upgrade sphinx
+- pip install --user pytest
+- pip install --user pytest-cov
 
 install:
 - ( cd doc && make html )
