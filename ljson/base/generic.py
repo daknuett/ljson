@@ -160,22 +160,6 @@ class LjsonSelector(object):
 		"""
 		pass
 
-class UniqueLjsonSelector(object):
-	"""
-	This selector can be used if the rows are unique.
-	"""
-	def __init__(self):
-		pass
-	def __getitem__(self, column):
-		"""
-		Return the value of ``column``
-		"""
-		pass
-	def __setitem__(self, column, value):
-		"""
-		Set the value of the column.
-		"""
-		pass
 
 def row_matches(row, dct):
 	for k, v in dct.items():

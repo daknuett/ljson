@@ -3,7 +3,7 @@ An on-disk ljson implementation.
 """
 
 import json, os
-from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
+from .generic import Header, LjsonTable, LjsonSelector,  row_matches
 from collections import deque
 
 class Table(LjsonTable):

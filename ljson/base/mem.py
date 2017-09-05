@@ -6,7 +6,7 @@ needed or the set is small.
 """
 
 import json, os, collections
-from .generic import Header, LjsonTable, LjsonSelector, UniqueLjsonSelector, row_matches
+from .generic import Header, LjsonTable, LjsonSelector, row_matches
 
 class Table(LjsonTable):
 	"""
@@ -132,21 +132,4 @@ class Selector(LjsonSelector):
 	def __iter__(self):
 		self._index = 0
 		return self
-
-class UniqueSelector(UniqueLjsonSelector):
-	def __init__(self, header, dct, table, value):
-		self.header = header
-		self.value = value
-		self.dct = dct
-		self.table = table
-
-	def __getitem__(self, column):
-		return self.value[column]
-	def __setitem__(self):
-		rows = self.table.rows
-		for i, r in enumerate(self.table.rows):
-			if(row_matches(r, self.dct)):
-				r[column] = value
-		self.table.rows = rows
-
 
