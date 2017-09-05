@@ -17,6 +17,8 @@ def test_construct():
 
 	assert table[{"name": "peter"}].getone()["age"] == 42
 
+	assert list(table[{"name": "peter"}]) == data[:1]
+
 
 def test_write_and_read():
 	from io import StringIO

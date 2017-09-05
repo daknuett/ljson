@@ -23,6 +23,8 @@ def test_read():
 	
 	assert table[{"test4": 231}].getone()["test1"] == "foo"
 
+	assert list(table[{"test2": "bar"}]) == data[:1]
+
 def test_edit():
 	import copy
 	header = ljson.slapdash.generic.SlapdashHeader({})

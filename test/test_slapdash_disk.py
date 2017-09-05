@@ -64,6 +64,7 @@ def test_read(tmpdir):
 	assert list(table[{"test1": "foo"}]) == [r for r  in data if "test1" in r and r["test1"] == "foo"]
 
 	assert table[{"test1": "foo"}]["test1"] == [r["test1"] for r  in data if "test1" in r and r["test1"] == "foo"]	
+
 def test_edit(tmpdir):
 	import copy
 	table = _disk_table_from_data(tmpdir)
@@ -77,6 +78,18 @@ def test_edit(tmpdir):
 		data_.append(row_)
 
 	assert list(table) == data_
+
+	with _disk_table_from_data(tmpdir) as table:
+		table[{"test1": "bar"}]["test2"] = "foolbar"
+
+		data_ = []
+		for row in data:
+			row_ = copy.copy(row)
+			if("test1" in row_ and row_["test1"] == "bar"):
+				row_["test2"] = "foolbar"
+			data_.append(row_)
+
+		assert list(table) == data_
 
 def test_arithmetics(tmpdir):
 	table = _disk_table_from_data(tmpdir)
