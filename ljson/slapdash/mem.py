@@ -16,6 +16,21 @@ class Table(SlapdashTable):
 		self.insert_stats()
 		self._index = 0
 
+	@classmethod
+	def empty(cls):
+		header = SlapdashHeader({})
+		table = cls(header)
+		return table
+
+	@staticmethod
+	def from_file(file_):
+
+		header = SlapdashHeader.from_file(file_)
+
+		table = Table(header, [json.loads(line) for line in file_ if not line.isspace()])
+		return table
+
+
 	def calculate_stats(self):
 		counter = defaultdict(int)
 		dtype_counter = defaultdict(int)

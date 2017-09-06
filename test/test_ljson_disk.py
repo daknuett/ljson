@@ -82,6 +82,16 @@ def test_edit(tmpdir):
 	table = ljson.base.disk.Table.from_file(fio)
 	assert list(table) == list(table_in)
 
+	import pytest
+
+	with pytest.raises(RuntimeError):
+		for item in table:
+			table[{"name": item["name"]}]["name"] = item["name"].upper()
+
+		for d in data_:
+			d["name"] = d["name"].upper()
+		assert list(table) == data_
+
 
 
 

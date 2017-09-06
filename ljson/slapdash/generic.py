@@ -4,7 +4,7 @@ Some generic functions and classes for ljson.slapdash.
 """
 
 from ..base.generic import datatypes, datatype_by_name, python_datatype_by_name
-import json
+import json, os
 
 class SlapdashHeader(object):
 	"""
@@ -39,6 +39,7 @@ class SlapdashHeader(object):
 			return SlapdashHeader({})
 		del(data["__type__"])
 		return SlapdashHeader(data)
+
 
 class SlapdashTable(object):
 	"""
@@ -106,6 +107,23 @@ class SlapdashTable(object):
 		pass
 	def save(self, fout):
 		pass
+
+	
+	@classmethod
+	def empty(cls):
+		"""
+		Return a new empty slapdash table.
+		"""
+		pass
+	@classmethod
+	def open(cls, filename):
+		"""
+		Equivalent to ``Table.from_file(open(filename, "r+"))``
+		"""
+		if(not os.path.exists(filename)):
+			raise IOError("cannot open {} for reading: does not exist".format(filename))
+		fin = open(filename, "r+")
+		return cls.from_file(fin)
 
 def document_matches(document, dct):
 	"""
