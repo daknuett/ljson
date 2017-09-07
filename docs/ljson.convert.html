@@ -25,16 +25,14 @@
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="lson 0.1.1 documentation" href="index.html" />
     <link rel="up" title="ljson package" href="ljson.html" />
+    <link rel="next" title="ljson.slapdash package" href="ljson.slapdash.html" />
     <link rel="prev" title="ljson.base package" href="ljson.base.html" />
    
-  <link rel="stylesheet" href="static/custom.css" type="text/css" />
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
-  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -62,7 +60,7 @@
 <dl class="function">
 <dt id="ljson.convert.csv.csv2table">
 <code class="descclassname">ljson.convert.csv.</code><code class="descname">csv2table</code><span class="sig-paren">(</span><em>fin</em>, <em>types={}</em>, <em>modifiers={}</em>, <em>fieldnames=None</em>, <em>restkey=None</em>, <em>restval=None</em>, <em>dialect='excel'</em>, <em>**fmtargs</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/csv.html#csv2table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.csv.csv2table" title="Permalink to this definition">¶</a></dt>
-<dd><p id="csv2table">Reads the csv table from <code class="docutils literal"><span class="pre">fin</span></code> and converts it to 
+<dd><p id="csv2table">Reads the csv table from <code class="docutils literal"><span class="pre">fin</span></code> and converts it to
 a <code class="docutils literal"><span class="pre">ljson.base.memTable</span></code>.</p>
 <p>The arguments fin,fieldnames,restkey,restval,dialect,fmtargs are passed to <code class="docutils literal"><span class="pre">csv.DictReader</span></code>.</p>
 <p><code class="docutils literal"><span class="pre">types</span></code> is a dict containing the types of the columns,
@@ -71,7 +69,7 @@ they are mapped {&lt;columname&gt;:&lt;typename&gt;}.</p>
 {&lt;columname&gt;:[&lt;modifier&gt;, &lt;modifier&gt;]}.</p>
 <p>If a column does not have an expicite type <code class="docutils literal"><span class="pre">&quot;str&quot;</span></code> is used.</p>
 <p>Eg:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fin</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;id,name</span><span class="se">\n</span><span class="s2">1,foo</span><span class="se">\n</span><span class="s2">2,bar</span><span class="se">\n</span><span class="s2">3,baz&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">csv2table</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;str&quot;</span><span class="p">},</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;unique&quot;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
@@ -89,7 +87,7 @@ they are mapped {&lt;columname&gt;:&lt;typename&gt;}.</p>
 <p>The arguments <code class="docutils literal"><span class="pre">restval='',</span> <span class="pre">extrasaction='raise',</span> <span class="pre">dialect='excel',</span> <span class="pre">*args,</span> <span class="pre">**kwds</span></code> are
 passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span></code>.</p>
 <p><strong>Hint</strong>: Converting files can be done by using the on-disk implementation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ljson.base.disk</span> <span class="kn">import</span> <span class="n">Table</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ljson.base.disk</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ljson.convert.csv</span> <span class="kn">import</span> <span class="n">table2csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;test.lson&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
@@ -101,8 +99,44 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 </dd></dl>
 
 </div>
-<div class="section" id="ljson-convert-sql-module">
-<h2>ljson.convert.sql module<a class="headerlink" href="#ljson-convert-sql-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ljson.convert.sql">
+<span id="ljson-convert-sql-module"></span><h2>ljson.convert.sql module<a class="headerlink" href="#module-ljson.convert.sql" title="Permalink to this headline">¶</a></h2>
+<p>This module provides functions to convert ljson
+tables from/to SQL tables.</p>
+<p><strong>WARNING</strong>: The SQL datatype &#8220;BINARY&#8221; and the python datatype &#8220;bytes&#8221;
+might not work.</p>
+<p><strong>Note</strong>: If one wants to use json items, these items will be stored
+as &#8220;varchar&#8221; in SQL. The function <a class="reference internal" href="#table2sql">table2sql</a> will convert json automatically
+to str, but the &#8220;sql2*&#8221; functions will not convert str to json. One can convert
+the objects later.</p>
+<dl class="function">
+<dt id="ljson.convert.sql.sql2file">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2file</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>fout</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2file" title="Permalink to this definition">¶</a></dt>
+<dd><p id="sql2file">Convert the SQL table to an <code class="docutils literal"><span class="pre">ljson.disk.Table</span></code>.</p>
+<p>This function should be used to read big tables.</p>
+<p><strong>*WARNING*</strong>: <code class="docutils literal"><span class="pre">fout</span></code> must be opened in <code class="docutils literal"><span class="pre">w+</span></code> mode!</p>
+<p>See also: <a class="reference internal" href="#sql2table">sql2table</a></p>
+<p>Returns the resulting table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ljson.convert.sql.sql2table">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">sql2table</code><span class="sig-paren">(</span><em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#sql2table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.sql2table" title="Permalink to this definition">¶</a></dt>
+<dd><p id="sql2table">Convert the SQL table to an ljson table. This function(just like <a class="reference internal" href="#sql2file">sql2file</a>)
+<strong>does not</strong> parse json items automatically.</p>
+<p>db, username, password and host are used to log in.</p>
+<p>See also: <a class="reference internal" href="#sql2file">sql2file</a></p>
+<p>Returns the resulting table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ljson.convert.sql.table2sql">
+<code class="descclassname">ljson.convert.sql.</code><code class="descname">table2sql</code><span class="sig-paren">(</span><em>table</em>, <em>db</em>, <em>username</em>, <em>password</em>, <em>tablename</em>, <em>host='localhost'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/convert/sql.html#table2sql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.convert.sql.table2sql" title="Permalink to this definition">¶</a></dt>
+<dd><p id="table2sql">Insert the values from the given table into the 
+<strong>already existing</strong> SQL table.</p>
+<p>json items will be stored as str instances.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ljson.convert">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ljson.convert" title="Permalink to this headline">¶</a></h2>
@@ -120,7 +154,7 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
 <li><a class="reference internal" href="#">ljson.convert package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ljson.convert.csv">ljson.convert.csv module</a></li>
-<li><a class="reference internal" href="#ljson-convert-sql-module">ljson.convert.sql module</a></li>
+<li><a class="reference internal" href="#module-ljson.convert.sql">ljson.convert.sql module</a></li>
 <li><a class="reference internal" href="#module-ljson.convert">Module contents</a></li>
 </ul>
 </li>
@@ -132,6 +166,7 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
   <li><a href="modules.html">ljson</a><ul>
   <li><a href="ljson.html">ljson package</a><ul>
       <li>Previous: <a href="ljson.base.html" title="previous chapter">ljson.base package</a></li>
+      <li>Next: <a href="ljson.slapdash.html" title="next chapter">ljson.slapdash package</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -166,7 +201,7 @@ passed to <code class="docutils literal"><span class="pre">csv.DictWriter</span>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="sources/ljson.convert.txt"

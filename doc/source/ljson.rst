@@ -8,6 +8,7 @@ Subpackages
 
     ljson.base
     ljson.convert
+    ljson.slapdash
 
 Module contents
 ---------------

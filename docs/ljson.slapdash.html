@@ -24,15 +24,14 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="lson 0.1.1 documentation" href="index.html" />
+    <link rel="up" title="ljson package" href="ljson.html" />
+    <link rel="prev" title="ljson.convert package" href="ljson.convert.html" />
    
-  <link rel="stylesheet" href="static/custom.css" type="text/css" />
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
-  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -43,6 +42,59 @@
 <h1>ljson.slapdash package<a class="headerlink" href="#ljson-slapdash-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ljson.slapdash.disk">
+<span id="ljson-slapdash-disk-module"></span><h2>ljson.slapdash.disk module<a class="headerlink" href="#module-ljson.slapdash.disk" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ljson.slapdash.disk.Selector">
+<em class="property">class </em><code class="descclassname">ljson.slapdash.disk.</code><code class="descname">Selector</code><span class="sig-paren">(</span><em>header</em>, <em>dct</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Selector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="ljson.slapdash.disk.Selector.getone">
+<code class="descname">getone</code><span class="sig-paren">(</span><em>column=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Selector.getone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Selector.getone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ljson.slapdash.disk.Table">
+<em class="property">class </em><code class="descclassname">ljson.slapdash.disk.</code><code class="descname">Table</code><span class="sig-paren">(</span><em>header</em>, <em>file_</em>, <em>reread_stats=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ljson.slapdash.generic.SlapdashTable" title="ljson.slapdash.generic.SlapdashTable"><code class="xref py py-class docutils literal"><span class="pre">ljson.slapdash.generic.SlapdashTable</span></code></a></p>
+<dl class="method">
+<dt id="ljson.slapdash.disk.Table.additem">
+<code class="descname">additem</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.additem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.additem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ljson.slapdash.disk.Table.calculate_stats">
+<code class="descname">calculate_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.calculate_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.calculate_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ljson.slapdash.disk.Table.from_file">
+<em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING: <code class="docutils literal"><span class="pre">file_</span></code> <strong>must</strong> be opened in <code class="docutils literal"><span class="pre">r+</span></code> mode!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ljson.slapdash.disk.Table.insert_stats">
+<code class="descname">insert_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.insert_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.insert_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ljson.slapdash.disk.Table.open">
+<em class="property">static </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r+&quot;))</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ljson.slapdash.disk.Table.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>fout</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save this table to the file <code class="docutils literal"><span class="pre">fout</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-ljson.slapdash.generic">
 <span id="ljson-slapdash-generic-module"></span><h2>ljson.slapdash.generic module<a class="headerlink" href="#module-ljson.slapdash.generic" title="Permalink to this headline">¶</a></h2>
@@ -78,6 +130,7 @@ data, like in a document-oriented database.</p>
 <dt id="ljson.slapdash.generic.SlapdashTable.additem">
 <code class="descname">additem</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.additem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.additem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a document to the table.</p>
+<p>This will update the header according to the inserted document.</p>
 </dd></dl>
 
 <dl class="method">
@@ -86,7 +139,7 @@ data, like in a document-oriented database.</p>
 <dd><p>Calculate statistical information about the 
 data structure.
 Returns a dict:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
         <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;field_count&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="s2">&quot;total_datatype_count&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -124,6 +177,7 @@ type.</p>
 produce a high number of tables.</p>
 <p>Attribute names listed in <code class="docutils literal"><span class="pre">ignore</span></code> will be ignored by the split
 process and the data will not appear in the resulting tables.</p>
+<p><strong>Warning</strong>: Currently not implemented.</p>
 </dd></dl>
 
 </dd></dl>
@@ -201,6 +255,7 @@ most unique.</p>
   <ul>
 <li><a class="reference internal" href="#">ljson.slapdash package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ljson.slapdash.disk">ljson.slapdash.disk module</a></li>
 <li><a class="reference internal" href="#module-ljson.slapdash.generic">ljson.slapdash.generic module</a></li>
 <li><a class="reference internal" href="#module-ljson.slapdash.mem">ljson.slapdash.mem module</a></li>
 <li><a class="reference internal" href="#module-ljson.slapdash">Module contents</a></li>
@@ -211,6 +266,11 @@ most unique.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">ljson</a><ul>
+  <li><a href="ljson.html">ljson package</a><ul>
+      <li>Previous: <a href="ljson.convert.html" title="previous chapter">ljson.convert package</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -243,7 +303,7 @@ most unique.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="sources/ljson.slapdash.txt"

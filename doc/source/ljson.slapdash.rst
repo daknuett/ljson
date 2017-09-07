@@ -4,6 +4,14 @@ ljson.slapdash package
 Submodules
 ----------
 
+ljson.slapdash.disk module
+--------------------------
+
+.. automodule:: ljson.slapdash.disk
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ljson.slapdash.generic module
 -----------------------------
 
