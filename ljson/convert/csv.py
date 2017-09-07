@@ -42,7 +42,7 @@ def csv2table(fin, types = {}, modifiers = {},
 	"""
 
 	reader = csv.DictReader(fin, 
-			fieldnames = fieldnames, 
+			fieldnames = fieldnames,
 			restkey = restkey,
 			restval = restval,
 			dialect = dialect,
@@ -97,7 +97,7 @@ def csv2file(fin, fout, types = {}, modifiers = {},
 	
 	reader = csv.DictReader(fin, 
 			fieldnames = fieldnames, 
-			restkey = restkey, 
+			restkey = restkey,
 			restval = restval,
 			dialect = dialect,
 			**fmtargs)

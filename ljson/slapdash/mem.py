@@ -39,7 +39,7 @@ class Table(SlapdashTable):
 	def additem(self, document):
 		old_data = {k: self.header.descriptor[k]
 			for k in ("field_count", "total_datatype_count", "per_field_datatype_count")}
-		
+
 		counter = defaultdict(int)
 		dtype_counter = defaultdict(int)
 		dtype_per_field_counter = defaultdict()

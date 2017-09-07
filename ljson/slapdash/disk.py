@@ -51,7 +51,7 @@ class Table(SlapdashTable):
 			self.insert_stats()
 		old_data = {k: self.header.descriptor[k]
 			for k in ("field_count", "total_datatype_count", "per_field_datatype_count")}
-		
+
 		counter = defaultdict(int)
 		dtype_counter = defaultdict(int)
 		dtype_per_field_counter = defaultdict()

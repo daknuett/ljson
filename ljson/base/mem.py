@@ -47,14 +47,14 @@ class Table(LjsonTable):
 		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__,
 				mymod = type(self).__module__,
 				header = repr(self.header),
-				descriptor = self.header.descriptor, 
+				descriptor = self.header.descriptor,
 				table = self.rows)
 
 	def __getitem__(self, dct):
 		for k in dct:
 			if(not k in self.header.descriptor):
 				raise KeyError("unknow key: {}".format(k))
-		
+
 		return Selector(self.header, dct, self)
 	
 	def __next__(self):

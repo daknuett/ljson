@@ -112,7 +112,7 @@ class SlapdashTable(object):
 def document_matches(document, dct):
 	"""
 	Return True, if the document matches the
-	given dict. If a value in the dict is not contained 
+	given dict. If a value in the dict is not contained
 	in the document, this will return false.
 	"""
 	for k, v in dct.items():
