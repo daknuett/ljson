@@ -1,7 +1,7 @@
 import ljson.base.mem
 import ljson.base.disk
 import ljson.base.generic
-import copy, os
+import copy, os, pytest
 
 from .data import data, header_descriptor, item_meg
 
@@ -260,3 +260,18 @@ def test_delete(tmpdir):
 	del(table[{"name": "peter"}])
 
 	assert list(table) == data_
+
+
+@pytest.mark.slow
+def test_speedup_delete(tmpdir, benchmark):
+	benchmark(test_delete, tmpdir)
+@pytest.mark.slow
+def test_speedup_edit(tmpdir, benchmark):
+	benchmark(test_edit, tmpdir)
+
+@pytest.mark.slow
+def test_speedup_contains(tmpdir, benchmark):
+	benchmark(test_contains)
+@pytest.mark.slow
+def test_speedup_selection_iter(tmpdir, benchmark):
+	benchmark(test_selection_iter, tmpdir)
