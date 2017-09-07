@@ -3,7 +3,7 @@
 """
 The base ljson implementation.
 
-This package provides base functionality, 
+This package provides base functionality,
 like getter and setter interface.
 
 Creating a ljson table is pretty easy.

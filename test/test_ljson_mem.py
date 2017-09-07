@@ -6,7 +6,7 @@ from .data import data, header_descriptor, item_meg
 def test_construct():
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
-	
+
 	assert list(table) == data
 
 	table_postinsert = ljson.base.mem.Table(header, [])
@@ -46,7 +46,7 @@ def test_edit():
 	table = ljson.base.mem.Table(header, data_)
 
 	table[{"lname": "griffin"}]["lname"] = "Griffin"
-	
+
 	data_ = []
 
 	for row in data:
@@ -78,7 +78,7 @@ def test_unique_check():
 def test_contains():
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
-	
+
 
 	assert {"lname": "griffin"} in table
 	assert not {"lname": "griffindor"} in table

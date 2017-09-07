@@ -73,12 +73,12 @@ class Table(SlapdashTable):
 			except KeyError:
 				raise_key_error = True
 				wrong_type = (k, v)
-				
+
 		if(raise_key_error):
 			raise KeyError("Unknown datatype for field {}: {}".format(*wrong_type))
 
 		self.document_count += 1
-				
+
 		self.header.descriptor.update({"length": self.document_count, "field_count": dict(counter),
 			"total_datatype_count": dict(dtype_counter),
 			"per_field_datatype_count": dict(dtype_per_field_counter)})
@@ -219,7 +219,7 @@ class Selector(object):
 			if(document_matches(row, self.dct)):
 				res.append(row[column])
 		return list(res)
-			
+
 	def __setitem__(self, column, value):
 		self._first_next_call = True
 		self.table._first_next_call = True

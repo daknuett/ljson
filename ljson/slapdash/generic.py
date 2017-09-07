@@ -59,7 +59,7 @@ class SlapdashTable(object):
 		pass
 	def calculate_stats(self):
 		"""
-		Calculate statistical information about the 
+		Calculate statistical information about the
 		data structure.
 		Returns a dict::
 
@@ -73,7 +73,7 @@ class SlapdashTable(object):
 		pass
 	def insert_stats(self):
 		"""
-		Calculate statistical information about the 
+		Calculate statistical information about the
 		data structure and store the gathered information
 		in the Header.
 		"""

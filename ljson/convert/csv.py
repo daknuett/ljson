@@ -41,7 +41,7 @@ def csv2table(fin, types = {}, modifiers = {},
 	Returns: the table
 	"""
 
-	reader = csv.DictReader(fin, 
+	reader = csv.DictReader(fin,
 			fieldnames = fieldnames,
 			restkey = restkey,
 			restval = restval,
@@ -75,10 +75,10 @@ def csv2table(fin, types = {}, modifiers = {},
 		row = {k: converters[k](v) if k in converters else v for k,v in row.items()}
 		table.additem(row)
 	return table
-		
-	
-			
-	
+
+
+
+
 def csv2file(fin, fout, types = {}, modifiers = {},
 		fieldnames=None, restkey=None, restval=None, dialect='excel', **fmtargs):
 	"""
@@ -87,16 +87,16 @@ def csv2file(fin, fout, types = {}, modifiers = {},
 	Converts the csv file to a ljson file. Reads csv from ``fin`` and writes to ``fout``.
 
 	The main difference to csv2table_ is that csv2file uses the on-disk implementation.
-	
+
 	This function should be used if one wants to convert just the files without using the data.
 
 	**See also**: csv2table_
 
 	Returns: the table
 	"""
-	
-	reader = csv.DictReader(fin, 
-			fieldnames = fieldnames, 
+
+	reader = csv.DictReader(fin,
+			fieldnames = fieldnames,
 			restkey = restkey,
 			restval = restval,
 			dialect = dialect,
@@ -167,7 +167,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 			**kwds)
 	writer.writeheader()
 	for row in table:
-		row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+		row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v)
 			for k,v in row.items()}
 		writer.writerow(row)
 

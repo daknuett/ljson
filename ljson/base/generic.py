@@ -44,7 +44,7 @@ class Header(object):
 			descriptor = {}
 			for k, v in data.items():
 				descriptor[k] = {"type": None, "modifiers": []}
-			return Header(descriptor), True 
+			return Header(descriptor), True
 		del(data["__type__"])
 		return Header(data), False
 
@@ -87,7 +87,7 @@ class LjsonTable(object):
 		Select rows by the dict dct.
 		Returns a LjsonSelector object.
 
-		Using dict as index is required to provide 
+		Using dict as index is required to provide
 		"search functionality".
 
 		See also the ljson.base documentation.
@@ -119,7 +119,7 @@ class LjsonTable(object):
 		Check if there is at least one row matching the selector ``dct``
 
 		Example::
-			
+
 			{"id": 4} in table
 		"""
 		pass

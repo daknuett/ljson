@@ -61,18 +61,18 @@ class Table(SlapdashTable):
 			except KeyError as e:
 				raise_key_error = True
 				wrong_type = (k, v)
-				
+
 		if(raise_key_error):
 			raise KeyError("Unknown datatype for field {}: {}".format(*wrong_type))
 
 		self.document_count += 1
-				
+
 		self.header.descriptor.update({"length": self.document_count, "field_count": dict(counter),
 			"total_datatype_count": dict(dtype_counter),
 			"per_field_datatype_count": dict(dtype_per_field_counter)})
 
 		self.documents.append(document)
-				
+
 
 	def __delitem__(self, dct):
 		que = deque()
@@ -104,17 +104,17 @@ class Table(SlapdashTable):
 		return False
 
 	def __repr__(self):
-		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__, 
+		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__,
 				mymod = type(self).__module__,
 				header = repr(self.header),
-				descriptor = self.header.descriptor, 
+				descriptor = self.header.descriptor,
 				table = self.documents)
 	def save(self, fout):
 		fout.write(self.header.get_header())
 		for r in self.documents:
 			fout.write("\n")
 			json.dump(r, fout)
-	
+
 	def __getitem__(self, dct):
 		return Selector(self.header, dct, self)
 	def __iter__(self):

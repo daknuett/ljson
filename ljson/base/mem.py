@@ -56,7 +56,7 @@ class Table(LjsonTable):
 				raise KeyError("unknow key: {}".format(k))
 
 		return Selector(self.header, dct, self)
-	
+
 	def __next__(self):
 		if(self._index >= len(self.rows)):
 			raise StopIteration()
@@ -69,7 +69,7 @@ class Table(LjsonTable):
 		for r in self.rows:
 			fout.write("\n")
 			json.dump(r, fout)
-		
+
 	def additem(self, row):
 		for k, v in row.items():
 			self.header.check_data(k, v)
@@ -96,7 +96,7 @@ class Table(LjsonTable):
 			raise KeyError("no matching rows found: {}".format(dct))
 		for i in que:
 			del(self.rows[i])
-			
+
 
 
 
