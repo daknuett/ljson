@@ -95,6 +95,8 @@ class SlapdashTable(object):
 
 		Attribute names listed in ``ignore`` will be ignored by the split
 		process and the data will not appear in the resulting tables.
+
+		**Warning**: Currently not implemented.
 		"""
 		pass
 	def additem(self, document):

@@ -88,7 +88,7 @@ class LjsonTable(object):
 		Returns a LjsonSelector object.
 
 		Using dict as index is required to provide 
-		"search functionality". 
+		"search functionality".
 
 		See also the ljson.base documentation.
 		"""

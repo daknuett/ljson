@@ -8,7 +8,7 @@ like getter and setter interface.
 
 Creating a ljson table is pretty easy.
 
->>> from ljson import base 
+>>> from ljson import base
 >>> header = base.Header({"id": {"type": "int", "modifiers":["unique"]}, "name": {"type": "str", "modifiers": []}})
 >>> table = base.Table(header, [{"id": 1, "name": "foo"}, {"id": 2, "name": "bar"}, {"id": 3, "name": "bar"}])
 

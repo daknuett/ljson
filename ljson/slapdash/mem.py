@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from .generic import SlapdashHeader, SlapdashTable, document_matches
+from .generic import SlapdashTable, document_matches
 from ..base.generic import inversed_datatypes
 from collections import defaultdict, deque
 import json
@@ -37,7 +37,7 @@ class Table(SlapdashTable):
 		self.header.descriptor.update(self.calculate_stats())
 
 	def additem(self, document):
-		old_data = {k: self.header.descriptor[k] 
+		old_data = {k: self.header.descriptor[k]
 			for k in ("field_count", "total_datatype_count", "per_field_datatype_count")}
 		
 		counter = defaultdict(int)

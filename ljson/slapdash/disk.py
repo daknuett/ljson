@@ -49,7 +49,7 @@ class Table(SlapdashTable):
 		self._first_next_call = True
 		if(not "field_count" in self.header.descriptor):
 			self.insert_stats()
-		old_data = {k: self.header.descriptor[k] 
+		old_data = {k: self.header.descriptor[k]
 			for k in ("field_count", "total_datatype_count", "per_field_datatype_count")}
 		
 		counter = defaultdict(int)
@@ -70,7 +70,7 @@ class Table(SlapdashTable):
 				if(not k in dtype_per_field_counter):
 					dtype_per_field_counter[k] = defaultdict(int)
 				dtype_per_field_counter[k][inversed_datatypes[type(v)]] += 1
-			except KeyError as e:
+			except KeyError:
 				raise_key_error = True
 				wrong_type = (k, v)
 				

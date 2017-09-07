@@ -44,7 +44,7 @@ class Table(LjsonTable):
 		return False
 
 	def __repr__(self):
-		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__, 
+		return "{mymod}.{mytype}({header}, {table})".format(mytype = type(self).__name__,
 				mymod = type(self).__module__,
 				header = repr(self.header),
 				descriptor = self.header.descriptor, 
@@ -118,8 +118,11 @@ class Selector(LjsonSelector):
 	def __getitem__(self, column):
 		return [row[column] for row in self.rows]
 	def __setitem__(self, column, value):
+		# FIXME: maybe one should make this more memory efficient.
+		# I am pretty sure that the rows do not get copied, so
+		# setitem should be usable.
 		rows = self.table.rows
-		for i, r in enumerate(self.table.rows):
+		for r in self.table.rows:
 			if(row_matches(r, self.dct)):
 				r[column] = value
 		self.table.rows = rows

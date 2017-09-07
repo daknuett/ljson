@@ -14,7 +14,7 @@ def csv2table(fin, types = {}, modifiers = {},
 	"""
 	.. _csv2table:
 
-	Reads the csv table from ``fin`` and converts it to 
+	Reads the csv table from ``fin`` and converts it to
 	a ``ljson.base.memTable``.
 
 	The arguments fin,fieldnames,restkey,restval,dialect,fmtargs are passed to ``csv.DictReader``.
@@ -43,7 +43,7 @@ def csv2table(fin, types = {}, modifiers = {},
 
 	reader = csv.DictReader(fin, 
 			fieldnames = fieldnames, 
-			restkey = restkey, 
+			restkey = restkey,
 			restval = restval,
 			dialect = dialect,
 			**fmtargs)
@@ -159,7 +159,7 @@ def table2csv(table, fout, restval='', extrasaction='raise', dialect='excel', *a
 	# FIXME explan this.
 	if("__type__" in fieldnames):
 		del(fieldnames[fieldnames.index("__type__")])
-	writer = csv.DictWriter(fout, fieldnames, 
+	writer = csv.DictWriter(fout, fieldnames,
 			restval = restval,
 			extrasaction = extrasaction,
 			dialect = dialect,
