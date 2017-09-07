@@ -1,6 +1,10 @@
 ljson -- Line JSON
 ******************
 
+.. image:: https://api.codacy.com/project/badge/Grade/530345cc30dc44539e921eb63be461dd
+   :alt: Codacy Badge
+   :target: https://www.codacy.com/app/daknuett/ljson?utm_source=github.com&utm_medium=referral&utm_content=daknuett/ljson&utm_campaign=badger
+
 .. contents::
 
 
