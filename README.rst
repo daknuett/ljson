@@ -21,6 +21,12 @@ current build-status is:
 .. image:: https://travis-ci.org/daknuett/ljson.svg?branch=master
     :target: https://travis-ci.org/daknuett/ljson
 
+The code is reviewed automatically on `codacy
+<https://www.codacy.com>`_:
+
+.. image:: https://api.codacy.com/project/badge/Grade/530345cc30dc44539e921eb63be461dd
+   :target: https://www.codacy.com/app/daknuett/ljson?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=daknuett/ljson&amp;utm_campaign=Badge_Grade
+
 What is ljson?
 ==============
 
