@@ -10,7 +10,7 @@ def test_construct(tmpdir):
 
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
-		
+
 
 	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
 	table.save(f)
@@ -36,7 +36,7 @@ def _disk_table_from_data(tmpdir):
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
 	table.insert_stats()
-		
+
 
 	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
 	table.save(f)
@@ -63,7 +63,7 @@ def test_read(tmpdir):
 	assert list(table) == data
 	assert list(table[{"test1": "foo"}]) == [r for r  in data if "test1" in r and r["test1"] == "foo"]
 
-	assert table[{"test1": "foo"}]["test1"] == [r["test1"] for r  in data if "test1" in r and r["test1"] == "foo"]	
+	assert table[{"test1": "foo"}]["test1"] == [r["test1"] for r  in data if "test1" in r and r["test1"] == "foo"]
 
 def test_edit(tmpdir):
 	import copy
@@ -93,7 +93,7 @@ def test_edit(tmpdir):
 
 def test_arithmetics(tmpdir):
 	table = _disk_table_from_data(tmpdir)
-	
+
 	table.insert_stats()
 
 

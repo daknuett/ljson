@@ -20,7 +20,7 @@ def test_construct():
 def test_read():
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
-	
+
 	assert table[{"test4": 231}].getone()["test1"] == "foo"
 
 	assert list(table[{"test2": "bar"}]) == data[:1]
@@ -29,7 +29,7 @@ def test_edit():
 	import copy
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
-	
+
 	table[{"test1": "bar"}]["test2"] = "foolbar"
 
 	data_ = []
@@ -45,7 +45,7 @@ def test_edit():
 def test_arithmetics():
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, data)
-	
+
 	table.insert_stats()
 
 

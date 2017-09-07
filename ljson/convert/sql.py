@@ -3,7 +3,7 @@ This module provides functions to convert ljson
 tables from/to SQL tables.
 
 **WARNING**: The SQL datatype "BINARY" and the python datatype "bytes"
-might not work. 
+might not work.
 
 **Note**: If one wants to use json items, these items will be stored
 as "varchar" in SQL. The function table2sql_ will convert json automatically
@@ -21,9 +21,9 @@ def _select_datatype(dtype_string):
 	dtype_string = dtype_string.lower()
 
 	dtypes_by_contains = {\
-		"char": "str", 
-		"text": "str", 
-		"binary": "bytes", 
+		"char": "str",
+		"text": "str",
+		"binary": "bytes",
 		"int": "int",
 		"bit": "int",
 		"bool": "bool",
@@ -45,7 +45,7 @@ def _select_datatype(dtype_string):
 
 
 
-def sql2table(db, username, password, tablename, host = "localhost"): 
+def sql2table(db, username, password, tablename, host = "localhost"):
 	"""
 	.. _sql2table:
 
@@ -76,8 +76,8 @@ def sql2table(db, username, password, tablename, host = "localhost"):
 			if(key):
 				mods.append("unique")
 			modifiers_by_cols[colname] = mods
-	descriptor = {colname: {"type": dtypes_by_cols[colname], 
-				"modifiers": modifiers_by_cols[colname]} 
+	descriptor = {colname: {"type": dtypes_by_cols[colname],
+				"modifiers": modifiers_by_cols[colname]}
 		for colname in columns}
 	header = Header(descriptor)
 	table = Table(header, [])
@@ -90,7 +90,7 @@ def sql2table(db, username, password, tablename, host = "localhost"):
 	con.close()
 	return table
 
-def sql2file(db, username, password, tablename, fout, host = "localhost"): 
+def sql2file(db, username, password, tablename, fout, host = "localhost"):
 	"""
 	.. _sql2file:
 
@@ -121,15 +121,15 @@ def sql2file(db, username, password, tablename, fout, host = "localhost"):
 			if(key):
 				mods.append("unique")
 			modifiers_by_cols[colname] = mods
-	descriptor = {colname: {"type": dtypes_by_cols[colname], 
-				"modifiers": modifiers_by_cols[colname]} 
+	descriptor = {colname: {"type": dtypes_by_cols[colname],
+				"modifiers": modifiers_by_cols[colname]}
 		for colname in columns}
 	header = Header(descriptor)
 	fout.write(header.get_header())
 	fout.seek(0)
 
 	table = DiskTable.from_file(fout)
-	
+
 	with con.cursor() as cursor:
 		cursor.execute("SELECT {} FROM {}".format(",".join(columns), tablename))
 		for row in cursor.fetchall():
@@ -143,12 +143,12 @@ def table2sql(table, db, username, password, tablename, host = "localhost"):
 	"""
 	.. _table2sql:
 
-	Insert the values from the given table into the 
+	Insert the values from the given table into the
 	**already existing** SQL table.
 
 	json items will be stored as str instances.
 	"""
-	
+
 	# build the INSERT pattern:
 	#
 	dtypes = {k: v["type"] for k,v in table.header.descriptor.items()}
@@ -162,9 +162,9 @@ def table2sql(table, db, username, password, tablename, host = "localhost"):
 	with con.cursor() as cursor:
 		for row in table:
 			# convert json to str.
-			row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v) 
+			row = {k: v if not table.header.descriptor[k]["type"] == "json" else json.dumps(v)
 				for k,v in row.items()}
-			
+
 			cursor.execute(pattern.format(*[row[colname] for colname in columns]))
 	con.commit()
 	con.close()

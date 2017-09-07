@@ -46,7 +46,7 @@ class Table(LjsonTable):
 		for k in dct:
 			if(not k in self.header.descriptor):
 				raise KeyError("unknow key: {}".format(k))
-		
+
 		return Selector(self.header, dct, self)
 	def __next__(self):
 		if(self._first_next_call):
@@ -129,7 +129,7 @@ class Table(LjsonTable):
 		if(not deleted_row):
 			raise KeyError("no matching rows found: {}".format(dct))
 
-	
+
 class Selector(LjsonSelector):
 	def __init__(self, header, dct, table):
 		self.header = header
@@ -166,7 +166,7 @@ class Selector(LjsonSelector):
 			if(row_matches(row, self.dct)):
 				res.append(row[column])
 		return list(res)
-			
+
 	def __setitem__(self, column, value):
 		self._first_next_call = True
 		self.table._first_next_call = True
@@ -209,6 +209,6 @@ class Selector(LjsonSelector):
 		self._first_next_call = True
 		return self
 
-	
+
 
 
