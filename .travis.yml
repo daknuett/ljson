@@ -11,6 +11,7 @@ before_install:
 - pip install --upgrade sphinx
 - pip install pytest
 - pip install pytest-cov
+- pip install pytest-benchmark
 
 install:
 - ( cd doc && make html )
