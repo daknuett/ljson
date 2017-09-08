@@ -88,7 +88,6 @@ class Table(SlapdashTable):
 
 		self.documents.append(document)
 
-
 	def __delitem__(self, dct):
 		que = deque()
 		for i, document in enumerate(self.documents):
