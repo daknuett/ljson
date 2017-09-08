@@ -99,7 +99,7 @@ class SlapdashTable(object):
 
 		**Warning**: Currently not implemented.
 		"""
-		ignore = ignore if ignore else []
+		#ignore = ignore if ignore else []
 		pass
 	def additem(self, document):
 		"""
