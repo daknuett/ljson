@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from .generic import SlapdashTable, document_matches
+from .generic import SlapdashTable, SlapdashHeader, document_matches
 from ..base.generic import inversed_datatypes
 from collections import defaultdict, deque
 import json
@@ -19,7 +19,7 @@ class Table(SlapdashTable):
 	@classmethod
 	def empty(cls):
 		header = SlapdashHeader({})
-		table = cls(header)
+		table = cls(header, [])
 		return table
 
 	@staticmethod
