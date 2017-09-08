@@ -20,7 +20,8 @@ class Table(LjsonTable):
 		self._headless = is_headless
 		self.header = header
 		self.file = file_
-		self._first_next_call = True
+		self._file_pointer_stack = deque()
+		self._loop_file_pointer_stack = deque()
 
 	@staticmethod
 	def open(filename):
@@ -49,15 +50,27 @@ class Table(LjsonTable):
 
 		return Selector(self.header, dct, self)
 	def __next__(self):
-		if(self._first_next_call):
-			self._first_next_call = False
-			self.file.seek(0)
-			if(not self._headless):
-				self.file.readline()
-		row = self.file.__next__()
+		seek_after = self.file.tell()
+		self.file.seek(self._loop_file_pointer_stack.popleft())
+
+
+		row = self.file.readline()
+		if(not row):
+			# we are leaving the loop => this context is done
+			# => return to the context before __iter__ was called
+			self.file.seek(self._file_pointer_stack.popleft())
+			raise StopIteration()
 		while(row.isspace()):
-			row = self.file.__next__()
+			if(not row):
+				# we are leaving the loop => this context is done
+				# => return to the context before __iter__ was called
+				self.file.seek(self._file_pointer_stack.popleft())
+				raise StopIteration()
+			row = self.file.readline()
+		self._loop_file_pointer_stack.appendleft(self.file.tell())
+		self.file.seek(seek_after)
 		return json.loads(row)
+
 
 	def __enter__(self):
 		return self
@@ -71,17 +84,18 @@ class Table(LjsonTable):
 		"""
 		Save this table to the file ``fout``.
 		"""
-		self._first_next_call = True
+		seek = self.file.tell()
 		self.file.seek(0)
 		for r in self.file:
 			if(r.isspace()):
 				continue
 			fout.write(r)
+		self.file.seek(seek)
 	def additem(self, row):
 		"""
 		Add a new row.
 		"""
-		self._first_next_call = True
+		seek = self.file.tell()
 		for k, v in row.items():
 			self.header.check_data(k, v)
 			if("unique" in self.header.descriptor[k]["modifiers"]):
@@ -92,8 +106,9 @@ class Table(LjsonTable):
 		self.file.seek(0, 2) # EOF here
 		self.file.write("\n")
 		json.dump(row, self.file)
+		self.file.seek(seek)
 	def __contains__(self, dct):
-		self._first_next_call = True
+		seek = self.file.tell()
 		self.file.seek(0)
 		if(not self._headless):
 			self.file.readline()
@@ -101,14 +116,23 @@ class Table(LjsonTable):
 			if(row.isspace()):
 				continue
 			if(row_matches(json.loads(row), dct)):
+				self.file.seek(seek)
 				return True
+		self.file.seek(seek)
 		return False
 	def __iter__(self):
-		self._first_next_call = True
+		self._file_pointer_stack.appendleft(self.file.tell())
+		self.file.seek(0)
+		if(not self._headless):
+			self.file.readline()
+		self._loop_file_pointer_stack.appendleft(self.file.tell())
 		return self
 
 	def __delitem__(self, dct):
-		self._first_next_call = True
+		if(self._file_pointer_stack):
+			raise RuntimeError("Attempt to delete item from table during looping. This leads to undefined behaviour.")
+		seek_after = self.file.tell()
+		max_seek = 0
 		self.file.seek(0)
 		os.unlink(self.file.name)
 		buf = open(self.file.name, "w+")
@@ -123,9 +147,14 @@ class Table(LjsonTable):
 				deleted_row = True
 			else:
 				buf.write(line)
-		buf.seek(0)
+				max_seek = buf.tell()
 		self.file.close()
 		self.file = buf
+		if(seek_after <= max_seek):
+			self.file.seek(seek_after)
+		else:
+			self.file.seek(0)
+			raise RuntimeWarning("File is truncated. unable to restore table state.")
 		if(not deleted_row):
 			raise KeyError("no matching rows found: {}".format(dct))
 
@@ -136,11 +165,11 @@ class Selector(LjsonSelector):
 		self.file = table.file
 		self.dct = dct
 		self.table = table
-		self._first_next_call = True
+		self._file_pointer_stack = deque()
+		self._loop_file_pointer_stack = deque()
 
 	def getone(self, column = None):
-		self.table._first_next_call = True
-		self._first_next_call = True
+		seek_after = self.file.tell()
 		self.file.seek(0)
 		if(not self.table._headless):
 			self.file.readline()
@@ -150,13 +179,15 @@ class Selector(LjsonSelector):
 			row = json.loads(line)
 			if(row_matches(row, self.dct)):
 				if(column):
+					self.file.seek(seek_after)
 					return row[column]
 				else:
+					self.file.seek(seek_after)
 					return row
+		self.file.seek(seek_after)
 		return None
 	def __getitem__(self, column):
-		self._first_next_call = True
-		self.table._first_next_call = True
+		seek_after = self.file.tell()
 		self.file.seek(0)
 		if(not self.table._headless):
 			self.file.readline()
@@ -165,11 +196,13 @@ class Selector(LjsonSelector):
 			row = json.loads(line)
 			if(row_matches(row, self.dct)):
 				res.append(row[column])
+		self.file.seek(seek_after)
 		return list(res)
 
 	def __setitem__(self, column, value):
-		self._first_next_call = True
-		self.table._first_next_call = True
+		if(self._file_pointer_stack or self.table._file_pointer_stack):
+			raise RuntimeError("Attempt to edit table while iterating")
+		seek_after = self.file.tell()
 		self.file.seek(0)
 		os.unlink(self.file.name)
 		buf = open(self.file.name, "w+")
@@ -188,25 +221,39 @@ class Selector(LjsonSelector):
 		self.file.close()
 		self.file = buf
 		self.table.file = buf
+		self.table.file.seek(seek_after)
 
 	def __next__(self):
-		self.table._first_next_call = True
-		if(self._first_next_call):
-			self._first_next_call = False
-			self.file.seek(0)
-			if(not self.table._headless):
-				self.file.readline()
-		row = self.file.__next__()
+		seek_after = self.file.tell()
+		self.file.seek(self._loop_file_pointer_stack.popleft())
+
+
+		row = self.file.readline()
+		if(not row):
+			# we are leaving the loop => this context is done
+			# => return to the context before __iter__ was called
+			self.file.seek(self._file_pointer_stack.popleft())
+			raise StopIteration()
 		data = {}
 		if(not row.isspace()):
 			data = json.loads(row)
 		while(row.isspace() or not row_matches(data, self.dct)):
-			row = self.file.__next__()
+			row = self.file.readline()
+			if(not row):
+				# we are leaving the loop => this context is done
+				# => return to the context before __iter__ was called
+				self.file.seek(self._file_pointer_stack.popleft())
+				raise StopIteration()
 			data = json.loads(row) if not row.isspace() else {}
+		self._loop_file_pointer_stack.appendleft(self.file.tell())
+		self.table.file.seek(seek_after)
 		return data
 	def __iter__(self):
-		self.table._first_next_call = True
-		self._first_next_call = True
+		self._file_pointer_stack.appendleft(self.file.tell())
+		self.file.seek(0)
+		if(not self.table._headless):
+			self.file.readline()
+		self._loop_file_pointer_stack.appendleft(self.file.tell())
 		return self
 
 
