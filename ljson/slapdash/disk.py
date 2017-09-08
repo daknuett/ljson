@@ -148,12 +148,12 @@ class Table(SlapdashTable):
 			self.file.seek(self._file_pointer_stack.popleft())
 			raise StopIteration()
 		while(row.isspace()):
-			if(not row):
-				# we are leaving the loop => this context is done
-				# => return to the context before __iter__ was called
-				self.file.seek(self._file_pointer_stack.popleft())
-				raise StopIteration()
 			row = self.file.readline()
+		if(not row):
+			# we are leaving the loop => this context is done
+			# => return to the context before __iter__ was called
+			self.file.seek(self._file_pointer_stack.popleft())
+			raise StopIteration()
 		self._loop_file_pointer_stack.appendleft(self.file.tell())
 		self.file.seek(seek_after)
 		return json.loads(row)
