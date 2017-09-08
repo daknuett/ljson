@@ -9,7 +9,7 @@ from ..base.generic import datatype_by_name, Header
 from ..base.mem import Table
 from ..base.disk import Table as DiskTable
 
-def csv2table(fin, types = {}, modifiers = {},
+def csv2table(fin, types = None, modifiers = None,
 		fieldnames=None, restkey=None, restval=None, dialect='excel', **fmtargs):
 	"""
 	.. _csv2table:
@@ -40,6 +40,9 @@ def csv2table(fin, types = {}, modifiers = {},
 
 	Returns: the table
 	"""
+
+	types = types if types else {}
+	modifiers = modifiers if modifiers else {}
 
 	reader = csv.DictReader(fin,
 			fieldnames = fieldnames,
@@ -79,7 +82,7 @@ def csv2table(fin, types = {}, modifiers = {},
 
 
 
-def csv2file(fin, fout, types = {}, modifiers = {},
+def csv2file(fin, fout, types = None, modifiers = None,
 		fieldnames=None, restkey=None, restval=None, dialect='excel', **fmtargs):
 	"""
 	.. _csv2file:
@@ -94,6 +97,8 @@ def csv2file(fin, fout, types = {}, modifiers = {},
 
 	Returns: the table
 	"""
+	types = types if types else {}
+	modifiers = modifiers if modifiers else {}
 
 	reader = csv.DictReader(fin,
 			fieldnames = fieldnames,

@@ -86,7 +86,7 @@ class SlapdashTable(object):
 		Read a SlapdashTable from a file
 		"""
 		pass
-	def split(self, ignore = []):
+	def split(self, ignore = None):
 		"""
 		Split the table into tables containing exactly one document
 		type.
@@ -99,6 +99,7 @@ class SlapdashTable(object):
 
 		**Warning**: Currently not implemented.
 		"""
+		ignore = ignore if ignore else []
 		pass
 	def additem(self, document):
 		"""
