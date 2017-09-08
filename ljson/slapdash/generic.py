@@ -3,7 +3,7 @@ Some generic functions and classes for ljson.slapdash.
 
 """
 
-from ..base.generic import datatypes, datatype_by_name, python_datatype_by_name
+from ..base.generic import datatype_by_name, python_datatype_by_name
 import json, os
 
 class SlapdashHeader(object):
@@ -81,7 +81,7 @@ class SlapdashTable(object):
 		pass
 
 	@staticmethod
-	def from_file(self, fin):
+	def from_file(fin):
 		"""
 		Read a SlapdashTable from a file
 		"""
@@ -110,7 +110,6 @@ class SlapdashTable(object):
 	def save(self, fout):
 		pass
 
-	
 	@classmethod
 	def empty(cls):
 		"""
