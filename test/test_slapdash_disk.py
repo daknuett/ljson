@@ -29,6 +29,14 @@ def test_construct(tmpdir):
 
 	assert list(table) == data
 
+	f = open(os.path.join(str(tmpdir), "file.ljson"), "w+")
+	table = ljson.slapdash.disk.Table.empty(f)
+	for row in data:
+		table.additem(row)
+
+	assert list(table) == data
+
+
 
 def _disk_table_from_data(tmpdir):
 	import os

@@ -262,6 +262,11 @@ def test_delete(tmpdir):
 	assert list(table) == data_
 
 
+	table.additem(item_meg)
+	del(table[{"name": "meg"}])
+	assert list(table) == data_
+
+
 @pytest.mark.slow
 def test_speedup_delete(tmpdir, benchmark):
 	benchmark(test_delete, tmpdir)

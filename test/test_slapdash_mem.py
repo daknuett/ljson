@@ -10,7 +10,12 @@ def test_construct():
 
 	header = ljson.slapdash.generic.SlapdashHeader({})
 	table = ljson.slapdash.mem.Table(header, [])
+	for row in data:
+		table.additem(row)
 
+	assert list(table) == data
+
+	table  = ljson.slapdash.mem.Table.empty()
 	for row in data:
 		table.additem(row)
 
@@ -68,3 +73,18 @@ def test_delete():
 	del(data_[data_.index({"test4": 4})])
 
 	assert list(table) == data_
+
+def test_save_open():
+	header = ljson.slapdash.generic.SlapdashHeader({})
+	table = ljson.slapdash.mem.Table(header, data)
+
+	from io import StringIO
+
+	f = StringIO()
+	table.save(f)
+	f.seek(0)
+
+	table = ljson.slapdash.mem.Table.from_file(f)
+
+	assert list(table) == data
+	
