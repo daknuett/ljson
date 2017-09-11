@@ -81,7 +81,7 @@ class SlapdashTable(object):
 		pass
 
 	@staticmethod
-	def from_file(fin):
+	def from_file(file_):
 		"""
 		Read a SlapdashTable from a file
 		"""
