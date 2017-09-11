@@ -42,7 +42,7 @@ class Header(object):
 		if(not "__type__" in data or data["__type__"] != "header"):
 			fin.seek(0)
 			descriptor = {}
-			for k, v in data.items():
+			for k in data.keys():
 				descriptor[k] = {"type": None, "modifiers": []}
 			return Header(descriptor), True
 		del(data["__type__"])

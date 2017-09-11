@@ -3,7 +3,7 @@ Some generic functions and classes for ljson.slapdash.
 
 """
 
-from ..base.generic import datatype_by_name, python_datatype_by_name
+from ..base.generic import python_datatype_by_name
 import json, os
 
 class SlapdashHeader(object):

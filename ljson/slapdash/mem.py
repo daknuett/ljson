@@ -73,7 +73,7 @@ class Table(SlapdashTable):
 				if(not k in dtype_per_field_counter):
 					dtype_per_field_counter[k] = defaultdict(int)
 				dtype_per_field_counter[k][inversed_datatypes[type(v)]] += 1
-			except KeyError as e:
+			except KeyError:
 				raise_key_error = True
 				wrong_type = (k, v)
 
