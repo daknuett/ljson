@@ -175,6 +175,30 @@ class LjsonQueryResult(object):
 	like a list (like before) but providing a new way of item assignment.
 
 	This class should be new in v0.3.0.
+
+	***Warning***:
+
+	| This class will behave most propably differently from what one would expect:
+	| Only ``__i*__`` methods are overwritten!
+	| All other methods are mapped to the underlaying ``list`` representation.
+	| This leads to the fact that
+	  
+	::
+
+		table[{"some_field": some_value}][some_value] += another_value
+		# and
+		table[{"some_field": some_value}][some_value] = another_value + table[{"some_field": some_value}][some_value]
+
+	Are not the same!
+
+	In particular: The first sample will produce a valid result and modify the table,
+	while the latter leads to undefined behaviour.
+
+	***FIXME***:
+
+	There should a method ``LjsonTable.apply(selector, func, args)`` that bypasses the problem!
+
+	
 	"""
 	def __init__(self, table, selector, selected, list_):
 		self.table = table
@@ -232,6 +256,16 @@ class LjsonQueryResult(object):
 		return self._list.__setitem__(name, item)
 	def __reversed__(self):
 		return self._list.__reversed__()
+	def __eq__(self, other):
+		return self._list.__eq__(other)
+	def __le__(self, other):
+		return self._list.__le__(other)
+	def __ge__(self, other):
+		return self._list.__ge__(other)
+	def __lt__(self, other):
+		return self._list.__lt__(other)
+	def __gt__(self, other):
+		return self._list.__gt__(other)
 
 	def __getattr__(self, name):
 		if name in ("_list", "table", "selector", "_selected"):

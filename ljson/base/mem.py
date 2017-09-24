@@ -195,4 +195,3 @@ class QueryResult(LjsonQueryResult):
 		for row in self.selector.rows:
 			row[self._selected] >>= item
 		return self
-	

@@ -3,7 +3,7 @@ An on-disk ljson implementation.
 """
 
 import json, os
-from .generic import Header, LjsonTable, LjsonSelector,  row_matches
+from .generic import Header, LjsonTable, LjsonSelector,  row_matches, LjsonQueryResult
 from collections import deque
 
 class Table(LjsonTable):
@@ -197,7 +197,7 @@ class Selector(LjsonSelector):
 			if(row_matches(row, self.dct)):
 				res.append(row[column])
 		self.file.seek(seek_after)
-		return list(res)
+		return QueryResult(self.table, self, column, list(res))
 
 	def __setitem__(self, column, value):
 		if(self._file_pointer_stack or self.table._file_pointer_stack):
@@ -258,4 +258,85 @@ class Selector(LjsonSelector):
 
 
 
+class QueryResult(LjsonQueryResult):
+	"""
+	See ``ljson.base.generic.LjsonQueryResult``.
+	"""
+	def _perform_change(self, func, *args):
+		"""
+		This is used to keep the overhead of modifications at one place.
+		"""
+		if(self.selector._file_pointer_stack or self.table._file_pointer_stack):
+			raise RuntimeError("Attempt to edit table while iterating")
+		seek_after = self.table.file.tell()
+		self.table.file.seek(0)
+		os.unlink(self.table.file.name)
+		buf = open(self.table.file.name, "w+")
+		if(not self.table._headless):
+			buf.write(self.table.file.readline())
+		for line in self.table.file:
+			if(line.isspace()):
+				continue
+			r = json.loads(line)
+			if(row_matches(r, self.selector.dct)):
+				r[self._selected] = func(r[self._selected], *args)
+				json.dump(r, buf)
+				buf.write("\n")
+			else:
+				buf.write(line)
+		self.table.file.close()
+		self.table.file = buf
+		self.selector.file = buf
+		self.table.file.seek(seek_after)
+
+	def __iadd__(self, item):
+		self._perform_change(lambda a,b: a + b, item)
+		return self
+	def __imul__(self, item):
+		self._perform_change(lambda a,b: a * b, item)
+		return self
+	def __isub__(self, item):
+		self._perform_change(lambda a,b: a - b, item)
+		return self
+	def __itruediv__(self, item):
+		self._perform_change(lambda a,b: a / b, item)
+		return self
+	def __ifloordiv__(self, item):
+		self._perform_change(lambda a,b: a // b, item)
+		return self
+	def __imod__(self, item):
+		self._perform_change(lambda a,b: a % b, item)
+		return self
+	def __ipow__(self, item, modulo = None):
+		if(modulo != None):
+			self._perform_change(lambda a,b, modulo: a.__pow__(b, modulo) , item, modulo)
+		else:
+			self._perform_change(lambda a,b: a ** b, item)
+		return self
+	def __iand__(self, item):
+		self._perform_change(lambda a,b: a & b, item)
+		return self
+	def __ixor__(self, item):
+		self._perform_change(lambda a,b: a ^ b, item)
+		return self
+	def __ior__(self, item):
+		self._perform_change(lambda a,b: a | b, item)
+		return self
+	def __ilshift__(self, item):
+		self._perform_change(lambda a,b: a << b, item)
+		return self
+	def __irshift__(self, item):
+		self._perform_change(lambda a,b: a >> b, item)
+		return self
+
+
+	def __getattr__(self, name):
+		if name in ("_list", "table", "selector", "_selected", "_perform_change"):
+			return object.__getattr__(self, name)
+		return getattr(self._list, name)
+	def __setattr__(self, name, value):
+		if name in ("_list", "table", "selector", "_selected", "_perform_change"):
+			return object.__setattr__(self, name, value)
+		
+		return setattr(self._list, name, value)
 
