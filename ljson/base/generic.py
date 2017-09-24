@@ -135,7 +135,7 @@ class LjsonSelector(object):
 		pass
 	def __getitem__(self, column):
 		"""
-		Return the column values as a list of lists
+		Return the column values as a list
 		"""
 		pass
 	def __setitem__(self, column, value):
@@ -160,6 +160,89 @@ class LjsonSelector(object):
 		"""
 		pass
 
+
+class LjsonQueryResult(object):
+	"""
+	This is the class that is used to handle query results for LJSON.
+
+	Until v0.2.0 query results were just lists or scalar objects 
+	(returned by ``LjsonSelector.getone(column != 0)``).
+
+	This resulted in undefined (and unwanted) behaviour in many use 
+	cases, like ``table[{"some_field": some_value}]["some_field"] += another_value``.
+
+	Therefore the LjsonQueryResult has been introduced, behaving in the most cases
+	like a list (like before) but providing a new way of item assignment.
+
+	This class should be new in v0.3.0.
+	"""
+	def __init__(self, table, selector, selected, list_):
+		self.table = table
+		self.selector = selector
+		self._list = list_
+		self._selected = selected
+
+	def __iadd__(self, item):
+		pass
+	def __imul__(self, item):
+		pass
+	def __isub__(self, item):
+		pass
+	def __itruediv__(self, item):
+		pass
+	def __ifloordiv__(self, item):
+		pass
+	def __imod__(self, item):
+		pass
+	def __ipow__(self, item, modulo = None):
+		pass
+	def __iand__(self, item):
+		pass
+	def __ixor__(self, item):
+		pass
+	def __ior__(self, item):
+		pass
+
+	def __ilshift__(self, item):
+		pass
+	def __irshift__(self, item):
+		pass
+
+	def __len__(self):
+		return len(self._list)
+	def __next__(self):
+		return self._list.__next__()
+	def __add__(self, item):
+		return self._list.__add__(item)
+	def __radd__(self, item): 
+		return self._list.__radd__(item)
+	def __mul__(self, item):
+		return self._list.__mul__(item)
+	def __rmul__(self, item):
+		return self._list.__rmul__(item)
+	def __iter__(self):
+		return self._list.__iter__()
+	def __repr__(self):
+		return self._list.__repr__()
+	def __str__(self):
+		return self._list.__str__()
+	def __getitem__(self, item):
+		return self._list.__getitem__(item)
+	def __setitem__(self, name, item):
+		return self._list.__setitem__(name, item)
+	def __reversed__(self):
+		return self._list.__reversed__()
+
+	def __getattr__(self, name):
+		if name in ("_list", "table", "selector", "_selected"):
+			return object.__getattr__(self, name)
+		return getattr(self._list, name)
+	def __setattr__(self, name, value):
+		if name in ("_list", "table", "selector", "_selected"):
+			return object.__setattr__(self, name, value)
+		
+		return setattr(self._list, name, value)
+	
 
 def row_matches(row, dct):
 	for k, v in dct.items():

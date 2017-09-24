@@ -6,7 +6,7 @@ needed or the set is small.
 """
 
 import json, os, collections
-from .generic import Header, LjsonTable, LjsonSelector, row_matches
+from .generic import Header, LjsonTable, LjsonSelector, row_matches, LjsonQueryResult
 
 class Table(LjsonTable):
 	"""
@@ -116,7 +116,7 @@ class Selector(LjsonSelector):
 		else:
 			return self.rows[0]
 	def __getitem__(self, column):
-		return [row[column] for row in self.rows]
+		return QueryResult(self.table, self, column, [row[column] for row in self.rows])
 	def __setitem__(self, column, value):
 		# FIXME: maybe one should make this more memory efficient.
 		# I am pretty sure that the rows do not get copied, so
@@ -136,3 +136,63 @@ class Selector(LjsonSelector):
 		self._index = 0
 		return self
 
+
+class QueryResult(LjsonQueryResult):
+	"""
+	See ``ljson.base.generic.LjsonQueryResult``.
+	"""
+	def __iadd__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] += item
+		return self
+	def __imul__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] *= item
+		return self
+	def __isub__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] -= item
+		return self
+	def __itruediv__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] /= item
+		return self
+	def __ifloordiv__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] //= item
+		return self
+	def __imod__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] %= item
+		return self
+	def __ipow__(self, item, modulo = None):
+		if(modulo != None):
+			for row in self.selector.rows:
+				row[self._selected] = row[self._selected].__pow__(item, modulo)
+		else:
+			for row in self.selector.rows:
+				row[self._selected] = row[self._selected].__pow__(item)
+		return self
+	def __iand__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] &= item
+		return self
+	def __ixor__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] ^= item
+		return self
+	def __ior__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] |= item
+		return self
+
+
+	def __ilshift__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] <<= item
+		return self
+	def __irshift__(self, item):
+		for row in self.selector.rows:
+			row[self._selected] >>= item
+		return self
+	
