@@ -94,6 +94,22 @@ def test_edit(tmpdir):
 
 
 
+def test_edit2(tmpdir):
+	filename = os.path.join(str(tmpdir), "table.ljson")
+
+	header = ljson.base.generic.Header(header_descriptor)
+	table = ljson.base.mem.Table(header, data)
+
+	fio = open(filename, "w+")
+
+	table.save(fio)
+	fio.seek(0)
+
+	table = ljson.base.disk.Table.from_file(fio)
+	table[{"name": "peter"}]["name"] += "Pan"
+	print(list(table))
+	assert table[{"name": "peterPan"}].getone("name") == "peterPan"
+		
 
 def test_contexts():
 	from io import StringIO
