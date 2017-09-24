@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ljson.base package &mdash; lson 0.2.0 documentation</title>
+    <title>ljson.base package &mdash; lson 0.3.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2.0',
+        VERSION:     '0.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="lson 0.2.0 documentation" href="index.html" />
+    <link rel="top" title="lson 0.3.0 documentation" href="index.html" />
     <link rel="up" title="ljson package" href="ljson.html" />
     <link rel="next" title="ljson.convert package" href="ljson.convert.html" />
     <link rel="prev" title="ljson package" href="ljson.html" />
@@ -47,6 +47,13 @@
 <div class="section" id="module-ljson.base.disk">
 <span id="ljson-base-disk-module"></span><h2>ljson.base.disk module<a class="headerlink" href="#module-ljson.base.disk" title="Permalink to this headline">¶</a></h2>
 <p>An on-disk ljson implementation.</p>
+<dl class="class">
+<dt id="ljson.base.disk.QueryResult">
+<em class="property">class </em><code class="descclassname">ljson.base.disk.</code><code class="descname">QueryResult</code><span class="sig-paren">(</span><em>table</em>, <em>selector</em>, <em>selected</em>, <em>list_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/disk.html#QueryResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.QueryResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ljson.base.generic.LjsonQueryResult" title="ljson.base.generic.LjsonQueryResult"><code class="xref py py-class docutils literal"><span class="pre">ljson.base.generic.LjsonQueryResult</span></code></a></p>
+<p>See <code class="docutils literal"><span class="pre">ljson.base.generic.LjsonQueryResult</span></code>.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="ljson.base.disk.Selector">
 <em class="property">class </em><code class="descclassname">ljson.base.disk.</code><code class="descname">Selector</code><span class="sig-paren">(</span><em>header</em>, <em>dct</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/disk.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.disk.Selector" title="Permalink to this definition">¶</a></dt>
@@ -122,6 +129,37 @@ a file but instead use the static method from_file.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="ljson.base.generic.LjsonQueryResult">
+<em class="property">class </em><code class="descclassname">ljson.base.generic.</code><code class="descname">LjsonQueryResult</code><span class="sig-paren">(</span><em>table</em>, <em>selector</em>, <em>selected</em>, <em>list_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/generic.html#LjsonQueryResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonQueryResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This is the class that is used to handle query results for LJSON.</p>
+<p>Until v0.2.0 query results were just lists or scalar objects 
+(returned by <code class="docutils literal"><span class="pre">LjsonSelector.getone(column</span> <span class="pre">!=</span> <span class="pre">0)</span></code>).</p>
+<p>This resulted in undefined (and unwanted) behaviour in many use 
+cases, like <code class="docutils literal"><span class="pre">table[{&quot;some_field&quot;:</span> <span class="pre">some_value}][&quot;some_field&quot;]</span> <span class="pre">+=</span> <span class="pre">another_value</span></code>.</p>
+<p>Therefore the LjsonQueryResult has been introduced, behaving in the most cases
+like a list (like before) but providing a new way of item assignment.</p>
+<p>This class should be new in v0.3.0.</p>
+<p><strong>*Warning*</strong>:</p>
+<div class="line-block">
+<div class="line">This class will behave most propably differently from what one would expect:</div>
+<div class="line">Only <code class="docutils literal"><span class="pre">__i*__</span></code> methods are overwritten!</div>
+<div class="line">All other methods are mapped to the underlaying <code class="docutils literal"><span class="pre">list</span></code> representation.</div>
+<div class="line">This leads to the fact that</div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">table</span><span class="p">[{</span><span class="s2">&quot;some_field&quot;</span><span class="p">:</span> <span class="n">some_value</span><span class="p">}][</span><span class="n">some_value</span><span class="p">]</span> <span class="o">+=</span> <span class="n">another_value</span>
+<span class="c1"># and</span>
+<span class="n">table</span><span class="p">[{</span><span class="s2">&quot;some_field&quot;</span><span class="p">:</span> <span class="n">some_value</span><span class="p">}][</span><span class="n">some_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">another_value</span> <span class="o">+</span> <span class="n">table</span><span class="p">[{</span><span class="s2">&quot;some_field&quot;</span><span class="p">:</span> <span class="n">some_value</span><span class="p">}][</span><span class="n">some_value</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Are not the same!</p>
+<p>In particular: The first sample will produce a valid result and modify the table,
+while the latter leads to undefined behaviour.</p>
+<p><strong>*FIXME*</strong>:</p>
+<p>There should a method <code class="docutils literal"><span class="pre">LjsonTable.apply(selector,</span> <span class="pre">func,</span> <span class="pre">args)</span></code> that bypasses the problem!</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ljson.base.generic.LjsonSelector">
 <em class="property">class </em><code class="descclassname">ljson.base.generic.</code><code class="descname">LjsonSelector</code><a class="reference internal" href="_modules/ljson/base/generic.html#LjsonSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.generic.LjsonSelector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
@@ -179,6 +217,13 @@ the first row is choosen.</p>
 <p>This module might be used if the entired set is
 needed or the set is small.</p>
 <dl class="class">
+<dt id="ljson.base.mem.QueryResult">
+<em class="property">class </em><code class="descclassname">ljson.base.mem.</code><code class="descname">QueryResult</code><span class="sig-paren">(</span><em>table</em>, <em>selector</em>, <em>selected</em>, <em>list_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/mem.html#QueryResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.QueryResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ljson.base.generic.LjsonQueryResult" title="ljson.base.generic.LjsonQueryResult"><code class="xref py py-class docutils literal"><span class="pre">ljson.base.generic.LjsonQueryResult</span></code></a></p>
+<p>See <code class="docutils literal"><span class="pre">ljson.base.generic.LjsonQueryResult</span></code>.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ljson.base.mem.Selector">
 <em class="property">class </em><code class="descclassname">ljson.base.mem.</code><code class="descname">Selector</code><span class="sig-paren">(</span><em>header</em>, <em>dct</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ljson/base/mem.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.base.mem.Selector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ljson.base.generic.LjsonSelector" title="ljson.base.generic.LjsonSelector"><code class="xref py py-class docutils literal"><span class="pre">ljson.base.generic.LjsonSelector</span></code></a></p>
@@ -223,7 +268,7 @@ a file but instead use the static method from_file.</p>
 <div class="section" id="module-ljson.base">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ljson.base" title="Permalink to this headline">¶</a></h2>
 <p>The base ljson implementation.</p>
-<p>This package provides base functionality, 
+<p>This package provides base functionality,
 like getter and setter interface.</p>
 <p>Creating a ljson table is pretty easy.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ljson</span> <span class="kn">import</span> <span class="n">base</span>

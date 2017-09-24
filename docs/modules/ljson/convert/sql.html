@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ljson.convert.sql &mdash; lson 0.2.0 documentation</title>
+    <title>ljson.convert.sql &mdash; lson 0.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.2.0',
+        VERSION:     '0.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="lson 0.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="lson 0.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,7 +43,7 @@
 <span class="sd">tables from/to SQL tables.</span>
 
 <span class="sd">**WARNING**: The SQL datatype &quot;BINARY&quot; and the python datatype &quot;bytes&quot;</span>
-<span class="sd">might not work. </span>
+<span class="sd">might not work.</span>
 
 <span class="sd">**Note**: If one wants to use json items, these items will be stored</span>
 <span class="sd">as &quot;varchar&quot; in SQL. The function table2sql_ will convert json automatically</span>
@@ -61,9 +61,9 @@
 	<span class="n">dtype_string</span> <span class="o">=</span> <span class="n">dtype_string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 	<span class="n">dtypes_by_contains</span> <span class="o">=</span> <span class="p">{</span>\
-		<span class="s2">&quot;char&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> 
-		<span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> 
-		<span class="s2">&quot;binary&quot;</span><span class="p">:</span> <span class="s2">&quot;bytes&quot;</span><span class="p">,</span> 
+		<span class="s2">&quot;char&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;binary&quot;</span><span class="p">:</span> <span class="s2">&quot;bytes&quot;</span><span class="p">,</span>
 		<span class="s2">&quot;int&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
 		<span class="s2">&quot;bit&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
 		<span class="s2">&quot;bool&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
@@ -85,7 +85,7 @@
 
 
 
-<div class="viewcode-block" id="sql2table"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.sql.sql2table">[docs]</a><span class="k">def</span> <span class="nf">sql2table</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span> 
+<div class="viewcode-block" id="sql2table"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.sql.sql2table">[docs]</a><span class="k">def</span> <span class="nf">sql2table</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	.. _sql2table:</span>
 
@@ -116,8 +116,8 @@
 			<span class="k">if</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
 				<span class="n">mods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;unique&quot;</span><span class="p">)</span>
 			<span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">mods</span>
-	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{</span><span class="n">colname</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">dtypes_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span> 
-				<span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]}</span> 
+	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{</span><span class="n">colname</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">dtypes_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span>
+				<span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]}</span>
 		<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
 	<span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span>
 	<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="p">[])</span>
@@ -130,7 +130,7 @@
 	<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">table</span></div>
 
-<div class="viewcode-block" id="sql2file"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.sql.sql2file">[docs]</a><span class="k">def</span> <span class="nf">sql2file</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span> 
+<div class="viewcode-block" id="sql2file"><a class="viewcode-back" href="../../../ljson.convert.html#ljson.convert.sql.sql2file">[docs]</a><span class="k">def</span> <span class="nf">sql2file</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	.. _sql2file:</span>
 
@@ -161,15 +161,15 @@
 			<span class="k">if</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
 				<span class="n">mods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;unique&quot;</span><span class="p">)</span>
 			<span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">mods</span>
-	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{</span><span class="n">colname</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">dtypes_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span> 
-				<span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]}</span> 
+	<span class="n">descriptor</span> <span class="o">=</span> <span class="p">{</span><span class="n">colname</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">dtypes_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span>
+				<span class="s2">&quot;modifiers&quot;</span><span class="p">:</span> <span class="n">modifiers_by_cols</span><span class="p">[</span><span class="n">colname</span><span class="p">]}</span>
 		<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
 	<span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span>
 	<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">get_header</span><span class="p">())</span>
 	<span class="n">fout</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 	<span class="n">table</span> <span class="o">=</span> <span class="n">DiskTable</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
-	
+
 	<span class="k">with</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
 		<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT {} FROM {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="n">tablename</span><span class="p">))</span>
 		<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
@@ -183,12 +183,12 @@
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	.. _table2sql:</span>
 
-<span class="sd">	Insert the values from the given table into the </span>
+<span class="sd">	Insert the values from the given table into the</span>
 <span class="sd">	**already existing** SQL table.</span>
 
 <span class="sd">	json items will be stored as str instances.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	
+
 	<span class="c1"># build the INSERT pattern:</span>
 	<span class="c1">#</span>
 	<span class="n">dtypes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -202,9 +202,9 @@
 	<span class="k">with</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
 		<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
 			<span class="c1"># convert json to str.</span>
-			<span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">descriptor</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span> <span class="k">else</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> 
+			<span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">descriptor</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span> <span class="k">else</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 				<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-			
+
 			<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]))</span>
 	<span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>

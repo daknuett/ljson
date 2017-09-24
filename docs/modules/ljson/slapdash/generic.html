@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ljson.slapdash.generic &mdash; lson 0.2.0 documentation</title>
+    <title>ljson.slapdash.generic &mdash; lson 0.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../../static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.2.0',
+        VERSION:     '0.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../static/jquery.js"></script>
     <script type="text/javascript" src="../../../static/underscore.js"></script>
     <script type="text/javascript" src="../../../static/doctools.js"></script>
-    <link rel="top" title="lson 0.2.0 documentation" href="../../../index.html" />
+    <link rel="top" title="lson 0.3.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
   
@@ -43,8 +43,8 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..base.generic</span> <span class="kn">import</span> <span class="n">datatypes</span><span class="p">,</span> <span class="n">datatype_by_name</span><span class="p">,</span> <span class="n">python_datatype_by_name</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">..base.generic</span> <span class="kn">import</span> <span class="n">python_datatype_by_name</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="SlapdashHeader"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashHeader">[docs]</a><span class="k">class</span> <span class="nc">SlapdashHeader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -80,6 +80,7 @@
 		<span class="k">del</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;__type__&quot;</span><span class="p">])</span>
 		<span class="k">return</span> <span class="n">SlapdashHeader</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
 
+
 <div class="viewcode-block" id="SlapdashTable"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable">[docs]</a><span class="k">class</span> <span class="nc">SlapdashTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A messy table.</span>
@@ -99,7 +100,7 @@
 		<span class="k">pass</span>
 <div class="viewcode-block" id="SlapdashTable.calculate_stats"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.calculate_stats">[docs]</a>	<span class="k">def</span> <span class="nf">calculate_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Calculate statistical information about the </span>
+<span class="sd">		Calculate statistical information about the</span>
 <span class="sd">		data structure.</span>
 <span class="sd">		Returns a dict::</span>
 
@@ -113,19 +114,19 @@
 		<span class="k">pass</span></div>
 <div class="viewcode-block" id="SlapdashTable.insert_stats"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.insert_stats">[docs]</a>	<span class="k">def</span> <span class="nf">insert_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Calculate statistical information about the </span>
+<span class="sd">		Calculate statistical information about the</span>
 <span class="sd">		data structure and store the gathered information</span>
 <span class="sd">		in the Header.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">pass</span></div>
 
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="SlapdashTable.from_file"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.from_file">[docs]</a>	<span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fin</span><span class="p">):</span>
+<div class="viewcode-block" id="SlapdashTable.from_file"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.from_file">[docs]</a>	<span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">file_</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Read a SlapdashTable from a file</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">pass</span></div>
-<div class="viewcode-block" id="SlapdashTable.split"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.split">[docs]</a>	<span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore</span> <span class="o">=</span> <span class="p">[]):</span>
+<div class="viewcode-block" id="SlapdashTable.split"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.split">[docs]</a>	<span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Split the table into tables containing exactly one document</span>
 <span class="sd">		type.</span>
@@ -138,6 +139,7 @@
 
 <span class="sd">		**Warning**: Currently not implemented.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1">#ignore = ignore if ignore else []</span>
 		<span class="k">pass</span></div>
 <div class="viewcode-block" id="SlapdashTable.additem"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.additem">[docs]</a>	<span class="k">def</span> <span class="nf">additem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -147,12 +149,28 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">pass</span></div>
 <div class="viewcode-block" id="SlapdashTable.save"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.save">[docs]</a>	<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
-		<span class="k">pass</span></div></div>
+		<span class="k">pass</span></div>
+
+	<span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SlapdashTable.empty"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.empty">[docs]</a>	<span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return a new empty slapdash table.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">pass</span></div>
+	<span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SlapdashTable.open"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.SlapdashTable.open">[docs]</a>	<span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Equivalent to ``Table.from_file(open(filename, &quot;r+&quot;))``</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
+			<span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;cannot open {} for reading: does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+		<span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="document_matches"><a class="viewcode-back" href="../../../ljson.slapdash.html#ljson.slapdash.generic.document_matches">[docs]</a><span class="k">def</span> <span class="nf">document_matches</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Return True, if the document matches the</span>
-<span class="sd">	given dict. If a value in the dict is not contained </span>
+<span class="sd">	given dict. If a value in the dict is not contained</span>
 <span class="sd">	in the document, this will return false.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ljson.slapdash package &mdash; lson 0.2.0 documentation</title>
+    <title>ljson.slapdash package &mdash; lson 0.3.0 documentation</title>
     
     <link rel="stylesheet" href="static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2.0',
+        VERSION:     '0.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="lson 0.2.0 documentation" href="index.html" />
+    <link rel="top" title="lson 0.3.0 documentation" href="index.html" />
     <link rel="up" title="ljson package" href="ljson.html" />
     <link rel="prev" title="ljson.convert package" href="ljson.convert.html" />
    
@@ -70,6 +70,13 @@
 <code class="descname">calculate_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.calculate_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.calculate_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="classmethod">
+<dt id="ljson.slapdash.disk.Table.empty">
+<em class="property">classmethod </em><code class="descname">empty</code><span class="sig-paren">(</span><em>file_or_filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new empty table with the given file
+or filename.</p>
+</dd></dl>
+
 <dl class="staticmethod">
 <dt id="ljson.slapdash.disk.Table.from_file">
 <em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.from_file" title="Permalink to this definition">¶</a></dt>
@@ -80,12 +87,6 @@
 <dt id="ljson.slapdash.disk.Table.insert_stats">
 <code class="descname">insert_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.insert_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.insert_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="ljson.slapdash.disk.Table.open">
-<em class="property">static </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/disk.html#Table.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.disk.Table.open" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r+&quot;))</span></code></p>
-</dd></dl>
 
 <dl class="method">
 <dt id="ljson.slapdash.disk.Table.save">
@@ -136,7 +137,7 @@ data, like in a document-oriented database.</p>
 <dl class="method">
 <dt id="ljson.slapdash.generic.SlapdashTable.calculate_stats">
 <code class="descname">calculate_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.calculate_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.calculate_stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate statistical information about the 
+<dd><p>Calculate statistical information about the
 data structure.
 Returns a dict:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -149,18 +150,30 @@ Returns a dict:</p>
 </div>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="ljson.slapdash.generic.SlapdashTable.empty">
+<em class="property">classmethod </em><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new empty slapdash table.</p>
+</dd></dl>
+
 <dl class="staticmethod">
 <dt id="ljson.slapdash.generic.SlapdashTable.from_file">
-<em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>fin</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.from_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a SlapdashTable from a file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ljson.slapdash.generic.SlapdashTable.insert_stats">
 <code class="descname">insert_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.insert_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.insert_stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate statistical information about the 
+<dd><p>Calculate statistical information about the
 data structure and store the gathered information
 in the Header.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ljson.slapdash.generic.SlapdashTable.open">
+<em class="property">classmethod </em><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to <code class="docutils literal"><span class="pre">Table.from_file(open(filename,</span> <span class="pre">&quot;r+&quot;))</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -170,7 +183,7 @@ in the Header.</p>
 
 <dl class="method">
 <dt id="ljson.slapdash.generic.SlapdashTable.split">
-<code class="descname">split</code><span class="sig-paren">(</span><em>ignore=[]</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.split" title="Permalink to this definition">¶</a></dt>
+<code class="descname">split</code><span class="sig-paren">(</span><em>ignore=None</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#SlapdashTable.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.SlapdashTable.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the table into tables containing exactly one document
 type.</p>
 <p><strong>Warning</strong>: If the table highly inhomogenous, this will
@@ -186,7 +199,7 @@ process and the data will not appear in the resulting tables.</p>
 <dt id="ljson.slapdash.generic.document_matches">
 <code class="descclassname">ljson.slapdash.generic.</code><code class="descname">document_matches</code><span class="sig-paren">(</span><em>document</em>, <em>dct</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/generic.html#document_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.generic.document_matches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True, if the document matches the
-given dict. If a value in the dict is not contained 
+given dict. If a value in the dict is not contained
 in the document, this will return false.</p>
 </dd></dl>
 
@@ -218,6 +231,16 @@ in the document, this will return false.</p>
 <code class="descname">calculate_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/mem.html#Table.calculate_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.mem.Table.calculate_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="classmethod">
+<dt id="ljson.slapdash.mem.Table.empty">
+<em class="property">classmethod </em><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/mem.html#Table.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.mem.Table.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ljson.slapdash.mem.Table.from_file">
+<em class="property">static </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/mem.html#Table.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.mem.Table.from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ljson.slapdash.mem.Table.insert_stats">
 <code class="descname">insert_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/ljson/slapdash/mem.html#Table.insert_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ljson.slapdash.mem.Table.insert_stats" title="Permalink to this definition">¶</a></dt>
@@ -236,7 +259,7 @@ in the document, this will return false.</p>
 <p>ljson.slapdash is basically the messy little brother
 of ljson.</p>
 <p>slapdash is oriented on document-oriented databases.
-The main difference to ljson is that slapdash rows 
+The main difference to ljson is that slapdash rows
 do not get typechecked and there is no way to ensure
 homogenity.</p>
 <p>However the header might provide some information about
