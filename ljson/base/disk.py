@@ -5,6 +5,7 @@ An on-disk ljson implementation.
 import json, os
 from .generic import Header, LjsonTable, LjsonSelector,  row_matches, LjsonQueryResult
 from collections import deque
+from threading import RLock
 
 class Table(LjsonTable):
 	"""
@@ -22,6 +23,7 @@ class Table(LjsonTable):
 		self.file = file_
 		self._file_pointer_stack = deque()
 		self._loop_file_pointer_stack = deque()
+		self._lock = RLock()
 
 	@staticmethod
 	def open(filename):
@@ -50,32 +52,34 @@ class Table(LjsonTable):
 
 		return Selector(self.header, dct, self)
 	def __next__(self):
-		seek_after = self.file.tell()
-		self.file.seek(self._loop_file_pointer_stack.popleft())
+		with self._lock:
+			seek_after = self.file.tell()
+			self.file.seek(self._loop_file_pointer_stack.popleft())
 
 
-		row = self.file.readline()
-		if(not row):
-			# we are leaving the loop => this context is done
-			# => return to the context before __iter__ was called
-			self.file.seek(self._file_pointer_stack.popleft())
-			raise StopIteration()
-		while(row.isspace()):
 			row = self.file.readline()
-		if(not row):
-			# we are leaving the loop => this context is done
-			# => return to the context before __iter__ was called
-			self.file.seek(self._file_pointer_stack.popleft())
-			raise StopIteration()
-		self._loop_file_pointer_stack.appendleft(self.file.tell())
-		self.file.seek(seek_after)
-		return json.loads(row)
+			if(not row):
+				# we are leaving the loop => this context is done
+				# => return to the context before __iter__ was called
+				self.file.seek(self._file_pointer_stack.popleft())
+				raise StopIteration()
+			while(row.isspace()):
+				row = self.file.readline()
+			if(not row):
+				# we are leaving the loop => this context is done
+				# => return to the context before __iter__ was called
+				self.file.seek(self._file_pointer_stack.popleft())
+				raise StopIteration()
+			self._loop_file_pointer_stack.appendleft(self.file.tell())
+			self.file.seek(seek_after)
+			return json.loads(row)
 
 
 	def __enter__(self):
 		return self
 	def __exit__(self, exc_type, exc_value, traceback):
-		self.file.close()
+		with self._lock:
+			self.file.close()
 		del(self.header)
 		del(self)
 		return False
@@ -84,79 +88,84 @@ class Table(LjsonTable):
 		"""
 		Save this table to the file ``fout``.
 		"""
-		seek = self.file.tell()
-		self.file.seek(0)
-		for r in self.file:
-			if(r.isspace()):
-				continue
-			fout.write(r)
-		self.file.seek(seek)
+		with self._lock:
+			seek = self.file.tell()
+			self.file.seek(0)
+			for r in self.file:
+				if(r.isspace()):
+					continue
+				fout.write(r)
+			self.file.seek(seek)
 	def additem(self, row):
 		"""
 		Add a new row.
 		"""
-		seek = self.file.tell()
-		for k, v in row.items():
-			self.header.check_data(k, v)
-			if("unique" in self.header.descriptor[k]["modifiers"]):
-				# check if the value is unique
-				for r in self:
-					if(v == r[k]):
-						raise ValueError("Value {} is not unique: {}".format(k, v))
-		self.file.seek(0, 2) # EOF here
-		self.file.write("\n")
-		json.dump(row, self.file)
-		self.file.seek(seek)
+		with self._lock:
+			seek = self.file.tell()
+			for k, v in row.items():
+				self.header.check_data(k, v)
+				if("unique" in self.header.descriptor[k]["modifiers"]):
+					# check if the value is unique
+					for r in self:
+						if(v == r[k]):
+							raise ValueError("Value {} is not unique: {}".format(k, v))
+			self.file.seek(0, 2) # EOF here
+			self.file.write("\n")
+			json.dump(row, self.file)
+			self.file.seek(seek)
 	def __contains__(self, dct):
-		seek = self.file.tell()
-		self.file.seek(0)
-		if(not self._headless):
-			self.file.readline()
-		for row in self.file:
-			if(row.isspace()):
-				continue
-			if(row_matches(json.loads(row), dct)):
-				self.file.seek(seek)
-				return True
-		self.file.seek(seek)
-		return False
+		with self._lock:
+			seek = self.file.tell()
+			self.file.seek(0)
+			if(not self._headless):
+				self.file.readline()
+			for row in self.file:
+				if(row.isspace()):
+					continue
+				if(row_matches(json.loads(row), dct)):
+					self.file.seek(seek)
+					return True
+			self.file.seek(seek)
+			return False
 	def __iter__(self):
-		self._file_pointer_stack.appendleft(self.file.tell())
-		self.file.seek(0)
-		if(not self._headless):
-			self.file.readline()
-		self._loop_file_pointer_stack.appendleft(self.file.tell())
-		return self
+		with self._lock:
+			self._file_pointer_stack.appendleft(self.file.tell())
+			self.file.seek(0)
+			if(not self._headless):
+				self.file.readline()
+			self._loop_file_pointer_stack.appendleft(self.file.tell())
+			return self
 
 	def __delitem__(self, dct):
-		if(self._file_pointer_stack):
-			raise RuntimeError("Attempt to delete item from table during looping. This leads to undefined behaviour.")
-		seek_after = self.file.tell()
-		max_seek = 0
-		self.file.seek(0)
-		os.unlink(self.file.name)
-		buf = open(self.file.name, "w+")
-		if(not self._headless):
-			buf.write(self.file.readline())
-		deleted_row = False
-		for line in self.file:
-			if(line.isspace()):
-				continue
-			r = json.loads(line)
-			if(row_matches(r, dct)):
-				deleted_row = True
-			else:
-				buf.write(line)
-				max_seek = buf.tell()
-		self.file.close()
-		self.file = buf
-		if(seek_after <= max_seek):
-			self.file.seek(seek_after)
-		else:
+		with self._lock:
+			if(self._file_pointer_stack):
+				raise RuntimeError("Attempt to delete item from table during looping. This leads to undefined behaviour.")
+			seek_after = self.file.tell()
+			max_seek = 0
 			self.file.seek(0)
-			raise RuntimeWarning("File is truncated. unable to restore table state.")
-		if(not deleted_row):
-			raise KeyError("no matching rows found: {}".format(dct))
+			os.unlink(self.file.name)
+			buf = open(self.file.name, "w+")
+			if(not self._headless):
+				buf.write(self.file.readline())
+			deleted_row = False
+			for line in self.file:
+				if(line.isspace()):
+					continue
+				r = json.loads(line)
+				if(row_matches(r, dct)):
+					deleted_row = True
+				else:
+					buf.write(line)
+					max_seek = buf.tell()
+			self.file.close()
+			self.file = buf
+			if(seek_after <= max_seek):
+				self.file.seek(seek_after)
+			else:
+				self.file.seek(0)
+				raise RuntimeWarning("File is truncated. unable to restore table state.")
+			if(not deleted_row):
+				raise KeyError("no matching rows found: {}".format(dct))
 
 
 class Selector(LjsonSelector):
@@ -169,92 +178,97 @@ class Selector(LjsonSelector):
 		self._loop_file_pointer_stack = deque()
 
 	def getone(self, column = None):
-		seek_after = self.file.tell()
-		self.file.seek(0)
-		if(not self.table._headless):
-			self.file.readline()
-		for line in self.file:
-			if(line.isspace()):
-				continue
-			row = json.loads(line)
-			if(row_matches(row, self.dct)):
-				if(column):
-					self.file.seek(seek_after)
-					return row[column]
-				else:
-					self.file.seek(seek_after)
-					return row
-		self.file.seek(seek_after)
-		return None
+		with self.table._lock:
+			seek_after = self.file.tell()
+			self.file.seek(0)
+			if(not self.table._headless):
+				self.file.readline()
+			for line in self.file:
+				if(line.isspace()):
+					continue
+				row = json.loads(line)
+				if(row_matches(row, self.dct)):
+					if(column):
+						self.file.seek(seek_after)
+						return row[column]
+					else:
+						self.file.seek(seek_after)
+						return row
+			self.file.seek(seek_after)
+			return None
 	def __getitem__(self, column):
-		seek_after = self.file.tell()
-		self.file.seek(0)
-		if(not self.table._headless):
-			self.file.readline()
-		res = deque()
-		for line in self.file:
-			row = json.loads(line)
-			if(row_matches(row, self.dct)):
-				res.append(row[column])
-		self.file.seek(seek_after)
-		return QueryResult(self.table, self, column, list(res))
+		with self.table._lock:
+			seek_after = self.file.tell()
+			self.file.seek(0)
+			if(not self.table._headless):
+				self.file.readline()
+			res = deque()
+			for line in self.file:
+				row = json.loads(line)
+				if(row_matches(row, self.dct)):
+					res.append(row[column])
+			self.file.seek(seek_after)
+			return QueryResult(self.table, self, column, list(res))
 
 	def __setitem__(self, column, value):
-		if(self._file_pointer_stack or self.table._file_pointer_stack):
-			raise RuntimeError("Attempt to edit table while iterating")
-		seek_after = self.file.tell()
-		self.file.seek(0)
-		os.unlink(self.file.name)
-		buf = open(self.file.name, "w+")
-		if(not self.table._headless):
-			buf.write(self.file.readline())
-		for line in self.file:
-			if(line.isspace()):
-				continue
-			r = json.loads(line)
-			if(row_matches(r, self.dct)):
-				r[column] = value
-				json.dump(r, buf)
-				buf.write("\n")
-			else:
-				buf.write(line)
-		self.file.close()
-		self.file = buf
-		self.table.file = buf
-		self.table.file.seek(seek_after)
+		with self.table._lock:
+			if(self._file_pointer_stack or self.table._file_pointer_stack):
+				raise RuntimeError("Attempt to edit table while iterating")
+			seek_after = self.file.tell()
+			self.file.seek(0)
+			os.unlink(self.file.name)
+			buf = open(self.file.name, "w+")
+			if(not self.table._headless):
+				buf.write(self.file.readline())
+			for line in self.file:
+				if(line.isspace()):
+					continue
+				r = json.loads(line)
+				if(row_matches(r, self.dct)):
+					r[column] = value
+					json.dump(r, buf)
+					buf.write("\n")
+				else:
+					buf.write(line)
+			self.file.close()
+			self.file = buf
+			self.table.file = buf
+			self.table.file.seek(seek_after)
 
 	def __next__(self):
-		seek_after = self.file.tell()
-		self.file.seek(self._loop_file_pointer_stack.popleft())
+		with self.table._lock:
+			seek_after = self.file.tell()
+			self.file.seek(self._loop_file_pointer_stack.popleft())
 
 
-		row = self.file.readline()
-		if(not row):
-			# we are leaving the loop => this context is done
-			# => return to the context before __iter__ was called
-			self.file.seek(self._file_pointer_stack.popleft())
-			raise StopIteration()
-		data = {}
-		if(not row.isspace()):
-			data = json.loads(row)
-		while(row.isspace() or not row_matches(data, self.dct)):
 			row = self.file.readline()
 			if(not row):
 				# we are leaving the loop => this context is done
 				# => return to the context before __iter__ was called
 				self.file.seek(self._file_pointer_stack.popleft())
 				raise StopIteration()
-			data = json.loads(row) if not row.isspace() else {}
-		self._loop_file_pointer_stack.appendleft(self.file.tell())
-		self.table.file.seek(seek_after)
-		return data
+			data = {}
+			if(not row.isspace()):
+				data = json.loads(row)
+			while(row.isspace() or not row_matches(data, self.dct)):
+				row = self.file.readline()
+				if(not row):
+					# we are leaving the loop => this context is done
+					# => return to the context before __iter__ was called
+					self.file.seek(self._file_pointer_stack.popleft())
+					raise StopIteration()
+				data = json.loads(row) if not row.isspace() else {}
+			self._loop_file_pointer_stack.appendleft(self.file.tell())
+			self.table.file.seek(seek_after)
+			return data
 	def __iter__(self):
-		self._file_pointer_stack.appendleft(self.file.tell())
-		self.file.seek(0)
-		if(not self.table._headless):
-			self.file.readline()
-		self._loop_file_pointer_stack.appendleft(self.file.tell())
-		return self
+		with self.table._lock:
+			self._file_pointer_stack.appendleft(self.file.tell())
+			self.file.seek(0)
+			if(not self.table._headless):
+				self.file.readline()
+			self._loop_file_pointer_stack.appendleft(self.file.tell())
+			return self
 
 
 
@@ -266,28 +280,29 @@ class QueryResult(LjsonQueryResult):
 		"""
 		This is used to keep the overhead of modifications at one place.
 		"""
-		if(self.selector._file_pointer_stack or self.table._file_pointer_stack):
-			raise RuntimeError("Attempt to edit table while iterating")
-		seek_after = self.table.file.tell()
-		self.table.file.seek(0)
-		os.unlink(self.table.file.name)
-		buf = open(self.table.file.name, "w+")
-		if(not self.table._headless):
-			buf.write(self.table.file.readline())
-		for line in self.table.file:
-			if(line.isspace()):
-				continue
-			r = json.loads(line)
-			if(row_matches(r, self.selector.dct)):
-				r[self._selected] = func(r[self._selected], *args)
-				json.dump(r, buf)
-				buf.write("\n")
-			else:
-				buf.write(line)
-		self.table.file.close()
-		self.table.file = buf
-		self.selector.file = buf
-		self.table.file.seek(seek_after)
+		with self.table._lock:
+			if(self.selector._file_pointer_stack or self.table._file_pointer_stack):
+				raise RuntimeError("Attempt to edit table while iterating")
+			seek_after = self.table.file.tell()
+			self.table.file.seek(0)
+			os.unlink(self.table.file.name)
+			buf = open(self.table.file.name, "w+")
+			if(not self.table._headless):
+				buf.write(self.table.file.readline())
+			for line in self.table.file:
+				if(line.isspace()):
+					continue
+				r = json.loads(line)
+				if(row_matches(r, self.selector.dct)):
+					r[self._selected] = func(r[self._selected], *args)
+					json.dump(r, buf)
+					buf.write("\n")
+				else:
+					buf.write(line)
+			self.table.file.close()
+			self.table.file = buf
+			self.selector.file = buf
+			self.table.file.seek(seek_after)
 
 	def __iadd__(self, item):
 		self._perform_change(lambda a,b: a + b, item)
