@@ -165,3 +165,38 @@ Deleting rows is supported since 0.1.1::
 	with DiskTable.open("output.json") as table:
 		del(table[{"id": 0}])
 
+Gotchas
+*******
+
+In *v0.3.0* a new feature has been added:
+``LjsonQueryResult`` s. Those objects are returned by
+``LjsonSelector.__getitem__`` and should fulfill two
+purposes:
+
+- Behave like a list for nearly everything
+- Make it possible to edit tables in a pythonic way.
+
+Therefore something like this is possible::
+
+	with DiskTable.open("data.json") as table:
+		table[{"id": 0}]["age"] += 1
+
+Which is pretty nice. But it also should work like a list,
+so::
+
+	with DiskTable.open("data.json") as table:
+		result = table[{"id": 0}]["age"] + [1]
+
+Will produce ``[21, 1]``.
+
+So unluckily::
+
+	with DiskTable.open("data.json") as table:
+		table[{"id": 0}]["age"] = table[{"id": 0}]["age"] + 1
+
+Will fail (and in general this leads to undefined
+behaviour).
+
+The ``LjsonQueryResult`` class overrides all ``__i*__``
+methods, while all other methods are passed to the
+underlaying ``list``.

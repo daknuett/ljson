@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quickstart &mdash; lson 0.3.0 documentation</title>
+    <title>Quickstart &mdash; lson 0.3.1 documentation</title>
     
     <link rel="stylesheet" href="../static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="lson 0.3.0 documentation" href="../index.html" />
+    <link rel="top" title="lson 0.3.1 documentation" href="../index.html" />
     <link rel="next" title="ljson" href="../modules.html" />
     <link rel="prev" title="ljson – Line JSON" href="../README.html" />
    
@@ -196,6 +196,39 @@ makes it easy to manage disk tables:</p>
 </div>
 </div>
 </div>
+<div class="section" id="gotchas">
+<h1>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h1>
+<p>In <em>v0.3.0</em> a new feature has been added:
+<code class="docutils literal"><span class="pre">LjsonQueryResult</span></code> s. Those objects are returned by
+<code class="docutils literal"><span class="pre">LjsonSelector.__getitem__</span></code> and should fulfill two
+purposes:</p>
+<ul class="simple">
+<li>Behave like a list for nearly everything</li>
+<li>Make it possible to edit tables in a pythonic way.</li>
+</ul>
+<p>Therefore something like this is possible:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DiskTable</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;data.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">table</span><span class="p">:</span>
+        <span class="n">table</span><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}][</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Which is pretty nice. But it also should work like a list,
+so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DiskTable</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;data.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">table</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">table</span><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}][</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Will produce <code class="docutils literal"><span class="pre">[21,</span> <span class="pre">1]</span></code>.</p>
+<p>So unluckily:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DiskTable</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;data.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">table</span><span class="p">:</span>
+        <span class="n">table</span><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}][</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}][</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Will fail (and in general this leads to undefined
+behaviour).</p>
+<p>The <code class="docutils literal"><span class="pre">LjsonQueryResult</span></code> class overrides all <code class="docutils literal"><span class="pre">__i*__</span></code>
+methods, while all other methods are passed to the
+underlaying <code class="docutils literal"><span class="pre">list</span></code>.</p>
+</div>
 
 
           </div>
@@ -220,6 +253,7 @@ makes it easy to manage disk tables:</p>
 <li><a class="reference internal" href="#deleting-items">Deleting Items</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#gotchas">Gotchas</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
