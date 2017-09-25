@@ -8,7 +8,7 @@ python:
 before_install:
 - sudo apt-get install python-sphinx
 - pip install alabaster
-- pip install --upgrade sphinx
+- pip install sphinx
 - pip install pytest
 - pip install pytest-cov
 - pip install pytest-benchmark
