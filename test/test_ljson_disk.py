@@ -91,6 +91,8 @@ def test_edit(tmpdir):
 		for d in data_:
 			d["name"] = d["name"].upper()
 		assert list(table) == data_
+	table.close()
+
 
 
 

@@ -166,6 +166,12 @@ class Table(LjsonTable):
 				raise RuntimeWarning("File is truncated. unable to restore table state.")
 			if(not deleted_row):
 				raise KeyError("no matching rows found: {}".format(dct))
+	def close(self):
+		"""
+		Close the underlaying file.
+		"""
+		self.file.close()
+		del(self)
 
 
 class Selector(LjsonSelector):

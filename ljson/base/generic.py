@@ -129,6 +129,12 @@ class LjsonTable(object):
 		"""
 		pass
 
+	def close(self):
+		"""
+		This is only used in ``ljson.base.disk`` and just for compability here.
+		"""
+		pass
+
 
 class LjsonSelector(object):
 	def __init__(self):
