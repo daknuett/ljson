@@ -65,7 +65,7 @@ class Table(LjsonTable):
 				raise StopIteration()
 			while(row.isspace()):
 				row = self.file.readline()
-			if(not row):
+			if(not row or row.isspace()):
 				# we are leaving the loop => this context is done
 				# => return to the context before __iter__ was called
 				self.file.seek(self._file_pointer_stack.popleft())
