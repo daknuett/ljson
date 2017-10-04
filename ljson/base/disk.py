@@ -112,6 +112,7 @@ class Table(LjsonTable):
 			self.file.seek(0, 2) # EOF here
 			self.file.write("\n")
 			json.dump(row, self.file)
+			self.file.flush()
 			self.file.seek(seek)
 	def __contains__(self, dct):
 		with self._lock:
@@ -159,6 +160,7 @@ class Table(LjsonTable):
 					max_seek = buf.tell()
 			self.file.close()
 			self.file = buf
+			self.file.flush()
 			if(seek_after <= max_seek):
 				self.file.seek(seek_after)
 			else:
@@ -240,6 +242,7 @@ class Selector(LjsonSelector):
 			self.file = buf
 			self.table.file = buf
 			self.table.file.seek(seek_after)
+			self.file.flush()
 
 	def __next__(self):
 		with self.table._lock:
@@ -307,6 +310,7 @@ class QueryResult(LjsonQueryResult):
 					buf.write(line)
 			self.table.file.close()
 			self.table.file = buf
+			self.table.file.flush()
 			self.selector.file = buf
 			self.table.file.seek(seek_after)
 
