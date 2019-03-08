@@ -37,13 +37,13 @@ class Table(LjsonTable):
 		return Table(header, fin, _headless)
 
 
-	@staticmethod
-	def from_file(fin):
+	@classmethod
+	def _from_file(cls, fin):
 		"""
 		WARNING: ``file_`` **must** be opened in ``r+`` mode!
 		"""
 		header, _headless = Header.from_file(fin)
-		return Table(header, fin, _headless)
+		return cls(header, fin, _headless)
 
 	def __getitem__(self, dct):
 		for k in dct:
@@ -84,7 +84,7 @@ class Table(LjsonTable):
 		del(self)
 		return False
 
-	def save(self, fout):
+	def _save(self, fout):
 		"""
 		Save this table to the file ``fout``.
 		"""

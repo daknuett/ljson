@@ -20,11 +20,11 @@ class Table(LjsonTable):
 		self.rows = rows
 		self._index = 0 # used by __next__
 
-	@staticmethod
-	def from_file(fin):
+	@classmethod
+	def _from_file(cls, fin):
 		header, headless = Header.from_file(fin)
 		rows = [json.loads(line) for line in fin if not line.isspace()]
-		return Table(header, rows)
+		return cls(header, rows)
 	@staticmethod
 	def open(filename):
 		"""
@@ -64,7 +64,7 @@ class Table(LjsonTable):
 		res = self.rows[self._index]
 		self._index += 1
 		return res
-	def save(self, fout):
+	def _save(self, fout):
 		fout.write(self.header.get_header())
 		for r in self.rows:
 			fout.write("\n")

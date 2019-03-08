@@ -4,6 +4,9 @@ Some generic functions and classes for ljson.
 They are used by the memory and the disk implementation.
 """
 import json
+import io
+import abc
+from abc import abstractmethod
 
 datatypes = (int, str, float, bool, bytes, dict, list)
 
@@ -75,14 +78,21 @@ class Header(object):
 		return json.dumps(header)
 
 
-class LjsonTable(object):
+class LjsonTable(metaclass=abc.ABCMeta):
 	def __init__(self):
 		self.header = None
-	def save(self, fout):
+	@abstractmethod
+	def _save(self, fout):
 		"""
 		Save the table to the given file.
 		"""
 		pass
+	def save(self, fout):
+		if(isinstance(fout, io.RawIOBase)):
+			fout = io.TextIOWrapper(fout)
+		return self._save(fout)
+
+	@abstractmethod
 	def __getitem__(self, dct):
 		"""
 		Select rows by the dict dct.
@@ -94,27 +104,36 @@ class LjsonTable(object):
 		See also the ljson.base documentation.
 		"""
 		pass
+	@abstractmethod
 	def __next__(self):
 		"""
 		Returns: the next row of the table
 		"""
 		pass
-	@staticmethod
-	def from_file(fin):
+	@classmethod
+	def from_file(cls, fin):
 		"""
 		Construct the table from the given file.
 		"""
+		if(isinstance(fin, io.RawIOBase)):
+			fin = io.TextIOWrapper(fin)
+		return cls._from_file(fin)
+	@abc.abstractclassmethod
+	def _from_file(cls, fin):
 		pass
+
 	@staticmethod
 	def open(filename):
 		"""
 		Equivalent to ``Table.from_file(open(filename, "r+"))``
 		"""
 		pass
+	@abstractmethod
 	def additem(self, row):
 		"""
 		Add the row to the table.
 		"""
+	@abstractmethod
 	def __contains__(self, dct):
 		"""
 		Check if there is at least one row matching the selector ``dct``
@@ -124,6 +143,7 @@ class LjsonTable(object):
 			{"id": 4} in table
 		"""
 		pass
+	@abstractmethod
 	def __delitem__(self, dct):
 		"""
 		Delete all matching items.
@@ -137,19 +157,22 @@ class LjsonTable(object):
 		pass
 
 
-class LjsonSelector(object):
+class LjsonSelector(metaclass=abc.ABCMeta):
 	def __init__(self):
 		pass
+	@abstractmethod
 	def __getitem__(self, column):
 		"""
 		Return the column values as a list
 		"""
 		pass
+	@abstractmethod
 	def __setitem__(self, column, value):
 		"""
 		Set the values to the columns
 		"""
 		pass
+	@abstractmethod
 	def getone(self, column = None):
 		"""
 		Return exactly one element.
@@ -161,6 +184,7 @@ class LjsonSelector(object):
 		Returns ``None`` if no matching rows were found.
 		"""
 		pass
+	@abstractmethod
 	def __next__(self):
 		"""
 		return the next matching row
@@ -168,7 +192,7 @@ class LjsonSelector(object):
 		pass
 
 
-class LjsonQueryResult(object):
+class LjsonQueryResult(metaclass=abc.ABCMeta):
 	"""
 	This is the class that is used to handle query results for LJSON.
 
@@ -213,29 +237,41 @@ class LjsonQueryResult(object):
 		self._list = list_
 		self._selected = selected
 
+	@abstractmethod
 	def __iadd__(self, item):
 		pass
+	@abstractmethod
 	def __imul__(self, item):
 		pass
+	@abstractmethod
 	def __isub__(self, item):
 		pass
+	@abstractmethod
 	def __itruediv__(self, item):
 		pass
+	@abstractmethod
 	def __ifloordiv__(self, item):
 		pass
+	@abstractmethod
 	def __imod__(self, item):
 		pass
+	@abstractmethod
 	def __ipow__(self, item, modulo = None):
 		pass
+	@abstractmethod
 	def __iand__(self, item):
 		pass
+	@abstractmethod
 	def __ixor__(self, item):
 		pass
+	@abstractmethod
 	def __ior__(self, item):
 		pass
 
+	@abstractmethod
 	def __ilshift__(self, item):
 		pass
+	@abstractmethod
 	def __irshift__(self, item):
 		pass
 
