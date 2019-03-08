@@ -21,7 +21,7 @@ def test_construct():
 
 
 def test_write_and_read():
-	from io import StringIO
+	from io import StringIO, BytesIO
 
 	header = ljson.base.generic.Header(header_descriptor)
 	table = ljson.base.mem.Table(header, data)
@@ -38,6 +38,12 @@ def test_write_and_read():
 
 	with pytest.raises(KeyError):
 		assert table_in[{"foo": "bar"}]
+
+	fio.seek(0)
+	fio2 = BytesIO(fio.read().encode("utf-8"))
+	table_in = ljson.base.mem.Table.from_file(fio2)
+
+	assert list(table_in) == data
 
 def test_edit():
 	import copy

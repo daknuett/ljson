@@ -32,13 +32,17 @@ class Header(object):
 				myname = type(self).__name__,
 				descriptor = self.descriptor)
 
-	@staticmethod
-	def from_file(fin):
+	@classmethod
+	def from_file(cls, fin):
 		"""
 		Construct the header from the file.
 		"""
 
+		if(not isinstance(fin, (io.StringIO, io.TextIOBase))):
+			fin = io.TextIOWrapper(fin)
+
 		line = fin.readline()
+		print(type(fin), line)
 		while(line.isspace()):
 			line = fin.readline()
 		data = json.loads(line)
@@ -47,9 +51,9 @@ class Header(object):
 			descriptor = {}
 			for k in data.keys():
 				descriptor[k] = {"type": None, "modifiers": []}
-			return Header(descriptor), True
+			return cls(descriptor), True
 		del(data["__type__"])
-		return Header(data), False
+		return cls(data), False
 
 	def check_data(self, key, value):
 		"""
@@ -115,7 +119,7 @@ class LjsonTable(metaclass=abc.ABCMeta):
 		"""
 		Construct the table from the given file.
 		"""
-		if(isinstance(fin, io.RawIOBase)):
+		if(not isinstance(fin, (io.StringIO, io.TextIOWrapper, io.TextIOBase))):
 			fin = io.TextIOWrapper(fin)
 		return cls._from_file(fin)
 	@abc.abstractclassmethod

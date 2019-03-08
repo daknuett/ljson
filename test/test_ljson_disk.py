@@ -6,7 +6,7 @@ import copy, os, pytest
 from .data import data, header_descriptor, item_meg
 
 def test_read():
-	from io import StringIO
+	from io import StringIO, BytesIO
 
 
 	header = ljson.base.generic.Header(header_descriptor)
@@ -27,6 +27,12 @@ def test_read():
 		assert table_in[{"foo": "bar"}]
 
 	assert table_in[{"lname": "griffin"}]["name"] == [d["name"] for d in data]
+
+	fio.seek(0)
+	fio2 = BytesIO(fio.read().encode("utf-8"))
+	table_in = ljson.base.disk.Table.from_file(fio2)
+
+	assert list(table_in) == data
 
 
 def test_edit(tmpdir):
