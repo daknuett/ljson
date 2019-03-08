@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst')) as f:
 
 setup(
 	name = "ljson",
-	version = "0.4.1",
+	version = "0.5.0",
 	description = "A table dataformat based on json",
 	long_description = long_description,
 	url = "https://github.com/daknuett/ljson",
