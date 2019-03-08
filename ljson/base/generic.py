@@ -82,6 +82,7 @@ class LjsonTable(object):
 		"""
 		Save the table to the given file.
 		"""
+		pass
 	def __getitem__(self, dct):
 		"""
 		Select rows by the dict dct.
