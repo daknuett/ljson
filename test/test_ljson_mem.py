@@ -45,6 +45,14 @@ def test_write_and_read():
 
 	assert list(table_in) == data
 
+	fio3 = BytesIO()
+	table_in.save(fio3)
+	print(fio3.closed)
+	fio3.seek(0, 0)
+	fio2.seek(0, 0)
+	 
+	assert fio3.read() == fio2.read()
+
 def test_edit():
 	import copy
 	data_ = copy.copy(data)
