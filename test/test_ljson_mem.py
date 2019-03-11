@@ -51,7 +51,7 @@ def test_write_and_read():
 	fio3.seek(0, 0)
 	fio2.seek(0, 0)
 	 
-	assert fio3.read() == fio2.read()
+	assert list(ljson.base.mem.Table.from_file(fio2)) == list(ljson.base.mem.Table.from_file(fio3))
 
 def test_edit():
 	import copy
