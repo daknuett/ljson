@@ -37,9 +37,10 @@ class Header(object):
 		"""
 		Construct the header from the file.
 		"""
-
+		detach = False
 		if(not isinstance(fin, (io.StringIO, io.TextIOBase))):
 			fin = io.TextIOWrapper(fin)
+			detach = True
 
 		line = fin.readline()
 		print(type(fin), line)
@@ -53,6 +54,10 @@ class Header(object):
 				descriptor[k] = {"type": None, "modifiers": []}
 			return cls(descriptor), True
 		del(data["__type__"])
+
+		if(detach):
+			fin.detach()
+
 		return cls(data), False
 
 	def check_data(self, key, value):
@@ -83,6 +88,7 @@ class Header(object):
 
 
 class LjsonTable(metaclass=abc.ABCMeta):
+	can_detach_after_fromfile = True
 	def __init__(self):
 		self.header = None
 	@abstractmethod
@@ -92,9 +98,16 @@ class LjsonTable(metaclass=abc.ABCMeta):
 		"""
 		pass
 	def save(self, fout):
-		if(isinstance(fout, io.RawIOBase)):
+		detach = False
+		if(not isinstance(fout, (io.TextIOBase, io.StringIO, io.TextIOWrapper))):
 			fout = io.TextIOWrapper(fout)
-		return self._save(fout)
+			detach = True
+		result = self._save(fout)
+		if(detach):
+			fout.detach()
+		return result
+
+
 
 	@abstractmethod
 	def __getitem__(self, dct):
@@ -119,9 +132,14 @@ class LjsonTable(metaclass=abc.ABCMeta):
 		"""
 		Construct the table from the given file.
 		"""
+		detach = False
 		if(not isinstance(fin, (io.StringIO, io.TextIOWrapper, io.TextIOBase))):
 			fin = io.TextIOWrapper(fin)
-		return cls._from_file(fin)
+			detach = True
+		result = cls._from_file(fin)
+		if(detach and cls.can_detach_after_fromfile):
+			fin.detach()
+		return result
 	@abc.abstractclassmethod
 	def _from_file(cls, fin):
 		pass

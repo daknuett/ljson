@@ -16,6 +16,7 @@ class Table(LjsonTable):
 
 	WARNING: ``file_`` **must** be opened in ``w+`` mode!
 	"""
+	can_detach_after_fromfile = False
 
 	def __init__(self, header, file_, is_headless = False):
 		self._headless = is_headless
