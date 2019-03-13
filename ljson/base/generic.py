@@ -64,7 +64,6 @@ class Header(object):
 			detach = True
 
 		line = fin.readline()
-		print(type(fin), line)
 		while(line.isspace()):
 			line = fin.readline()
 		data = json.loads(line)
