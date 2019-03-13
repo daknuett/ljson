@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 
-from .generic import SlapdashTable, SlapdashHeader, document_matches
+from .generic import (SlapdashTable
+		, SlapdashHeader
+		, document_matches
+		, prestringify
+		, preunstringify)
 from ..base.generic import inversed_datatypes
 from collections import defaultdict, deque
 import json
@@ -27,7 +31,7 @@ class Table(SlapdashTable):
 	def _from_file(cls, file_):
 		header = SlapdashHeader.from_file(file_)
 
-		table = cls(header, [json.loads(line) for line in file_ if not line.isspace()])
+		table = cls(header, [preunstringify(json.loads(line)) for line in file_ if not line.isspace()])
 		return table
 
 
@@ -127,7 +131,7 @@ class Table(SlapdashTable):
 		fout.write(self.header.get_header())
 		for r in self.documents:
 			fout.write("\n")
-			json.dump(r, fout)
+			json.dump(prestringify(r), fout)
 
 	def __getitem__(self, dct):
 		return Selector(self.header, dct, self)

@@ -1,4 +1,8 @@
-from .generic import SlapdashHeader, SlapdashTable, document_matches
+from .generic import (SlapdashTable
+		, SlapdashHeader
+		, document_matches
+		, prestringify
+		, preunstringify)
 from ..base.generic import inversed_datatypes
 from collections import defaultdict, deque
 import json, os
@@ -103,7 +107,7 @@ class Table(SlapdashTable):
 
 		self.file.seek(0, 2) # EOF here
 		self.file.write("\n")
-		json.dump(document, self.file)
+		json.dump(prestringify(document), self.file)
 		self.file.seek(seek_after)
 
 	def __getitem__(self, dct):
@@ -121,7 +125,7 @@ class Table(SlapdashTable):
 		for row in self.file:
 			if(row.isspace()):
 				continue
-			if(document_matches(json.loads(row), dct)):
+			if(document_matches(preunstringify(json.loads(row)), dct)):
 				self.file.seek(seek_after)
 				return True
 		self.file.seek(seek_after)
@@ -157,7 +161,7 @@ class Table(SlapdashTable):
 			raise StopIteration()
 		self._loop_file_pointer_stack.appendleft(self.file.tell())
 		self.file.seek(seek_after)
-		return json.loads(row)
+		return preunstringify(json.loads(row))
 
 	def __enter__(self):
 		return self
@@ -220,7 +224,7 @@ class Table(SlapdashTable):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = preunstringify(json.loads(line))
 			if(document_matches(r, dct)):
 				deleted_row = True
 				self.document_count -= 1
@@ -253,7 +257,7 @@ class Selector(object):
 		self.file.seek(0)
 		self.file.readline()
 		for line in self.file:
-			row = json.loads(line)
+			row = preunstringify(json.loads(line))
 			if(document_matches(row, self.dct)):
 				if(column):
 					self.file.seek(seek_after)
@@ -269,7 +273,7 @@ class Selector(object):
 		self.file.readline()
 		res = deque()
 		for line in self.file:
-			row = json.loads(line)
+			row = preunstringify(json.loads(line))
 			if(document_matches(row, self.dct)):
 				res.append(row[column])
 		self.file.seek(seek_after)
@@ -286,10 +290,10 @@ class Selector(object):
 		for line in self.file:
 			if(line.isspace()):
 				continue
-			r = json.loads(line)
+			r = preunstringify(json.loads(line))
 			if(document_matches(r, self.dct)):
 				r[column] = value
-				json.dump(r, buf)
+				json.dump(prestringify(r), buf)
 				buf.write("\n")
 			else:
 				buf.write(line)
@@ -311,7 +315,7 @@ class Selector(object):
 			raise StopIteration()
 		data = {}
 		if(not row.isspace()):
-			data = json.loads(row)
+			data = preunstringify(json.loads(row))
 		while(row.isspace() or not document_matches(data, self.dct)):
 			row = self.file.readline()
 			if(not row):
@@ -319,7 +323,7 @@ class Selector(object):
 				# => return to the context before __iter__ was called
 				self.file.seek(self._file_pointer_stack.popleft())
 				raise StopIteration()
-			data = json.loads(row) if not row.isspace() else {}
+			data = preunstringify(json.loads(row)) if not row.isspace() else {}
 		self._loop_file_pointer_stack.appendleft(self.file.tell())
 		self.table.file.seek(seek_after)
 		return data

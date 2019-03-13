@@ -4,11 +4,54 @@ Some generic functions and classes for ljson.slapdash.
 """
 
 import json, os, io
-
 from abc import abstractmethod, abstractclassmethod, ABCMeta
 
 from ..base.generic import python_datatype_by_name
 
+prestringifiers = {
+	"int": lambda x: x
+	, "str": lambda x: x
+	, "float": lambda x: x
+	, "bytes": lambda x: [i for i in x]
+	, "bool": lambda x: x
+	, "json": lambda x: x
+	# This is for missing datatypes. Should not happen, 
+	# but in case it happens no conversion will be done.
+	, None: lambda x: x
+}
+preunistringifiers = {
+	"int": lambda x: x
+	, "str": lambda x: x
+	, "float": lambda x: x
+	, "bytes": lambda x: bytes(x)
+	, "bool": lambda x: x
+	, "json": lambda x: x
+	, None: lambda x: x
+}
+datatypes = (int, str, float, bool, bytes, dict, list)
+python_datatype_by_name = {"int": int, "str": str, "float": float, "bytes": bytes, "bool": bool, "json": (list, dict)}
+inversed_datatypes = {}
+for k, v in python_datatype_by_name.items():
+	if(not isinstance(v, tuple)):
+		inversed_datatypes[v] = k
+	else:
+		for pytype in v:
+			inversed_datatypes[pytype] = k
+
+def prestringify_one(element):
+	if(not isinstance(element, datatypes)):
+		raise TypeError("unserializable type: {}".format(type(element)))
+
+	datatype_name = inversed_datatypes[type(element)]
+	converter = prestringifiers[datatype_name]
+
+	return (datatype_name, converter(element))
+
+def prestringify(row):
+	return {k: prestringify_one(v) for k,v in row.items()}
+
+def preunstringify(row):
+	return {k: prestringifiers[v[0]](v[1]) for k,v in row.items()}
 
 class SlapdashHeader(object):
 	"""
