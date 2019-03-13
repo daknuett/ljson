@@ -3,8 +3,12 @@ Some generic functions and classes for ljson.slapdash.
 
 """
 
+import json, os, io
+
+from abc import abstractmethod, abstractclassmethod, ABCMeta
+
 from ..base.generic import python_datatype_by_name
-import json, os
+
 
 class SlapdashHeader(object):
 	"""
@@ -33,31 +37,44 @@ class SlapdashHeader(object):
 		"""
 		Construct the header from the file.
 		"""
+		detach = False
+		if(not isinstance(fin, (io.StringIO, io.TextIOBase))):
+			fin = io.TextIOWrapper(fin)
+			detach = True
 		line = fin.readline()
 		data = json.loads(line)
 		if(not "__type__" in data or data["__type__"] != "slapdash-header"):
 			return SlapdashHeader({})
 		del(data["__type__"])
+
+		if(detach):
+			fin.detach()
 		return SlapdashHeader(data)
 
 
-class SlapdashTable(object):
+class SlapdashTable(metaclass=ABCMeta):
 	"""
 	A messy table.
 
 	SlapdashTable is used to store inhomogenous
 	data, like in a document-oriented database.
 	"""
+	@abstractmethod
 	def __getitem__(self, dct):
 		pass
+	@abstractmethod
 	def __delitem__(self, dct):
 		pass
+	@abstractmethod
 	def __next__(self):
 		pass
+	@abstractmethod
 	def __iter__(self):
 		pass
+	@abstractmethod
 	def __contains__(self, dct):
 		pass
+	@abstractmethod
 	def calculate_stats(self):
 		"""
 		Calculate statistical information about the
@@ -72,6 +89,7 @@ class SlapdashTable(object):
 			}
 		"""
 		pass
+	@abstractmethod
 	def insert_stats(self):
 		"""
 		Calculate statistical information about the
@@ -80,12 +98,27 @@ class SlapdashTable(object):
 		"""
 		pass
 
-	@staticmethod
-	def from_file(file_):
+	@classmethod
+	def from_file(cls, fin):
+		"""
+		Construct the table from the given file.
+		"""
+		detach = False
+		if(not isinstance(fin, (io.StringIO, io.TextIOWrapper, io.TextIOBase))):
+			fin = io.TextIOWrapper(fin)
+			detach = True
+		result = cls._from_file(fin)
+		if(detach and cls.can_detach_after_fromfile):
+			fin.detach()
+		return result
+	
+	@abstractclassmethod
+	def _from_file(cls, file_):
 		"""
 		Read a SlapdashTable from a file
 		"""
 		pass
+	@abstractmethod
 	def split(self, ignore = None):
 		"""
 		Split the table into tables containing exactly one document
@@ -101,6 +134,7 @@ class SlapdashTable(object):
 		"""
 		#ignore = ignore if ignore else []
 		pass
+	@abstractmethod
 	def additem(self, document):
 		"""
 		Add a document to the table.
@@ -108,16 +142,27 @@ class SlapdashTable(object):
 		This will update the header according to the inserted document.
 		"""
 		pass
+
 	def save(self, fout):
+		detach = False
+		if(not isinstance(fout, (io.TextIOBase, io.StringIO, io.TextIOWrapper))):
+			fout = io.TextIOWrapper(fout)
+			detach = True
+		result = self._save(fout)
+		if(detach):
+			fout.detach()
+		return result
+	@abstractmethod
+	def _save(self, fout):
 		pass
 
-	@classmethod
+	@abstractclassmethod
 	def empty(cls):
 		"""
 		Return a new empty slapdash table.
 		"""
 		pass
-	@classmethod
+	@abstractclassmethod
 	def open(cls, filename):
 		"""
 		Equivalent to ``Table.from_file(open(filename, "r+"))``

@@ -7,6 +7,7 @@ import json, os
 
 
 class Table(SlapdashTable):
+	can_detach_after_fromfile = False
 	def __init__(self, header, file_, reread_stats = False):
 		self.header = header
 		self.file = file_
@@ -54,12 +55,12 @@ class Table(SlapdashTable):
 
 
 	@staticmethod
-	def from_file(file_):
+	def _from_file(cls, file_):
 		"""
 		WARNING: ``file_`` **must** be opened in ``r+`` mode!
 		"""
 		header = SlapdashHeader.from_file(file_)
-		return Table(header, file_)
+		return cls(header, file_)
 
 	def additem(self, document):
 		seek_after = self.file.tell()
@@ -125,7 +126,7 @@ class Table(SlapdashTable):
 				return True
 		self.file.seek(seek_after)
 		return False
-	def save(self, fout):
+	def _save(self, fout):
 		"""
 		Save this table to the file ``fout``.
 		"""

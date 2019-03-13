@@ -8,6 +8,7 @@ import json
 
 
 class Table(SlapdashTable):
+	can_detach_after_fromfile = True
 	def __init__(self, header, documents):
 		self.header = header
 		self.documents = documents
@@ -22,12 +23,12 @@ class Table(SlapdashTable):
 		table = cls(header, [])
 		return table
 
-	@staticmethod
-	def from_file(file_):
+	@classmethod
+	def _from_file(cls, file_):
 
 		header = SlapdashHeader.from_file(file_)
 
-		table = Table(header, [json.loads(line) for line in file_ if not line.isspace()])
+		table = cls(header, [json.loads(line) for line in file_ if not line.isspace()])
 		return table
 
 
@@ -123,7 +124,7 @@ class Table(SlapdashTable):
 				header = repr(self.header),
 				descriptor = self.header.descriptor,
 				table = self.documents)
-	def save(self, fout):
+	def _save(self, fout):
 		fout.write(self.header.get_header())
 		for r in self.documents:
 			fout.write("\n")
