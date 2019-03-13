@@ -54,7 +54,7 @@ class Table(SlapdashTable):
 
 
 
-	@staticmethod
+	@classmethod
 	def _from_file(cls, file_):
 		"""
 		WARNING: ``file_`` **must** be opened in ``r+`` mode!

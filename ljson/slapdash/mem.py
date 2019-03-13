@@ -25,7 +25,6 @@ class Table(SlapdashTable):
 
 	@classmethod
 	def _from_file(cls, file_):
-
 		header = SlapdashHeader.from_file(file_)
 
 		table = cls(header, [json.loads(line) for line in file_ if not line.isspace()])

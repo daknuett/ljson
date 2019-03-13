@@ -32,8 +32,8 @@ class SlapdashHeader(object):
 
 		return json.dumps(header)
 
-	@staticmethod
-	def from_file(fin):
+	@classmethod
+	def from_file(cls, fin):
 		"""
 		Construct the header from the file.
 		"""
@@ -118,22 +118,22 @@ class SlapdashTable(metaclass=ABCMeta):
 		Read a SlapdashTable from a file
 		"""
 		pass
-	@abstractmethod
-	def split(self, ignore = None):
-		"""
-		Split the table into tables containing exactly one document
-		type.
-
-		**Warning**: If the table highly inhomogenous, this will
-		produce a high number of tables.
-
-		Attribute names listed in ``ignore`` will be ignored by the split
-		process and the data will not appear in the resulting tables.
-
-		**Warning**: Currently not implemented.
-		"""
-		#ignore = ignore if ignore else []
-		pass
+#	@abstractmethod
+#	def split(self, ignore = None):
+#		"""
+#		Split the table into tables containing exactly one document
+#		type.
+#
+#		**Warning**: If the table highly inhomogenous, this will
+#		produce a high number of tables.
+#
+#		Attribute names listed in ``ignore`` will be ignored by the split
+#		process and the data will not appear in the resulting tables.
+#
+#		**Warning**: Currently not implemented.
+#		"""
+#		#ignore = ignore if ignore else []
+#		pass
 	@abstractmethod
 	def additem(self, document):
 		"""
@@ -162,7 +162,7 @@ class SlapdashTable(metaclass=ABCMeta):
 		Return a new empty slapdash table.
 		"""
 		pass
-	@abstractclassmethod
+	@classmethod
 	def open(cls, filename):
 		"""
 		Equivalent to ``Table.from_file(open(filename, "r+"))``
