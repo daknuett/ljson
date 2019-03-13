@@ -20,6 +20,27 @@ for k, v in python_datatype_by_name.items():
 		for pytype in v:
 			inversed_datatypes[pytype] = k
 
+prestringifiers = {
+	"int": lambda x: x
+	, "str": lambda x: x
+	, "float": lambda x: x
+	, "bytes": lambda x: [i for i in x]
+	, "bool": lambda x: x
+	, "json": lambda x: x
+	# This is for missing datatypes. Should not happen, 
+	# but in case it happens no conversion will be done.
+	, None: lambda x: x
+}
+preunistringifiers = {
+	"int": lambda x: x
+	, "str": lambda x: x
+	, "float": lambda x: x
+	, "bytes": lambda x: bytes(x)
+	, "bool": lambda x: x
+	, "json": lambda x: x
+	, None: lambda x: x
+}
+
 class Header(object):
 	def __init__(self, descriptor):
 		self.descriptor = descriptor
@@ -77,6 +98,15 @@ class Header(object):
 			return True
 		return False
 
+	def prestringify(self, row):
+		return {k: prestringifiers[self.descriptor[k]["type"]](v) for k,v in row.items()}
+	def preunstringify(self, row):
+		return {k: preunistringifiers[self.descriptor[k]["type"]](v) for k,v in row.items()}
+	def stringify(self, row):
+		return json.dumps(self.prestringify(row))
+	def unstringify(self, row):
+		return self.preunstringify(json.loads(row))
+
 	def get_header(self):
 		"""
 		Return a JSON header.
@@ -91,6 +121,13 @@ class LjsonTable(metaclass=abc.ABCMeta):
 	can_detach_after_fromfile = True
 	def __init__(self):
 		self.header = None
+
+	def stringify(self, row):
+		return json.dumps(self.header.prestringify(row))
+	def unstringify(self, row):
+		return self.header.preunstringify(json.loads(row))
+
+	
 	@abstractmethod
 	def _save(self, fout):
 		"""
@@ -258,6 +295,10 @@ class LjsonQueryResult(metaclass=abc.ABCMeta):
 		self.selector = selector
 		self._list = list_
 		self._selected = selected
+	def stringify(self, row):
+		return json.dumps(self.selector.header.prestringify(row))
+	def unstringify(self, row):
+		return self.selector.header.preunstringify(json.loads(row))
 
 	@abstractmethod
 	def __iadd__(self, item):

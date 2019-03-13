@@ -23,7 +23,7 @@ class Table(LjsonTable):
 	@classmethod
 	def _from_file(cls, fin):
 		header, headless = Header.from_file(fin)
-		rows = [json.loads(line) for line in fin if not line.isspace()]
+		rows = [header.unstringify(line) for line in fin if not line.isspace()]
 		return cls(header, rows)
 	@staticmethod
 	def open(filename):
@@ -68,7 +68,7 @@ class Table(LjsonTable):
 		fout.write(self.header.get_header())
 		for r in self.rows:
 			fout.write("\n")
-			json.dump(r, fout)
+			fout.write(self.stringify(r))
 
 	def additem(self, row):
 		for k, v in row.items():

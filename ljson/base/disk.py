@@ -73,7 +73,7 @@ class Table(LjsonTable):
 				raise StopIteration()
 			self._loop_file_pointer_stack.appendleft(self.file.tell())
 			self.file.seek(seek_after)
-			return json.loads(row)
+			return self.unstringify(row)
 
 
 	def __enter__(self):
@@ -112,7 +112,7 @@ class Table(LjsonTable):
 							raise ValueError("Value {} is not unique: {}".format(k, v))
 			self.file.seek(0, 2) # EOF here
 			self.file.write("\n")
-			json.dump(row, self.file)
+			self.file.write(self.stringify(row))
 			self.file.flush()
 			self.file.seek(seek)
 	def __contains__(self, dct):
@@ -124,7 +124,7 @@ class Table(LjsonTable):
 			for row in self.file:
 				if(row.isspace()):
 					continue
-				if(row_matches(json.loads(row), dct)):
+				if(row_matches(self.unstringify(row), dct)):
 					self.file.seek(seek)
 					return True
 			self.file.seek(seek)
@@ -153,7 +153,7 @@ class Table(LjsonTable):
 			for line in self.file:
 				if(line.isspace()):
 					continue
-				r = json.loads(line)
+				r = self.unstringify(line)
 				if(row_matches(r, dct)):
 					deleted_row = True
 				else:
@@ -186,6 +186,10 @@ class Selector(LjsonSelector):
 		self._file_pointer_stack = deque()
 		self._loop_file_pointer_stack = deque()
 
+	def stringify(self, row):
+		return json.dumps(self.header.prestringify(row))
+	def unstringify(self, row):
+		return self.header.preunstringify(json.loads(row))
 	def getone(self, column = None):
 		with self.table._lock:
 			seek_after = self.file.tell()
@@ -195,7 +199,7 @@ class Selector(LjsonSelector):
 			for line in self.file:
 				if(line.isspace()):
 					continue
-				row = json.loads(line)
+				row = self.unstringify(line)
 				if(row_matches(row, self.dct)):
 					if(column):
 						self.file.seek(seek_after)
@@ -213,7 +217,7 @@ class Selector(LjsonSelector):
 				self.file.readline()
 			res = deque()
 			for line in self.file:
-				row = json.loads(line)
+				row = self.unstringify(line)
 				if(row_matches(row, self.dct)):
 					res.append(row[column])
 			self.file.seek(seek_after)
@@ -232,10 +236,10 @@ class Selector(LjsonSelector):
 			for line in self.file:
 				if(line.isspace()):
 					continue
-				r = json.loads(line)
+				r = self.unstringify(line)
 				if(row_matches(r, self.dct)):
 					r[column] = value
-					json.dump(r, buf)
+					buf.write(self.stringify(r))
 					buf.write("\n")
 				else:
 					buf.write(line)
@@ -259,7 +263,7 @@ class Selector(LjsonSelector):
 				raise StopIteration()
 			data = {}
 			if(not row.isspace()):
-				data = json.loads(row)
+				data = self.unstringify(row)
 			while(row.isspace() or not row_matches(data, self.dct)):
 				row = self.file.readline()
 				if(not row):
@@ -267,7 +271,7 @@ class Selector(LjsonSelector):
 					# => return to the context before __iter__ was called
 					self.file.seek(self._file_pointer_stack.popleft())
 					raise StopIteration()
-				data = json.loads(row) if not row.isspace() else {}
+				data = self.unstringify(row) if not row.isspace() else {}
 			self._loop_file_pointer_stack.appendleft(self.file.tell())
 			self.table.file.seek(seek_after)
 			return data
@@ -302,10 +306,10 @@ class QueryResult(LjsonQueryResult):
 			for line in self.table.file:
 				if(line.isspace()):
 					continue
-				r = json.loads(line)
+				r = self.unstringify(line)
 				if(row_matches(r, self.selector.dct)):
 					r[self._selected] = func(r[self._selected], *args)
-					json.dump(r, buf)
+					buf.write(self.stringify(r))
 					buf.write("\n")
 				else:
 					buf.write(line)
