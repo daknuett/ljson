@@ -76,10 +76,11 @@ def test_edit():
 
 def test_unique_check():
 	import copy
+	data_ = copy.copy(data)
 	header_descriptor_ = copy.copy(header_descriptor)
 	header_descriptor_["name"]["modifiers"] = ["unique"]
 	header = ljson.base.generic.Header(header_descriptor_)
-	table = ljson.base.mem.Table(header, data)
+	table = ljson.base.mem.Table(header, data_)
 
 	table.additem(item_meg)
 
@@ -94,7 +95,7 @@ def test_contains():
 	table = ljson.base.mem.Table(header, data)
 
 
-	assert {"lname": "griffin"} in table
+	assert {"lname": "griffin"} in table or {"lname": "Griffin"} in table
 	assert not {"lname": "griffindor"} in table
 
 
